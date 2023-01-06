@@ -27,6 +27,14 @@ $consulta_despesa = mysqli_query($conecta,$select);
 $linha = mysqli_fetch_assoc($consulta_despesa);
 $valor_receita = $linha['valor_receita'];
 
+
+//estoque 
+$select ="SELECT sum(cl_total) as valor_total FROM `tb_produto_estoque`";
+$consulta_valor_estoque = mysqli_query($conecta,$select);
+$linha = mysqli_fetch_assoc($consulta_valor_estoque);
+$valor_estoque = $linha['valor_total'];
+
+
 //receita total
 $select =" SELECT sum(valor) as receita_total  from lancamento_financeiro  where 
 status = 'Recebido'";
@@ -34,9 +42,11 @@ $consulta_despesa = mysqli_query($conecta,$select);
 $linha = mysqli_fetch_assoc($consulta_despesa);
 $receita_total = $linha['receita_total'];
 
-
+$saldo_caixa = $valor_receita - $valor_despesa -$valor_estoque;
 $saldo = $valor_receita - $valor_despesa;
 $lucratividade = ($saldo / $receita_total) *100
+
+
 ?>
 
 
@@ -54,7 +64,7 @@ $lucratividade = ($saldo / $receita_total) *100
                             <p>Saldo em caixa</p>
                         </div>
                         <div class="info-2">
-                            <p><?php echo real_format($saldo); ?></p>
+                            <p><?php echo real_format($saldo_caixa); ?></p>
                         </div>
                     </div>
                     <div class="icon">
@@ -81,6 +91,19 @@ $lucratividade = ($saldo / $receita_total) *100
                         </div>
                         <div class="info-2">
                             <p><?php echo real_format($valor_despesa); ?></p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        <img src="images/despesa.png">
+                    </div>
+                </div>
+                <div id="card" class="bloco-5">
+                    <div class="info">
+                        <div class="info-1">
+                            <p>Estoque</p>
+                        </div>
+                        <div class="info-2">
+                            <p><?php echo real_format($valor_estoque); ?></p>
                         </div>
                     </div>
                     <div class="icon">

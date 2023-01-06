@@ -118,6 +118,7 @@ position: relative;
 
 .dash .bloco .group .title {
     color: rgb(74, 74, 74);
+    text-align: center;
 }
 
 .dash .bloco .bloco-1{
@@ -142,6 +143,15 @@ background: linear-gradient(90deg, rgba(222,118,84,1) 0%, rgba(228,100,73,1) 28%
     color:white;
 }
 
+
+.dash .bloco .bloco-5{
+    background: rgb(168,138,89);
+    background: linear-gradient(90deg, rgba(168,138,89,1) 1%, rgba(203,167,109,1) 52%);
+    color:white;
+}
+.dash .bloco .bloco-5 p{
+    color: white;
+}
 
 .dash .bloco .bloco-1 .info-1 p{
     color:white;
