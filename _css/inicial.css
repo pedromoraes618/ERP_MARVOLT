@@ -1,0 +1,184 @@
+body{
+   
+    width: 100%;
+   position: relative;
+
+}
+.logo-img{
+
+height: 100%;
+width: 100%;
+
+margin: 0px;
+text-align: center;
+}
+.logo-img img{
+width: 700px;
+margin: 0 auto;
+
+
+}
+#lembrete{
+    
+right: 50px;
+bottom: 30px;
+font-size:50px;
+animation: lembrete 0.2s  infinite alternate;
+position: fixed;
+    
+}
+
+@keyframes lembrete{
+    0%{
+        transform: translateX(20px);
+    }
+    50%{
+        transform: translateX(17px);
+    }
+    100%{
+        transform: translateX(20px);
+    }
+}
+
+
+.dash{
+  
+    margin: 0 auto;
+     width: 100%;
+     margin-bottom: 10px;
+
+}
+
+.dash .bloco{
+    padding-left: 100px;
+    padding-right:100px;
+    padding: 0px;
+    padding-bottom: 20x;
+ 
+}
+.dash .bloco .group{
+
+ width: fit-content;
+ margin: 0 auto;
+
+    
+}
+.dash .bloco .group-card{
+    margin: 0 auto;
+    width: fit-content;
+
+    display: flex;
+}
+
+.dash .bloco #card{
+-webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+display: flex;
+border-radius: 10PX;
+padding: 10px;
+width: 150px;
+margin: 20px;
+transition: all 0.4s ease-in-out;
+cursor: pointer;
+position: relative;
+
+}
+
+
+
+.dash .bloco .info{
+   margin: 0;
+}
+
+.dash .bloco .info-1 p{
+    margin: 0px;
+    margin-bottom: 5px;
+    color:rgb(110, 101, 0);
+}
+
+.dash .bloco .info-2 p{
+    margin: 0px;
+}
+
+
+.dash .bloco #card .icon{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    margin: 0 auto;
+}
+
+
+.dash .bloco #card .icon img{
+    width: 30px;
+
+}
+
+.dash .bloco .group .title {
+    color: rgb(74, 74, 74);
+}
+
+.dash .bloco .bloco-1{
+    background: rgb(230,133,63);
+    background: linear-gradient(90deg, rgba(230,133,63,1) 0%, rgba(230,155,63,1) 28%, rgba(230,172,63,1) 85%);
+    color: white;
+}
+.dash .bloco .bloco-2{
+    background: rgb(91,153,23);
+    background: linear-gradient(90deg, rgba(91,153,23,1) 0%, rgba(23,153,62,0.9836309523809523) 28%, rgba(23,153,88,1) 85%);
+    color: white;
+}
+.dash .bloco .bloco-3{
+    background: rgb(222,118,84);
+background: linear-gradient(90deg, rgba(222,118,84,1) 0%, rgba(228,100,73,1) 28%, rgba(212,64,32,1) 85%);
+    color: white;
+}
+
+.dash .bloco .bloco-4{
+    background: rgb(82,184,213);
+    background: linear-gradient(90deg, rgba(82,184,213,1) 0%, rgba(49,162,205,1) 28%, rgba(20,113,148,1) 85%);
+    color:white;
+}
+
+
+.dash .bloco .bloco-1 .info-1 p{
+    color:white;
+ 
+}
+
+
+.dash .bloco .bloco-2 .info-1 p{
+    color:white;
+}
+
+
+.dash .bloco .bloco-3 .info-1 p{
+    color:white;
+}
+
+
+.dash .bloco .bloco-4 .info-1 p{
+    color:white;
+}
+
+
+.dash .bloco .bloco-4 ul{
+    display: none;
+    position: absolute;
+    top: 40px;
+    width: 120px;
+    list-style: none;
+    border-radius: 5px;
+    padding: 10px;
+    -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    background-color: rgb(45, 45, 45);
+}
+
+.dash .bloco #card ul li{
+    text-align: left;
+    font-size: 0.8em;
+}

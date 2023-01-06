@@ -1,0 +1,20 @@
+[04-May-2022 03:00:05 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 03:06:15 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/e4vokoclkhu2/public_html/marvolt/classes/produtos/editar_produto.php on line 109
+[04-May-2022 03:06:15 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/e4vokoclkhu2/public_html/marvolt/classes/produtos/editar_produto.php on line 110
+[04-May-2022 03:06:15 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/e4vokoclkhu2/public_html/marvolt/classes/produtos/editar_produto.php on line 111
+[04-May-2022 03:06:15 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/e4vokoclkhu2/public_html/marvolt/classes/produtos/editar_produto.php on line 112
+[04-May-2022 03:06:15 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/e4vokoclkhu2/public_html/marvolt/classes/produtos/editar_produto.php on line 113
+[04-May-2022 03:06:15 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/e4vokoclkhu2/public_html/marvolt/classes/produtos/editar_produto.php on line 114
+[04-May-2022 03:06:15 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/e4vokoclkhu2/public_html/marvolt/classes/produtos/editar_produto.php on line 115
+[04-May-2022 03:06:15 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/e4vokoclkhu2/public_html/marvolt/classes/produtos/editar_produto.php on line 116
+[04-May-2022 03:06:15 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/e4vokoclkhu2/public_html/marvolt/classes/produtos/editar_produto.php on line 117
+[04-May-2022 05:37:17 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 15:11:54 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 15:13:25 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 15:23:09 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 16:30:50 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 16:38:51 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 16:40:32 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 16:43:50 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 16:55:16 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204
+[04-May-2022 20:21:53 UTC] PHP Notice:  Undefined variable: idProduto in /home/e4vokoclkhu2/public_html/marvolt/cdproduto/consulta_produto.php on line 204

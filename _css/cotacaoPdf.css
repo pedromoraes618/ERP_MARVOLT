@@ -1,0 +1,137 @@
+@font-face {
+    font-family:'ariallight';
+    src: url(../fonte/arial-nova-light.ttf) format('opentype');
+    font-style:normal;
+}
+.page-break { page-break-before: always; }
+
+*{
+   font-family:'ariallight';
+}
+#linha{
+    width: 100%;
+    border: 0.5px solid ;
+   margin-top: 5px;
+}
+
+#linhaTotal{
+    width: 100%;
+    border: 0.5px solid ;
+   margin-top: 30px;
+}
+div#dadosCliente{
+    font-family:'ariallight';
+    padding-top: 20px;
+  
+}
+
+#tempresa img{
+float: right;
+}
+#tcotacao tr td{
+    width: 510px;
+}
+
+#tcliente tr td{
+    width: 510px;
+}
+#cabecalhoTabela{
+
+    border-top: 1px solid;
+    margin-top: 20px;
+    border-spacing: 0 2px;
+   
+
+
+}
+
+#linhaCabecalho{
+    background-color: rgba(107, 107, 107,0.3);
+ 
+}
+
+#linhaCabecalho td{
+   padding-top: 4px;
+   padding-bottom: 4px;
+}
+
+div#agrupamento{
+display: block;
+width: 100%;
+padding: 20px 0px;
+}
+div#elemento{
+    display: inline-block;
+    border-bottom: 1px solid rgba(107, 107, 107,0.3);
+    width: 100%;
+}
+
+
+/*pdf relatoro*/
+.top-1{
+ 
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px;
+}
+.top-1 .cabecalho{
+   text-align: right;
+   padding-top: 10px;
+}
+
+.top-1 .cabecalho p{
+    margin: 2px;
+    font-size: 0.8em;
+}
+
+.top-1 .img_logo_relatorio {
+  
+    margin: 0px;
+    margin-bottom: 30px ;
+   
+  }
+.top-1 .img_logo_relatorio img{
+  
+    width: 170px;
+    margin-bottom: 0px;
+    
+
+}
+
+.titulo_relatorio{
+   
+    margin-bottom: 20px;
+    text-align: center;
+
+}
+.titulo_relatorio p{
+    margin: 0px;
+    font-weight: 600;
+    font-size: 0.8em;
+    color:rgb(73, 73, 73);
+}
+.tabela_relatoio table .top_tabela tr{
+    background-color: cadetblue;
+    
+}
+.tabela_relatoio table .top_tabela tr td p{
+    margin: 0px;
+    color: white;
+    padding: 5px;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+.tabela_relatoio table  {
+    margin-bottom: 20px;
+}
+.tabela_relatoio table .corpo_tabela tr td{
+    border: 1px solid rgb(139, 139, 139);
+    font-size: 0.9em;
+} 
+.tabela_relatoio table .corpo_tabela tr td p{
+    margin: 0px;
+    padding: 5px;
+}
+.tabela_relatoio table .corpo_tabela .valor_total{
+    background-color: rgb(238, 238, 238);
+}
