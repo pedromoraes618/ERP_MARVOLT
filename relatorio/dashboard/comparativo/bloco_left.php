@@ -36,7 +36,7 @@ include "../../../_incluir/funcoes.php";
                 </div>
                 <div class="info-2">
 
-                    <p style="margin:0 auto;">
+                    <p style="margin:0 auto;" title="lucratividade referente ao valor de venda e compra">
                         <?php echo real_percent($lucratividade);?></p>
 
                 </div>

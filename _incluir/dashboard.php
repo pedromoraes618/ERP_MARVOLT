@@ -58,19 +58,6 @@ $lucratividade = ($saldo / $receita_total) *100
                 <h3>Dashboard - últimos 12 meses</h3>
             </div>
             <div class="group-card">
-                <div id="card" class="bloco-1">
-                    <div class="info">
-                        <div class="info-1">
-                            <p>Saldo em caixa</p>
-                        </div>
-                        <div class="info-2">
-                            <p><?php echo real_format($saldo_caixa); ?></p>
-                        </div>
-                    </div>
-                    <div class="icon">
-                        <img src="images/carteira.png">
-                    </div>
-                </div>
                 <div id="card" class="bloco-2">
                     <div class="info">
                         <div class="info-1">
@@ -84,6 +71,7 @@ $lucratividade = ($saldo / $receita_total) *100
                         <img src="images/receita.png">
                     </div>
                 </div>
+
                 <div id="card" class="bloco-3">
                     <div class="info">
                         <div class="info-1">
@@ -91,19 +79,6 @@ $lucratividade = ($saldo / $receita_total) *100
                         </div>
                         <div class="info-2">
                             <p><?php echo real_format($valor_despesa); ?></p>
-                        </div>
-                    </div>
-                    <div class="icon">
-                        <img src="images/despesa.png">
-                    </div>
-                </div>
-                <div id="card" class="bloco-5">
-                    <div class="info">
-                        <div class="info-1">
-                            <p>Estoque</p>
-                        </div>
-                        <div class="info-2">
-                            <p><?php echo real_format($valor_estoque); ?></p>
                         </div>
                     </div>
                     <div class="icon">
@@ -127,6 +102,35 @@ $lucratividade = ($saldo / $receita_total) *100
                             L = (lucro líquido / Receita Total) *100 </li>
                     </ul>
                 </div>
+
+                <div id="card" class="bloco-5">
+                    <div class="info">
+                        <div class="info-1">
+                            <p>Estoque</p>
+                        </div>
+                        <div class="info-2">
+                            <p><?php echo real_format($valor_estoque); ?></p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        <img src="images/estoque.png">
+                    </div>
+                </div>
+
+                <div id="card" class="bloco-1">
+                    <div class="info">
+                        <div class="info-1">
+                            <p>Saldo em caixa</p>
+                        </div>
+                        <div class="info-2">
+                            <p><?php echo real_format($saldo_caixa); ?></p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        <img src="images/carteira.png">
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

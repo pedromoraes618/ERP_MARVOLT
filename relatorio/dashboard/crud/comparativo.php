@@ -64,6 +64,23 @@ if(($_GET)){
     pdc inner join clientes as clt on clt.clienteID = pdc.clienteID where pdc.data_fechamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31' group by pdc.clienteID order by valor_total_venda desc";
     $consulta_valor_receita_despesa_pd_compra_2= mysqli_query($conecta,$select);
 
+    /*coletar os valores do dos grupos depesa */
+    $select = "SELECT  tb_subgrupo_receita_despesa.subgrupo as grupo,sum(lancamento_financeiro.valor) as totalPorGrupo
+    from  lancamento_financeiro   inner join tb_subgrupo_receita_despesa
+    on lancamento_financeiro.grupoID = tb_subgrupo_receita_despesa.subGrupoID
+    inner join grupo_lancamento on  tb_subgrupo_receita_despesa.grupo = grupo_lancamento.grupo_lancamentoID
+    where lancamento_financeiro.status = 'Pago'  and lancamento_financeiro.data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31' group by tb_subgrupo_receita_despesa.subgrupo,grupo order by totalPorGrupo desc limit  6";
+    $consulta_somatorio_grupo_des = mysqli_query($conecta,$select);
+    $consulta_categoria_grupo_des = mysqli_query($conecta,$select);
+
+
+    /*valor total receita */
+    $select = "SELECT sum(valor) as valor_total_receita from lancamento_financeiro where status = 'Pago' and  data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31'";
+    $consultar_valor_total_receita =  mysqli_query($conecta,$select);
+    $linha = mysqli_fetch_assoc($consultar_valor_total_receita);
+    $valor_total_receita = $linha['valor_total_receita'];
+
+    
 
     if(isset($_GET['cliente_id'])){
         $clienteID = $_GET['cliente_id'];
@@ -87,6 +104,7 @@ if(($_GET)){
         return $total_valor_do_mes_receita_pdc;
     }
     }
+    
     
 }
     

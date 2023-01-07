@@ -173,6 +173,7 @@ $("#btn_d").click(function(e) {
     $('.bloco-principal .dados').css("display", "")
     $(".bloco-center-bottom").css("display","block")
     $(".bloco-center-top").css("height","250px")
+    $('.bloco-right-top').css("display", "block")
     $.ajax({
         type: 'GET',
         data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
@@ -237,6 +238,7 @@ $("#btn_r").click(function(e) {
     $('.bloco-principal .dados').css("display", "")
     $(".bloco-center-bottom").css("display","block")
     $(".bloco-center-top").css("height","250px")
+    $('.bloco-right-top').css("display", "block")
     $.ajax({
         type: 'GET',
         data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
@@ -302,7 +304,7 @@ $("#btn_c").click(function(e) {
     $('.bloco-principal .dados').slideDown(100)
     $('.bloco-principal .dados').css("display", "")
  
-
+    $('.bloco-right-top').css("display", "none")
     $.ajax({
         type: 'GET',
         data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
@@ -324,6 +326,17 @@ $("#btn_c").click(function(e) {
             return $(".bloco-left").html(result);
         },
     });
+    
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value,
+        url: "comparativo/bloco_right_bottom.php",
+        success: function(result) {
+            return $(".bloco-right-bottom").html(result);
+        },
+    });
+
     $(".bloco-center-bottom").css("display","none")
 })
 </script>

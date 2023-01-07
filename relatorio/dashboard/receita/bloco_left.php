@@ -30,8 +30,8 @@ include "../../../_incluir/funcoes.php";
                     <p class="sub_title"><?php echo $grupo; ?></p>
                     <p class="number"><?php echo real_format($valor); ?></p>
                 </div>
-                <div class="info-2">
-                    <p><?php echo real_percent($porcentagem);?></p>
+                <div id="cursor_pointer"  class="info-2">
+                    <p title="Porcentagem em relação a Receita total"><?php echo real_percent($porcentagem);?></p>
                 </div>
 
 

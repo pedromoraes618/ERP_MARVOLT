@@ -28,7 +28,10 @@ body{
 }
 
 
+#cursor_pointer{
+cursor: pointer;
 
+}
 .bloco-principal{
 
     width: 1400px;

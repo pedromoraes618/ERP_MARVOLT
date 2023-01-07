@@ -42,8 +42,19 @@ include("conexao/sessao.php");
 </body>
 <script src="jquery.js"></script>
 <script>
+$(document).ready(function(e) {
+    //se existe um localstorage, adicionar nome para o elemento lembrete
+    if (JSON.parse(localStorage.getItem("lembrete_add"))) {
+        document.getElementById("lembrete").style.display = "none";
+    }
+})
 $('#lembrete').click(function() {
+    var lembrete_add = "lembrete_add"
     document.getElementById("lembrete").style.display = "none";
+    localStorage.setItem("lembrete_add", JSON.stringify({
+        lembrete_add
+    }))
+
 });
 $(".bloco .bloco-4").mouseover(function(e) {
     e.preventDefault();
