@@ -40,7 +40,7 @@ $somatorio_grupo_receita = $linha['valor'];
 /*consultar top 5 de clientes agrupados */
 $select ="SELECT SUM(lcf.valor) as valor,lcf.clienteID,cl.nome_fantasia,gpcl.cl_id as id, gpcl.cl_descricao as grupo from lancamento_financeiro as lcf 
 inner join clientes as cl on cl.clienteID = lcf.clienteID inner join tb_grupo_cliente as gpcl on gpcl.cl_id= cl.grupo_cliente  where 
-lcf.receita_despesa = 'Receita' and lcf.status='Recebido' and gpcl.cl_id  != '7' and gpcl.cl_id != '0' and lcf.data_do_pagamento 
+lcf.receita_despesa = 'Receita' and lcf.status='Recebido' and lcf.data_do_pagamento 
 BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31' group by gpcl.cl_id order by valor desc limit 5";
 $consulta_clientes_por_receita_agrupados = mysqli_query($conecta,$select);
 
@@ -61,9 +61,9 @@ while($linha = mysqli_fetch_assoc($consulta_somatorio_cliente_receita)){
 
 
 /*consultar receita detalhada */
-$select = "SELECT SUM(lcf.valor) as valor,lcf.clienteID,cl.nome_fantasia as cliente, srd.subgrupo  as grupo, srd.subGrupoID as id_grupo from lancamento_financeiro as lcf inner join tb_subgrupo_receita_despesa as srd on srd.subGrupoID
+$select = "SELECT SUM(lcf.valor) as valor,lcf.clienteID,cl.nome_fantasia as cliente, srd.subgrupo  as grupo from lancamento_financeiro as lcf inner join tb_subgrupo_receita_despesa as srd on srd.subGrupoID
  = lcf.grupoID inner join clientes as cl on cl.clienteID = lcf.clienteID where 
-lcf.receita_despesa = 'Receita' and status='Recebido' and lcf.data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and lcf.grupoID != 22 and lcf.grupoID !=20  group by lcf.clienteID order by valor desc";
+lcf.receita_despesa = 'Receita' and status='Recebido' and lcf.data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31' group by lcf.clienteID order by valor desc";
 $consulta_receita_detalhada = mysqli_query($conecta,$select);
 
 /*consultar receita detalhada */

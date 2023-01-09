@@ -1,5 +1,5 @@
 <?php 
-include "../crud/receita.php";
+include "../crud/despesa.php";
 include "../../../_incluir/funcoes.php";
 ?>
 
@@ -8,11 +8,10 @@ include "../../../_incluir/funcoes.php";
     <div class="title">
         <h4>
             <?php 
-            if(isset($_GET['grupocliente'])){
-                $desc_grupo = $_GET['grupocliente'];
-                echo  "Receita entre meses - $desc_grupo ";
+            if(isset($_GET['grupo_despesa'])){
+                $desc_grupo = $_GET['grupo_despesa'];
+                echo  "Despesa entre meses - $desc_grupo ";
             }
-            
           ?>
 
         </h4>
@@ -44,15 +43,14 @@ include "../../../_incluir/funcoes.php";
                             while($i<=11){
                             $i = $i+ 1;
                             //verificar a quantidade de receita por mes 
-                            if(isset($_GET['id_grupo_cliente_bloco_center_bottom'])){
-                                $grupoID = $_GET['id_grupo_cliente_bloco_center_bottom'];
+                            if(isset($_GET['id_grupo_despesa_bloco_center_bottom'])){
+                                $grupoID = $_GET['id_grupo_despesa_bloco_center_bottom'];
                             }
                             // lcf.grupoID != 22  grupo de investimento de socio não entra na receita do dashboard
-                            $select = "SELECT sum(lcf.valor) as receita, grpc.cl_descricao from lancamento_financeiro as lcf inner join clientes as cl on cl.clienteID = lcf.clienteID inner join tb_grupo_cliente as grpc
-                            on grpc.cl_id = cl.grupo_cliente where lcf.grupoID != 22 and  lcf.receita_despesa = 'Receita' and lcf.status='Recebido' and lcf.data_do_pagamento between '$ano-$i-01' and '$ano-$i-31' and grpc.cl_id = '$grupoID' "; // GRUPO NOTA FISCAL RECEITA
+                            $select = "SELECT sum(valor) as despesa,grupoID from lancamento_financeiro  where receita_despesa = 'Despesa' and status='Pago' and data_do_pagamento between '$ano-$i-01' and '$ano-$i-31' and grupoID = '$grupoID'";
                             $consulta_valor_despesa_mes = mysqli_query($conecta,$select);
                             $linha = mysqli_fetch_assoc($consulta_valor_despesa_mes);
-                            $valor_do_mes  =   ($linha['receita']);
+                            $valor_do_mes  =   ($linha['despesa']);
                             $valorMultiplicado = $valor_do_mes;
                             $porcentagem = $valorMultiplicado /3000;
                             $porcentagem = real_percent_relatorio($porcentagem);
@@ -77,12 +75,11 @@ include "../../../_incluir/funcoes.php";
                                 $i = 0;
                                 while ($i <= 11) {
                                     $i = $i + 1;
-                                    $select ="SELECT sum(lcf.valor) as receita, grpc.cl_descricao from lancamento_financeiro as lcf inner join clientes as cl on cl.clienteID = lcf.clienteID inner join tb_grupo_cliente as grpc
-                                    on grpc.cl_id = cl.grupo_cliente where  lcf.receita_despesa = 'Receita' and lcf.status='Recebido' and lcf.data_do_pagamento between '$ano_anterior-$i-01' and '$ano_anterior-$i-31' and grpc.cl_id ='$grupoID'";
+                                    $select ="SELECT sum(valor) as despesa,grupoID from lancamento_financeiro  where receita_despesa = 'Despesa' and status='Pago' and data_do_pagamento between '$ano_anterior-$i-01' and '$ano_anterior-$i-31' and grupoID = '$grupoID'";
                                     $consulta_valor_despesa_mes_ano_anterior = mysqli_query($conecta, $select);
                                     $linha = mysqli_fetch_assoc(
                                     $consulta_valor_despesa_mes_ano_anterior);
-                                    $valor_do_mes_anterior = $linha['receita'];
+                                    $valor_do_mes_anterior = $linha['despesa'];
                                     $valorMultiplicado = $valor_do_mes_anterior;
                                     $porcentagem_anterior = $valorMultiplicado / 3000;
                                     $porcentagem_ano_anterior = real_percent_relatorio(

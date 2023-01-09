@@ -15,9 +15,9 @@ include "../../../_incluir/funcoes.php";
                 
                 $clinte = utf8_encode($linha['cliente']);
                 $grupo = utf8_encode($linha['grupo']);
-                $id_grupo = utf8_encode($linha['id_grupo']);
+             
               
-                if($id_grupo != 20 ){ // não incluir imprestimo em receita
+
                     $valor = $linha['valor'];
                     $valorMultiplicado = 100 * $valor;
                     $porcentagem = $valorMultiplicado / $somatorio_total_receita;
@@ -37,7 +37,7 @@ include "../../../_incluir/funcoes.php";
 
             </li>
             <?php
-            }
+            
         }
             ?>
 

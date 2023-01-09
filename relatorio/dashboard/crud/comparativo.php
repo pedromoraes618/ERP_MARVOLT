@@ -75,12 +75,40 @@ if(($_GET)){
 
 
     /*valor total receita */
-    $select = "SELECT sum(valor) as valor_total_receita from lancamento_financeiro where status = 'Pago' and  data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31'";
+    $select = "SELECT sum(valor) as valor_total_receita from lancamento_financeiro where status = 'Recebido' and  data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31'";
     $consultar_valor_total_receita =  mysqli_query($conecta,$select);
     $linha = mysqli_fetch_assoc($consultar_valor_total_receita);
     $valor_total_receita = $linha['valor_total_receita'];
 
     
+    
+//despesas dos ultimos 12 meses
+$select =" SELECT sum(valor) as valor_despesa from lancamento_financeiro where  status = 'Pago' and data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-01'"; 
+$consulta_despesa = mysqli_query($conecta,$select);
+$linha = mysqli_fetch_assoc($consulta_despesa);
+$valor_despesa = $linha['valor_despesa'];
+
+//receita dos ultimos 12 meses
+$select =" SELECT sum(valor) as valor_receita from lancamento_financeiro where status = 'Recebido' and data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31'";
+$consulta_despesa = mysqli_query($conecta,$select);
+$linha = mysqli_fetch_assoc($consulta_despesa);
+$valor_receita = $linha['valor_receita'];
+
+
+
+//receita total
+$select =" SELECT sum(valor) as receita_total  from lancamento_financeiro  where status = 'Recebido'";
+$consulta_despesa = mysqli_query($conecta,$select);
+$linha = mysqli_fetch_assoc($consulta_despesa);
+$receita_total = $linha['receita_total'];
+
+$saldo = $valor_receita - $valor_despesa;
+$lucratividade = ($saldo / $receita_total) *100;
+$lucratividade_real = ($saldo);
+
+
+
+
 
     if(isset($_GET['cliente_id'])){
         $clienteID = $_GET['cliente_id'];

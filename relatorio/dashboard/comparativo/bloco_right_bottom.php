@@ -39,9 +39,8 @@ include "../../../_incluir/funcoes.php";
             while($linha = mysqli_fetch_assoc($consulta_categoria_grupo_des)){ 
                 $categoria = utf8_encode($linha['grupo']);
                 $valor = $linha['totalPorGrupo'];
-    
                 echo    "'". $categoria ." ". real_format($valor) ."  /  %',"; 
-                }
+                }  echo    "'Lucro ". real_format($lucratividade_real)." /  %',"; 
                 ?>
             ];
             var myChart = new Chart(ctx, {
@@ -51,9 +50,9 @@ include "../../../_incluir/funcoes.php";
                     datasets: [{
                         backgroundColor: [
                             <?php 
-                            for($i = 0; $i<20; $i++){
+                            for($i = 0; $i<6; $i++){
                                 echo    "'".random_color()."',";
-                            }
+                            }echo    "'#8C1717',";
                             ?>
                         ],
 
@@ -61,13 +60,14 @@ include "../../../_incluir/funcoes.php";
                             <?php
             while($linha = mysqli_fetch_assoc($consulta_somatorio_grupo_des)){ 
                 $valor = $linha['totalPorGrupo'];
-
                 $valorMultiplicado = 100 * $valor;
                 $porcentagem = $valorMultiplicado / $valor_total_receita;
                 $porcentagem = real_percent_grafico($porcentagem);
                 echo "'".$porcentagem. "',";
                 
-                }?>
+                }echo real_percent_grafico($lucratividade);
+                
+                ?>
                         ],
                     }],
 

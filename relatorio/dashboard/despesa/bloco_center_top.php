@@ -25,7 +25,7 @@ include "../../../_incluir/funcoes.php";
             <li>
                 <div class="bloco-dados">
                     <div class="info">
-                        <div id_grupo="<?php echo $id_grupo;?>" class="info-1">
+                        <div id_grupo="<?php echo $id_grupo;?>" desc_grupo="<?php echo $categoria; ?>" class="info-1">
                             <p><?php echo $categoria; ?></p>
                         </div>
                         <div class="info-2">
@@ -64,6 +64,8 @@ $(".bloco-center-top nav ul li .info .info-1").click(function(e) {
     e.preventDefault();
 
     let id_grp = $(this).attr("id_grupo")
+    let desc_grupo = $(this).attr("desc_grupo")
+ 
     $.ajax({
         type: 'GET',
         data: "id_cliente_bloco_left=" + id_grp + "&filtroano=" + ano.value + "&filtromesini=" + mes_ini
@@ -71,6 +73,17 @@ $(".bloco-center-top nav ul li .info .info-1").click(function(e) {
         url: "despesa/bloco_left_detalhe_cliente.php",
         success: function(result) {
             return $(".bloco-left").html(result);
+        },
+    });
+
+    $.ajax({
+        type: 'GET',
+        data: "id_grupo_despesa_bloco_center_bottom=" + id_grp + "&filtroano=" + ano.value + "&filtromesini=" +
+            mes_ini
+            .value + "&filtromesfim=" + mes_fim.values + "&grupo_despesa=" + desc_grupo,
+        url: "despesa/bloco_center_bottom_detalhado_grupo.php",
+        success: function(result) {
+            return $(".bloco-center-bottom").html(result);
         },
     });
 })
