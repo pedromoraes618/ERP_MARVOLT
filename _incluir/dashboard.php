@@ -23,8 +23,8 @@ $select .= "where status = 'Recebido' and data_do_pagamento BETWEEN '$ano-01-01'
 $select .= "where status = 'Recebido' and data_do_pagamento BETWEEN '$ano_anterior-$mes-01' and '$ano-$mes-$dia'";
 }
 
-$consulta_despesa = mysqli_query($conecta,$select);
-$linha = mysqli_fetch_assoc($consulta_despesa);
+$consulta_receita = mysqli_query($conecta,$select);
+$linha = mysqli_fetch_assoc($consulta_receita);
 $valor_receita = $linha['valor_receita'];
 
 

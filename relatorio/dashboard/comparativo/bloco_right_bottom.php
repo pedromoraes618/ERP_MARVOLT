@@ -15,14 +15,14 @@ include "../../../_incluir/funcoes.php";
                 <canvas width="90" height="80" id="grafico_piizza"></canvas>
                 
             </div>
-            <div <?php 
+            <div title="Receita total"<?php 
             if($valor_total_receita > 1000000){
                 echo 'style="position:absolute;z-index: -1; right:80px;top: 155px;"';
             }else{
                 echo 'style="position:absolute; right:95px;top: 155px;"';
             }
             ?>  class="">
-                <p title="Receita total" style="font-size: 0.8em;"><?php echo real_format($valor_total_receita) ?></p>
+                <p  style="font-size: 0.8em;"><?php echo real_format($valor_total_receita) ?></p>
             </div>
             <?php
             // $select = "SELECT sum(nf.valor_total_nota) as totalPorCliente,gl.cl_descricao as cliente, cl.grupo_cliente as grupo_cliente_despesa 

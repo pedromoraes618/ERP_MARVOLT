@@ -83,15 +83,15 @@ if(($_GET)){
     
     
 //despesas dos ultimos 12 meses
-$select =" SELECT sum(valor) as valor_despesa from lancamento_financeiro where  status = 'Pago' and data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-01'"; 
+$select =" SELECT sum(valor) as valor_despesa from lancamento_financeiro where  status = 'Pago' and data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31'"; 
 $consulta_despesa = mysqli_query($conecta,$select);
 $linha = mysqli_fetch_assoc($consulta_despesa);
 $valor_despesa = $linha['valor_despesa'];
 
 //receita dos ultimos 12 meses
 $select =" SELECT sum(valor) as valor_receita from lancamento_financeiro where status = 'Recebido' and data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31'";
-$consulta_despesa = mysqli_query($conecta,$select);
-$linha = mysqli_fetch_assoc($consulta_despesa);
+$consulta_receita = mysqli_query($conecta,$select);
+$linha = mysqli_fetch_assoc($consulta_receita);
 $valor_receita = $linha['valor_receita'];
 
 
