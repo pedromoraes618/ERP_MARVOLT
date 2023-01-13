@@ -1,12 +1,12 @@
 <?php 
-include "../crud/receita.php";
+include "../crud/operacional_cotacao.php";
 include "../../../_incluir/funcoes.php";
 
 ?>
 
 <div class="relatorio-right-bottom">
     <div class="title">
-        <h4> Receita por Tipo</h4>
+        <h4> Valores por categoria Pdc</h4>
     </div>
     <div class="bloco">
         <div class="bloco-1">
@@ -22,10 +22,11 @@ include "../../../_incluir/funcoes.php";
             var dates = [
                 <?php 
                            $santos_brasil = 0;
-                        while( $linha = mysqli_fetch_assoc($consulta_valor_por_grupo_texto)){
-                            $grupo = utf8_encode($linha['grupo']);
-                            $valor_por_grupo = $linha['valor'];
-                            echo    "'". $grupo ." ". real_format($valor_por_grupo) ."  /  %',"; 
+                        while( $linha = mysqli_fetch_assoc($consulta_dados_descricao_categoria_pd)){
+                            $categoria = utf8_encode($linha['categoria']);
+                            $valor_venda = utf8_encode($linha['somavenda']);
+                         
+                            echo    "'". $categoria ." ". real_format($valor_venda) ."  /  %',"; 
                             }
                             
                         ?>
@@ -40,7 +41,7 @@ include "../../../_incluir/funcoes.php";
 
                         backgroundColor: [
                             <?php 
-                           while( $linha = mysqli_fetch_assoc($consulta_valor_por_grupo_cor)){
+                           while( $linha = mysqli_fetch_assoc($consulta_dados_cor_categoria_pd)){
                       
                     
                                 echo    "'".random_color()."',";
@@ -52,13 +53,13 @@ include "../../../_incluir/funcoes.php";
 
                             <?php
 
-                        while( $linha = mysqli_fetch_assoc($consulta_valor_por_grupo)){
+                        while($linha = mysqli_fetch_assoc($consulta_dados_categoria_pd)){
 
-                        $valor_por_grupo = $linha['valor'];
-                        $porcentagem_valor_grupo = ($valor_por_grupo / $somatorio_grupo_receita)*100;
-                        $porcentagem_valor_grupo = real_percent_grafico($porcentagem_valor_grupo);
+                        $valor_venda_por_categoria = $linha['somavenda'];
+                        $porcentagem_valor_categoria= ($valor_venda_por_categoria*100)/$valor_total_categoria;
+                        $porcentagem_valor_categoria= real_percent_grafico($porcentagem_valor_categoria);
 
-                        echo    "'".($porcentagem_valor_grupo) ."',"; 
+                        echo    "'".($porcentagem_valor_categoria) ."',"; 
 
                         }
                         ?>
@@ -70,9 +71,13 @@ include "../../../_incluir/funcoes.php";
                 options: {
                     elements: {
                         line: {
-                            tension: 0
+                            tension: 0,
+                         
                         }
-                    }, tooltips: {
+                        
+                    },
+
+                    tooltips: {
                         backgroundColor:'rgba(255, 255, 255, 1)',
                         bodyFontColor:'rgba(0, 0, 0, 1)',
                         titleFontColor:'rgba(0, 0, 0, 1)',
@@ -80,7 +85,7 @@ include "../../../_incluir/funcoes.php";
                         caretPadding:10,
                         xPadding:5,
                         yPadding:15,
-                      
+                         mode: 'index',
                          caretSize:10,
                          titleFontStyle:'bold',
                        
@@ -95,10 +100,11 @@ include "../../../_incluir/funcoes.php";
                           
                         // }
                     },
+               
                     scaleShowLabels: false,
                     legend: {
                         display: false,
-                        fontColor: 'rgb(255, 99, 132)'
+                        fontColor: 'rgb(245, 40, 145)',
                     },
 
                 }

@@ -16,6 +16,7 @@
     0% {
         transform: translateY(100px);
         opacity: 0;
+        
     }
 
     100% {
@@ -426,6 +427,7 @@ margin-bottom: 10px;
     border-radius: 5px;  
     overflow:auto; 
     margin-left: 15px;
+    overflow: hidden;
 }
 
 
@@ -561,7 +563,6 @@ margin-bottom: 10px;
     padding-left: 5px;
     margin-bottom: 10px;
 }
-
 
 
 /*RELATORIO BLOCO RELATORIO - > BLOCO LEFT*/
@@ -1293,3 +1294,69 @@ margin-bottom: 8px;
     margin: 0 auto;
     padding: 0px;
 }
+.bloco-right-footer .relatorio-right-footer .bloco .card_media{ 
+    
+    border: 1px solid #276597;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0px 5px 10px;
+    height:60px;
+    border-radius:10px;
+    -webkit-box-shadow: 0px 0px 2px 0px rgba(15,66,107,1);
+    -moz-box-shadow: 0px 0px 2px 0px rgba(15,66,107,1);
+    box-shadow: 0px 0px 2px 0px rgba(15,66,107,1);
+}   
+.bloco-right-footer .relatorio-right-footer .bloco .card_media .leg-1{
+    width: fit-content;
+
+    border-radius: 50%;
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(173,173,173,1);
+-moz-box-shadow: 0px 0px 5px 0px rgba(173,173,173,1);
+box-shadow: 0px 0px 5px 0px rgba(173,173,173,1);
+}
+.bloco-right-footer .relatorio-right-footer .bloco .card_media .leg-1 img{
+    width: 40px;
+}
+.bloco-right-footer .relatorio-right-footer .bloco .card_media  .info-card{
+
+    width: 100%;
+    padding: 20px;
+    padding-left: 14px;
+    padding-right:5px;
+
+   
+
+    
+}
+.bloco-right-footer .relatorio-right-footer .bloco .card_media  .info-card .cabecalho{
+    font-size: 0.8em;
+
+}
+.bloco-right-footer .relatorio-right-footer .bloco .card_media  .info-card p{
+    margin: 0px;
+    width: 100%;
+ 
+
+}
+
+.bloco::-webkit-scrollbar {
+	width: 10px;               /* width of the entire scrollbar */
+  }
+  
+.bloco::-webkit-scrollbar-track {
+	
+  }
+  
+.bloco::-webkit-scrollbar-thumb {
+	background-color: #072137;    /* color of the scroll thumb */
+	border-radius: 20px;       /* roundness of the scroll thumb */
+	border: 3px solid #051827;  /* creates padding around scroll thumb */
+  }
+
+
+
+

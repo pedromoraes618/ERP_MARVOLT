@@ -5,7 +5,7 @@ include "../../../_incluir/funcoes.php";
 
 <div class="relatorio_center_top">
     <div class="title">
-        <h4>Receita x Despesa x Lucro</h4>
+        <h4>Cotação Total x Ganha x Ganha Parcial</h4>
     </div>
     <!-- <div class="bloco-tipo">
         <button id="rb1">R1</button>
@@ -14,20 +14,20 @@ include "../../../_incluir/funcoes.php";
 
     <div class="bloco">
         <div class="legenda">
+            <div class="leg-1"><img src="../../images/total_cotacao.png">
+                <p>Total</p>
+            </div>
             <div class="leg-1"><img src="../../images/receita_relatorio.png">
-                <p>Receita</p>
+                <p>Ganha</p>
             </div>
-            <div class="leg-1"><img src="../../images/despesa_relatorio.png">
-                <p>Despesa</p>
-            </div>
-            <div class="leg-1"><img src="../../images/lucro.png">
-                <p>Lucro</p>
+            <div class="leg-1"><img src="../../images/cotacao_parcial.png">
+                <p>Ganha Parcial</p>
             </div>
         </div>
 
-        <div class="bloco-1" >
-            <div style="padding-top: 40px;">
-                <canvas width="750" height="300"  id="barchart"></canvas>
+        <div class="bloco-1">
+            <div>
+                <canvas width="750" height="150" id="barchart"></canvas>
             </div>
 
 
@@ -41,53 +41,49 @@ include "../../../_incluir/funcoes.php";
                 data: {
                     labels: meses,
                     datasets: [{
-                            type: 'line',
-                            label: 'Lucro R$',
-                            borderWidth: 3,
-                            borderColor: 'rgba(45, 0, 255, 1)',
-                            pointStyle: 'circle',
-                            fill: false,
 
+                            label: 'Total Cotação ',
+                            backgroundColor: 'rgba( 95, 158, 160, 1 )',
                             data: [
                                 <?php
                             $i = 0;
                             while($i<=11){
                             $i = $i+ 1;
                             //verificar a quantidade de receita por mes 
-                            echo       "'". (consular_receita_mes($i,$ano) - consular_despesa_mes($i,$ano))  ."',";
-                        }
+                            echo       "'". consultar_count_cotacao($i,$ano) ."',";
+                            }
                             ?>
                             ],
                         },
                         {
-
-                            label: 'Receita R$',
+                            label: 'Cotação Ganha ',
                             backgroundColor: 'rgba(20,148,71,1)',
                             data: [
                                 <?php
                             $i = 0;
                             while($i<=11){
                             $i = $i+ 1;
-                            //verificar a quantidade de receita por mes 
-                            echo       "'". consular_receita_mes($i,$ano) ."',";
+                            //verificar a quantidade de despesa por mes 
+                            echo       "'". (consultar_count_cotacao_ganha($i,$ano)) ."',";
                             }
                             ?>
                             ],
+
                         },
                         {
-                            label: 'Despesa R$',
-                            backgroundColor: 'rgba(173,16,16,1)',
+                            label: 'Cotação Ganha Parcial:',
+                            backgroundColor: 'rgba( 184, 134, 11, 1 )',
                             data: [
                                 <?php
                             $i = 0;
                             while($i<=11){
                             $i = $i+ 1;
                             //verificar a quantidade de despesa por mes 
-                            echo       "'". (consular_despesa_mes($i,$ano)) ."',";
+                            echo       "'". (consultar_count_cotacao_ganha_parcial($i,$ano)) ."',";
                             }
                             ?>
                             ],
-                          
+
                         },
                     ]
                 },
@@ -105,7 +101,7 @@ include "../../../_incluir/funcoes.php";
                         caretPadding:10,
                         xPadding:5,
                         yPadding:15,
-                      
+                       
                          caretSize:10,
                          titleFontStyle:'bold',
                        
@@ -129,12 +125,7 @@ include "../../../_incluir/funcoes.php";
                             locale: 'pt-BR',
 
                             ticks: {
-                                callback: (value, index, values) => {
-                                    return new Intl.NumberFormat('pt-br', {
-                                        style: 'currency',
-                                        currency: 'BRL',
-                                    }).format(value);
-                                },
+                              
                                 beginAtZero: true,
                                 fontColor: 'white' // aqui branco
                             },
@@ -144,7 +135,7 @@ include "../../../_incluir/funcoes.php";
                             locale: 'pt-BR',
                             categoryPercentage: 0.7,
                             barPercentage: 1.2,
-                            
+
                             ticks: {
                                 beginAtZero: true,
                                 fontColor: 'white' // aqui branco
@@ -165,4 +156,3 @@ include "../../../_incluir/funcoes.php";
 
 
 </div>
-

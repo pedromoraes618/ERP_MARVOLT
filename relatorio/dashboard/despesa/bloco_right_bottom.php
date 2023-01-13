@@ -92,6 +92,28 @@ include "../../../_incluir/funcoes.php";
                         line: {
                             tension: 0
                         }
+                    }, tooltips: {
+                        backgroundColor:'rgba(255, 255, 255, 1)',
+                        bodyFontColor:'rgba(0, 0, 0, 1)',
+                        titleFontColor:'rgba(0, 0, 0, 1)',
+                        titleFontSize:20,
+                        caretPadding:10,
+                        xPadding:5,
+                        yPadding:15,
+                      
+                         caretSize:10,
+                         titleFontStyle:'bold',
+                       
+                        
+                        // callbacks: {
+                        // title:function(chart){
+                        //     console.log(chart[0])
+                        // },
+                        //  afterBody:function(context){
+                        
+                        //  },
+                          
+                        // }
                     },
 
                     legend: {

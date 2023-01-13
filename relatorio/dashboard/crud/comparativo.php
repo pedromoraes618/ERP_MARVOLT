@@ -25,7 +25,9 @@ $mes_fim = $_GET['filtromesfim'];
 
 if(($_GET)){
     $array_valores_pd_compra = array();
-
+    $array_dados_despesa_top_5 = array();
+    $cont = 0;
+    $valor_outras_despesas = 0;
     /*funcao para retornar o valor por mes de despesa*/
     function consular_despesa_mes($i,$ano){
         include("../../../conexao/conexao.php"); 
@@ -69,9 +71,23 @@ if(($_GET)){
     from  lancamento_financeiro   inner join tb_subgrupo_receita_despesa
     on lancamento_financeiro.grupoID = tb_subgrupo_receita_despesa.subGrupoID
     inner join grupo_lancamento on  tb_subgrupo_receita_despesa.grupo = grupo_lancamento.grupo_lancamentoID
-    where lancamento_financeiro.status = 'Pago'  and lancamento_financeiro.data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31' group by tb_subgrupo_receita_despesa.subgrupo,grupo order by totalPorGrupo desc limit  6";
-    $consulta_somatorio_grupo_des = mysqli_query($conecta,$select);
-    $consulta_categoria_grupo_des = mysqli_query($conecta,$select);
+    where lancamento_financeiro.status = 'Pago'  and lancamento_financeiro.data_do_pagamento BETWEEN '$ano-$mes_ini-01' and '$ano-$mes_fim-31' group by tb_subgrupo_receita_despesa.subgrupo,grupo order by totalPorGrupo desc ";
+    $consulta_dados_grupo_des = mysqli_query($conecta,$select);
+    while($linha = mysqli_fetch_assoc($consulta_dados_grupo_des)){ 
+        $categoria = utf8_encode($linha['grupo']);
+        $valor = $linha['totalPorGrupo'];
+        if($cont <= 4){
+            array_push($array_dados_despesa_top_5,(
+            array("categoria"=>$categoria,"valor"=>$valor)
+            ));
+        }else{
+            $valor_outras_despesas = $valor + $valor_outras_despesas;
+        }
+        $cont ++;
+    }
+
+
+
 
 
     /*valor total receita */
@@ -106,9 +122,35 @@ $saldo = $valor_receita - $valor_despesa;
 $lucratividade = ($saldo / $receita_total) *100;
 $lucratividade_real = ($saldo);
 
+/*constular count total cotacao */
+function consultar_count_cotacao($i,$ano){
+    include("../../../conexao/conexao.php"); 
+    $select = "SELECT  count(*) as totalctccount from cotacao where data_envio between '$ano-$i-01' and '$ano-$i-31' ";
+    $consulta_total_cotacao_count= mysqli_query($conecta,$select);
+    $linha = mysqli_fetch_assoc($consulta_total_cotacao_count);
+    $total_cotacao_count  = $linha['totalctccount'];
+    return $total_cotacao_count;
+}
 
+/*constular count total ganha*/
+function consultar_count_cotacao_ganha($i,$ano){
+    include("../../../conexao/conexao.php"); 
+    $select = "SELECT  count(*) as totalctccount from cotacao where data_envio between '$ano-$i-01' and '$ano-$i-31' and status_proposta = '3' ";
+    $consulta_total_cotacao_ganha_count= mysqli_query($conecta,$select);
+    $linha = mysqli_fetch_assoc($consulta_total_cotacao_ganha_count);
+    $total_cotacao_ganha_count  = $linha['totalctccount'];
+    return $total_cotacao_ganha_count;
+}
 
-
+/*constular count total ganha parcial*/
+function consultar_count_cotacao_ganha_parcial($i,$ano){
+    include("../../../conexao/conexao.php"); 
+    $select = "SELECT  count(*) as totalctccount from cotacao where data_envio between '$ano-$i-01' and '$ano-$i-31' and status_proposta = '4' ";
+    $consulta_total_cotacao_ganha_parcial_count= mysqli_query($conecta,$select);
+    $linha = mysqli_fetch_assoc($consulta_total_cotacao_ganha_parcial_count);
+    $total_cotacao_ganha_parcial_count  = $linha['totalctccount'];
+    return $total_cotacao_ganha_parcial_count;
+}
 
     if(isset($_GET['cliente_id'])){
         $clienteID = $_GET['cliente_id'];

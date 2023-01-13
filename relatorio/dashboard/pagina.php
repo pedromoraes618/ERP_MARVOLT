@@ -36,7 +36,7 @@ include("include/mes.php");
                         <button id="btn_d" class="button">Despesa</button>
                         <button id="btn_r" class="button">Receita</button>
                         <button id="btn_c" class="button">Comparativo</button>
-                        <button id="btn_rs" class="button">Resumo</button>
+                        <button id="btn_o_ctc" class="button">Operacional</button>
                     </div>
 
                     <div class="filtro">
@@ -294,6 +294,7 @@ $("#btn_r").click(function(e) {
             return $(".bloco-right-footer").html(result);
         },
     });
+   
 })
 
 
@@ -338,6 +339,66 @@ $("#btn_c").click(function(e) {
     });
 
     $(".bloco-center-bottom").css("display","none")
+})
+
+
+
+$("#btn_o_ctc").click(function(e) {
+    e.preventDefault();
+
+    $('.bloco-principal .dados').fadeIn(500)
+    $('.bloco-principal .dados').slideDown(100)
+    $('.bloco-principal .dados').css("display", "")
+ 
+    $(".bloco-center-bottom").css("display","block")
+    $(".bloco-center-top").css("height","250px")
+    $('.bloco-right-bottom').css("display", "block")
+    $(".bloco-right-top").css("display","none")
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value,
+        url: "operacional_cotacao/bloco_left.php",
+        success: function(result) {
+            return $(".bloco-left").html(result);
+        },
+    });
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value,
+        url: "operacional_cotacao/bloco_center_bottom.php",
+        success: function(result) {
+            return $(".bloco-center-bottom").html(result);
+        },
+    });
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value,
+        url: "operacional_cotacao/bloco_center_top.php",
+        success: function(result) {
+            return $(".bloco-center-top").html(result);
+        },
+    });
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value,
+        url: "operacional_cotacao/bloco_right_bottom.php",
+        success: function(result) {
+            return $(".bloco-right-bottom").html(result);
+        },
+    });
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value,
+        url: "operacional_cotacao/bloco_right_footer.php",
+        success: function(result) {
+            return $(".bloco-right-footer").html(result);
+        },
+    });
 })
 </script>
 

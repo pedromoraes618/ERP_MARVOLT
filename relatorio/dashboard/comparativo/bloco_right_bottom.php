@@ -6,23 +6,26 @@ include "../../../_incluir/funcoes.php";
 
 <div class="relatorio-right-bottom">
     <div class="title">
-        <h4>Comparativo Despesa  </h4>
+        <h4>Comparativo Despesa</h4>
     </div>
     <div class="bloco">
         <div class="bloco-1">
+
+        
             <div class="grafico" style="width:200;height:150px">
-     
+
                 <canvas width="90" height="80" id="grafico_piizza"></canvas>
-                
+
             </div>
-            <div title="Receita total"<?php 
+            <div title="Receita total" <?php  
+        
             if($valor_total_receita > 1000000){
                 echo 'style="position:absolute;z-index: -1; right:80px;top: 155px;"';
             }else{
-                echo 'style="position:absolute; right:95px;top: 155px;"';
+                echo 'style="position:absolute;z-index: -1; right:95px;top: 155px;"';
             }
-            ?>  class="">
-                <p  style="font-size: 0.8em;"><?php echo real_format($valor_total_receita) ?></p>
+            ?> class="">
+                <p style="font-size: 0.8em;"><?php echo real_format($valor_total_receita) ?></p>
             </div>
             <?php
             // $select = "SELECT sum(nf.valor_total_nota) as totalPorCliente,gl.cl_descricao as cliente, cl.grupo_cliente as grupo_cliente_despesa 
@@ -36,11 +39,11 @@ include "../../../_incluir/funcoes.php";
             var ctx = document.getElementById("grafico_piizza").getContext('2d');
             var dates = [
                 <?php
-            while($linha = mysqli_fetch_assoc($consulta_categoria_grupo_des)){ 
-                $categoria = utf8_encode($linha['grupo']);
-                $valor = $linha['totalPorGrupo'];
-                echo    "'". $categoria ." ". real_format($valor) ."  /  %',"; 
-                }  echo    "'Lucro ". real_format($lucratividade_real)." /  %',"; 
+                    foreach($array_dados_despesa_top_5 as $linha){
+                    $categoria = $linha['categoria'];
+                    $valor = $linha['valor'];
+                     echo    "'". $categoria ." ". real_format($valor) ."  /  %',"; 
+                }   echo    "'Outros ". real_format($valor_outras_despesas)." /  %',"; echo    "'Lucro ". real_format($lucratividade_real)." /  %',";  
                 ?>
             ];
             var myChart = new Chart(ctx, {
@@ -50,22 +53,36 @@ include "../../../_incluir/funcoes.php";
                     datasets: [{
                         backgroundColor: [
                             <?php 
-                            for($i = 0; $i<6; $i++){
+                            for($i = 0; $i<5; $i++){
                                 echo    "'".random_color()."',";
-                            }echo    "'#8C1717',";
+                            }echo    "'#FFFF00',"."'#0000CD'";
                             ?>
                         ],
 
                         data: [
                             <?php
-            while($linha = mysqli_fetch_assoc($consulta_somatorio_grupo_des)){ 
-                $valor = $linha['totalPorGrupo'];
-                $valorMultiplicado = 100 * $valor;
-                $porcentagem = $valorMultiplicado / $valor_total_receita;
-                $porcentagem = real_percent_grafico($porcentagem);
-                echo "'".$porcentagem. "',";
-                
-                }echo real_percent_grafico($lucratividade);
+                $cont = 0;
+                foreach($array_dados_despesa_top_5 as $linha){
+                $cont = $cont + 1;
+                $categoria = $linha['categoria'];
+                $valor = $linha['valor'];
+
+                $valorMultiplicado_top_5 = 100 * $valor;
+                $porcentagem_top_5 = $valorMultiplicado_top_5 / $valor_total_receita;
+                $porcentagem_top_5 = real_percent_grafico($porcentagem_top_5);
+
+                $valorMultiplicado_lucro = 100 * $lucratividade_real;
+                $porcentagem_lucro = $valorMultiplicado_lucro / $valor_total_receita;
+                $porcentagem_lucro = real_percent_grafico($porcentagem_lucro);
+
+                $valorMultiplicado_outros = 100 * $valor_outras_despesas;
+                $porcentagem_outros = $valorMultiplicado_outros / $valor_total_receita;
+                $porcentagem_outros = real_percent_grafico($porcentagem_outros);
+
+
+                echo "'".$porcentagem_top_5. "',";
+                }echo "'".real_percent_grafico($porcentagem_outros). "',"."'".real_percent_grafico($porcentagem_lucro)."'";
+
                 
                 ?>
                         ],
@@ -81,6 +98,29 @@ include "../../../_incluir/funcoes.php";
                         line: {
                             tension: 0
                         }
+                    },
+                    tooltips: {
+                        backgroundColor:'rgba(255, 255, 255, 1)',
+                        bodyFontColor:'rgba(0, 0, 0, 1)',
+                        titleFontColor:'rgba(0, 0, 0, 1)',
+                        titleFontSize:20,
+                        caretPadding:10,
+                        xPadding:5,
+                        yPadding:15,
+                      
+                         caretSize:10,
+                         titleFontStyle:'bold',
+                       
+                        
+                        // callbacks: {
+                        // title:function(chart){
+                        //     console.log(chart[0])
+                        // },
+                        //  afterBody:function(context){
+                        
+                        //  },
+                          
+                        // }
                     },
 
                     legend: {

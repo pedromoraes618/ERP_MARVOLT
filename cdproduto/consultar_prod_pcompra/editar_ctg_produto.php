@@ -59,7 +59,7 @@ $lista_categoria = mysqli_query($conecta,$select);
                         <td style="width: 90px;" align=left><b>Descrição:</b></td>
 
                         <td align=left><input type="text" size=50 name="campoDescricao" id="campoDescricao"
-                                value="<?php echo $b_produto;  ?>">
+                                value="<?php echo utf8_encode($b_produto);  ?>">
                         </td>
 
                     </tr>
