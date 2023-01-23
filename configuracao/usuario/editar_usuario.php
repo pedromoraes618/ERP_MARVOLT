@@ -263,7 +263,7 @@ alertify.error("Usuário removido com sucesso");
                     <table style="float: left;">
                         <tr>
                             <td style="width: 90px;" align=left><b>Senha:</b></td>
-                            <td align=left><input type="text" size=20 name="campoSenha" id="campoSenha"
+                            <td align=left><input type="password" size=20 name="campoSenha" id="campoSenha"
                                     value="<?php echo $senhaB;?>"></td>
                         </tr>
                     </table>

@@ -37,6 +37,7 @@ include("include/mes.php");
                         <button id="btn_r" class="button">Receita</button>
                         <button id="btn_c" class="button">Comparativo</button>
                         <button id="btn_o_ctc" class="button">Operacional</button>
+                        <button id="btn_ftm" class="button">Faturamento</button>
                     </div>
 
                     <div class="filtro">
@@ -167,13 +168,20 @@ var ano = document.getElementById("ano")
 /*Despesa */
 $("#btn_d").click(function(e) {
     e.preventDefault();
+    $(this).addClass("btn_ativo");
+    $("#btn_r").removeClass("btn_ativo")
+    $("#btn_o_ctc").removeClass("btn_ativo")
+    $("#btn_ftm").removeClass("btn_ativo")
+    $("#btn_c").removeClass("btn_ativo")
 
+   
     $('.bloco-principal .dados').fadeIn(500)
     $('.bloco-principal .dados').slideDown(100)
     $('.bloco-principal .dados').css("display", "")
     $(".bloco-center-bottom").css("display","block")
     $(".bloco-center-top").css("height","250px")
     $('.bloco-right-top').css("display", "block")
+    $('.bloco-right-footer').css("display", "block")
     $.ajax({
         type: 'GET',
         data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
@@ -239,6 +247,13 @@ $("#btn_r").click(function(e) {
     $(".bloco-center-bottom").css("display","block")
     $(".bloco-center-top").css("height","250px")
     $('.bloco-right-top').css("display", "block")
+    $('.bloco-right-footer').css("display", "block")
+    $(this).addClass("btn_ativo");
+    $("#btn_d").removeClass("btn_ativo")
+    $("#btn_o_ctc").removeClass("btn_ativo")
+    $("#btn_ftm").removeClass("btn_ativo")
+    $("#btn_c").removeClass("btn_ativo")
+
     $.ajax({
         type: 'GET',
         data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
@@ -304,8 +319,15 @@ $("#btn_c").click(function(e) {
     $('.bloco-principal .dados').fadeIn(500)
     $('.bloco-principal .dados').slideDown(100)
     $('.bloco-principal .dados').css("display", "")
- 
+    $(".bloco-center-top").css("height","250px")
     $('.bloco-right-top').css("display", "none")
+    $('.bloco-right-bottom').css("display", "block")
+    $('.bloco-right-footer').css("display", "none")
+    $(this).addClass("btn_ativo");
+    $("#btn_r").removeClass("btn_ativo")
+    $("#btn_d").removeClass("btn_ativo")
+    $("#btn_o_ctc").removeClass("btn_ativo")
+    $("#btn_ftm").removeClass("btn_ativo")
     $.ajax({
         type: 'GET',
         data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
@@ -346,14 +368,22 @@ $("#btn_c").click(function(e) {
 $("#btn_o_ctc").click(function(e) {
     e.preventDefault();
 
+  
+
     $('.bloco-principal .dados').fadeIn(500)
     $('.bloco-principal .dados').slideDown(100)
     $('.bloco-principal .dados').css("display", "")
- 
     $(".bloco-center-bottom").css("display","block")
     $(".bloco-center-top").css("height","250px")
     $('.bloco-right-bottom').css("display", "block")
+    $('.bloco-right-footer').css("display", "block")
     $(".bloco-right-top").css("display","none")
+    
+    $(this).addClass("btn_ativo");
+    $("#btn_r").removeClass("btn_ativo")
+    $("#btn_d").removeClass("btn_ativo")
+    $("#btn_c").removeClass("btn_ativo")
+    $("#btn_ftm").removeClass("btn_ativo")
     $.ajax({
         type: 'GET',
         data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
@@ -400,6 +430,67 @@ $("#btn_o_ctc").click(function(e) {
         },
     });
 })
+
+
+$("#btn_ftm").click(function(e) {
+    e.preventDefault();
+
+    $('.bloco-principal .dados').fadeIn(500)
+    $('.bloco-principal .dados').slideDown(100)
+    $('.bloco-principal .dados').css("display", "")
+ 
+    $(".bloco-center-bottom").css("display","none")
+    $(".bloco-center-top").css("height","250px")
+    $('.bloco-right-bottom').css("display", "none")
+    $(".bloco-right-top").css("display","none")
+    $('.bloco-right-footer').css("display", "block")
+
+    $(this).addClass("btn_ativo");
+    $("#btn_r").removeClass("btn_ativo")
+    $("#btn_d").removeClass("btn_ativo")
+    $("#btn_o_ctc").removeClass("btn_ativo")
+    $("#btn_c").removeClass("btn_ativo")
+
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value,
+        url: "faturamento/bloco_left.php",
+        success: function(result) {
+            return $(".bloco-left").html(result);
+        },
+    });
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value,
+        url: "faturamento/bloco_center_top.php",
+        success: function(result) {
+            return $(".bloco-center-top").html(result);
+        },
+    });
+    $(".bloco-center-top").css("height","490px")
+    // $.ajax({
+    //     type: 'GET',
+    //     data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+    //         .value,
+    //     url: "faturamento/bloco_center_bottom.php",
+    //     success: function(result) {
+    //         return $(".bloco-center-bottom").html(result);
+    //     },
+    // });
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value,
+        url: "faturamento/bloco_right_top.php",
+        success: function(result) {
+            return $(".bloco-right-footer").html(result);
+        },
+    });
+})
+
+
 </script>
 
 

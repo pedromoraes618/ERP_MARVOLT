@@ -1,12 +1,12 @@
 <?php 
-include "../crud/receita.php";
+include "../crud/operacional_cotacao.php";
 include "../../../_incluir/funcoes.php";
 ?>
 
 <div class="relatorio_center_bottom">
 
     <div class="title">
-        <h4>Análise de variação de receita</h4>
+        <h4>Valor em Cotação- <?PHP ECHO $cliente; ?></h4>
     </div>
     <!-- <div class="bloco-tipo">
         <button id="rb1">R1</button>
@@ -24,11 +24,11 @@ include "../../../_incluir/funcoes.php";
 
         <div class="bloco-1">
             <div>
-                <canvas width="750" height="170" id="myChart"></canvas>
+                <canvas width="750" height="170" id="myChartCotacao"></canvas>
             </div>
 
             <script>
-            var ctx = document.getElementById("myChart").getContext('2d');
+            var ctx = document.getElementById("myChartCotacao").getContext('2d');
             var meses = ["Jan", "fev", "mar", "abr", "mai", "jun", 'jul', 'ago', 'set', 'out', 'nov', 'dez']
             var myChart = new Chart(ctx, {
                 type: 'line',
@@ -44,17 +44,13 @@ include "../../../_incluir/funcoes.php";
                             //verificar a quantidade de receita por mes 
                          
                             
-                            $select = "SELECT sum(lcf.valor) as receita, lcf.lancamentoFinanceiroID,cl.nome_fantasia,gpcl.cl_Id as grupo_cliente_id from lancamento_financeiro as lcf
-                            inner join clientes as cl on cl.clienteID = lcf.clienteID inner join tb_grupo_cliente as gpcl on gpcl.cl_id = cl.grupo_cliente  where  lcf.receita_despesa = 'Receita' and status='Recebido'  and lcf.data_do_pagamento BETWEEN '$ano-$i-01' and '$ano-$i-31'";
-                            $consulta_valor_despesa_mes = mysqli_query($conecta,$select);
-                            $linha = mysqli_fetch_assoc($consulta_valor_despesa_mes);
-                            $valor_do_mes  =   ($linha['receita']);
-                            $id  = $linha['lancamentoFinanceiroID'];
-                            $valorMultiplicado = $valor_do_mes;
-                            $porcentagem = $valorMultiplicado /3000;
-                            $porcentagem = real_percent_relatorio($porcentagem);
+                            $select = "SELECT sum(valorTotalComDesconto) as total from cotacao where data_envio between '$ano-$i-01' and '$ano-$i-31' and clienteID = '$clienteID'";
+                            $consulta_valor_cotacao_total = mysqli_query($conecta,$select);
+                            $linha = mysqli_fetch_assoc($consulta_valor_cotacao_total);
+                            $valor_cotacao_mes  =  ($linha['total']);
+                
 
-                            echo       "'". $valor_do_mes ."',";
+                            echo       "'". $valor_cotacao_mes ."',";
                             
                             }
                             ?>
@@ -72,18 +68,12 @@ include "../../../_incluir/funcoes.php";
                                 $i = 0;
                                 while ($i <= 11) {
                                     $i = $i + 1;
-                                    $select ="SELECT sum(lcf.valor) as receita, lcf.lancamentoFinanceiroID,cl.nome_fantasia,gpcl.cl_Id as grupo_cliente_id from lancamento_financeiro as lcf
-                                    inner join clientes as cl on cl.clienteID = lcf.clienteID inner join tb_grupo_cliente as gpcl on gpcl.cl_id = cl.grupo_cliente  where  lcf.receita_despesa = 'Receita' and status='Recebido'   and lcf.data_do_pagamento BETWEEN '$ano_anterior-$i-01' and '$ano_anterior-$i-31'";
-                                    $consulta_valor_despesa_mes_ano_anterior = mysqli_query($conecta, $select);
-                                    $linha = mysqli_fetch_assoc(
-                                    $consulta_valor_despesa_mes_ano_anterior);
-                                    $valor_do_mes_anterior = $linha['receita'];
-                                    $valorMultiplicado = $valor_do_mes_anterior;
-                                    $porcentagem_anterior = $valorMultiplicado / 3000;
-                                    $porcentagem_ano_anterior = real_percent_relatorio(
-                                        $porcentagem_anterior);
-
-                                    echo "'".$valor_do_mes_anterior."',";
+                                    $select ="SELECT sum(valorTotalComDesconto) as totalganho from cotacao where data_envio between '$ano_anterior-$i-01' and '$ano_anterior-$i-31' and clienteID = '$clienteID'";
+                                    $consulta_cotacao_ganho = mysqli_query($conecta, $select);
+                                    $linha = mysqli_fetch_assoc($consulta_cotacao_ganho);
+                                    $consulta_cotacao_ganho_total = $linha['totalganho'];
+                        
+                                    echo "'".$consulta_cotacao_ganho_total."',";
                                 } ?>
                             ],
                             borderColor: 'coral',
@@ -99,8 +89,7 @@ include "../../../_incluir/funcoes.php";
                         line: {
                             tension: 0
                         }
-                    },
-                    tooltips: {
+                    }, tooltips: {
                         backgroundColor:'rgba(255, 255, 255, 1)',
                         bodyFontColor:'rgba(0, 0, 0, 1)',
                         titleFontColor:'rgba(0, 0, 0, 1)',
@@ -124,6 +113,7 @@ include "../../../_incluir/funcoes.php";
                         // }
                     },
 
+
                     legend: {
                         display: false,
                         fontColor: 'rgb(255, 99, 132)'
@@ -134,11 +124,12 @@ include "../../../_incluir/funcoes.php";
                             display: true,
 
                             ticks: {
-                                callback:(value,index,values)=>{
-                                    return new Intl.NumberFormat('pt-br',{
-                                        style:'currency',
-                                        currency:'BRL',
-                                    }).format(value);},
+                                callback: (value, index, values) => {
+                                    return new Intl.NumberFormat('pt-br', {
+                                        style: 'currency',
+                                        currency: 'BRL',
+                                    }).format(value);
+                                },
                                 fontColor: 'white' // aqui branco
                             }
 
@@ -216,11 +207,11 @@ $("#rb2").click(function(e) {
 $('#ano_receita_meses').change(function() {
     var selectedValue = $(this).val();
 
-    
+
     $.ajax({
         type: 'GET',
         data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value+"&ano_filtro="+selectedValue,
+            .value + "&ano_filtro=" + selectedValue,
         url: "receita/bloco_center_bottom_ano_anterior.php",
         success: function(result) {
             return $(".relatorio_center_bottom .bloco").html(result);

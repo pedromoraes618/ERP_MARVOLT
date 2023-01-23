@@ -93,7 +93,7 @@ td{
 
 
 /*botão*/
-input[type="text"],input[type="email"]{
+input[type="text"],input[type="email"],input[type="password"]{
   margin-right: 20px;
   margin-bottom:9px;
   margin-top: 9px;
@@ -337,5 +337,19 @@ tr td input{
 
 .myFont{
   font-size:13px;
+
+}
+
+.bloco-input{
+ display: flex;
+ flex-wrap: wrap;
+justify-content: center;
+align-items: center;
+margin-top: 10px;
+
+
+}
+.bloco-input .group-input{
+  width: fit-content;
 
 }

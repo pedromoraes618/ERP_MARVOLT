@@ -5,7 +5,7 @@ include "../../../_incluir/funcoes.php";
 
 <div class="relatorio_center_top">
     <div class="title">
-        <h4>Receita x Despesa x Lucro</h4>
+    <h4>Análise de lucratividade</h4>
     </div>
     <!-- <div class="bloco-tipo">
         <button id="rb1">R1</button>

@@ -10,7 +10,7 @@ include "../../../_incluir/funcoes.php";
             <?php 
             if(isset($_GET['grupocliente'])){
                 $desc_grupo = $_GET['grupocliente'];
-                echo  "Receita entre meses - $desc_grupo ";
+                echo  "Análise de variação de receita - $desc_grupo ";
             }
             
           ?>

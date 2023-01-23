@@ -122,35 +122,7 @@ $saldo = $valor_receita - $valor_despesa;
 $lucratividade = ($saldo / $receita_total) *100;
 $lucratividade_real = ($saldo);
 
-/*constular count total cotacao */
-function consultar_count_cotacao($i,$ano){
-    include("../../../conexao/conexao.php"); 
-    $select = "SELECT  count(*) as totalctccount from cotacao where data_envio between '$ano-$i-01' and '$ano-$i-31' ";
-    $consulta_total_cotacao_count= mysqli_query($conecta,$select);
-    $linha = mysqli_fetch_assoc($consulta_total_cotacao_count);
-    $total_cotacao_count  = $linha['totalctccount'];
-    return $total_cotacao_count;
-}
 
-/*constular count total ganha*/
-function consultar_count_cotacao_ganha($i,$ano){
-    include("../../../conexao/conexao.php"); 
-    $select = "SELECT  count(*) as totalctccount from cotacao where data_envio between '$ano-$i-01' and '$ano-$i-31' and status_proposta = '3' ";
-    $consulta_total_cotacao_ganha_count= mysqli_query($conecta,$select);
-    $linha = mysqli_fetch_assoc($consulta_total_cotacao_ganha_count);
-    $total_cotacao_ganha_count  = $linha['totalctccount'];
-    return $total_cotacao_ganha_count;
-}
-
-/*constular count total ganha parcial*/
-function consultar_count_cotacao_ganha_parcial($i,$ano){
-    include("../../../conexao/conexao.php"); 
-    $select = "SELECT  count(*) as totalctccount from cotacao where data_envio between '$ano-$i-01' and '$ano-$i-31' and status_proposta = '4' ";
-    $consulta_total_cotacao_ganha_parcial_count= mysqli_query($conecta,$select);
-    $linha = mysqli_fetch_assoc($consulta_total_cotacao_ganha_parcial_count);
-    $total_cotacao_ganha_parcial_count  = $linha['totalctccount'];
-    return $total_cotacao_ganha_parcial_count;
-}
 
     if(isset($_GET['cliente_id'])){
         $clienteID = $_GET['cliente_id'];

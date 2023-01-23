@@ -37,7 +37,7 @@ if(isset($_GET['deletar'])){
 
 
 if(isset($_POST['enviar_formulario'])){
-    $formatosPermitidos = array("png","jpeg","jpg","pdf","gif","xml");
+    $formatosPermitidos = array("png","jpeg","jpg","pdf","gif","xml","PNG");
     $extensao = pathinfo($_FILES['arquivo']['name'],PATHINFO_EXTENSION);
 
     if(in_array($extensao,$formatosPermitidos)){
@@ -46,7 +46,8 @@ if(isset($_POST['enviar_formulario'])){
         $nome = ($_FILES['arquivo']['name']);
 
         if(move_uploaded_file($temporario,$pasta.$nome)){
-            //incliur no banco de dados          anexarArquivoNfe($nome,$codigo,$pasta);
+            //incliur no banco de dados         
+             anexarArquivoNfe($nome,$codigo,$pasta);
             ?>
 <script>
 alertify.sucess("Uplop efetuado com sucesso");

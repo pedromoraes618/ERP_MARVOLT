@@ -14,7 +14,10 @@
     $valor  = number_format($valor,2,".","");
     return  $valor;
 }
-
+function valor_k($valor) {
+  $valor  = number_format($valor,4,".","");
+  return  $valor;
+}
 
 function valor_qtd($valor) {
   $valor  = number_format($valor,0,"","");
@@ -78,6 +81,18 @@ function real_percent_grafico($valor) {
       return $value;
     
    }
+
+   function formatardataB2($value){
+    if($value == "0000-00-00"){
+      return "";
+    }else{
+      $value = date("d/m/Y",strtotime($value));
+      return $value;
+    }
+   
+  
+  }
+
    function formatDateB($value)
 {
     if (($value != "") and ($value != "0000-00-00")) {

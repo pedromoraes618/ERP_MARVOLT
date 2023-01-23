@@ -35,14 +35,16 @@ if ($_SESSION["user_portal"]) {
             <img src="../../../marvolt/images/marvolt.png">
             <ul>
                 <li><a href="../../../marvolt/index.php">Home</a></li>
-
+                <?php if ($nivel !=  6) { ?>
                 <li> <a
                         onclick="window.open('../../../marvolt/lembrete/lembrete.php', 
         'Titulo da Janela', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1500, HEIGHT=900');">Lembrete
 
                     </a>
                 </li>
-
+                <?php
+                }
+                ?>
                 <?php if ($nivel == 2 or $nivel == 4 or $nivel ==  5) { ?>
 
                 <li><a>Cliente<i class="fa-solid fa-arrow-down"></i></a>
@@ -54,6 +56,7 @@ if ($_SESSION["user_portal"]) {
                 }
                 ?>
 
+                <?php if ($nivel !=  6) { ?>
                 <li><a>Produto<i class="fa-solid fa-arrow-down"></i></a>
                     <ul>
                         <li><a href="../../../marvolt/cdproduto/consulta_produto.php">Produto</a></li>
@@ -66,7 +69,7 @@ if ($_SESSION["user_portal"]) {
 
                     </ul>
                 </li>
-
+                <?php } ?>
                 <?php if ($nivel == 2 or $nivel == 4 or $nivel ==  5) { ?>
                 <li><a>Cotação<i class="fa-solid fa-arrow-down"></i></a>
                     <ul>
@@ -76,7 +79,7 @@ if ($_SESSION["user_portal"]) {
                     </ul>
                 </li>
                 <?php } ?>
-
+                <?php if ($nivel !=  6) { ?>
                 <li><a>Pedido de compra<i class="fa-solid fa-arrow-down"></i></a>
                     <ul>
                         <?php if ($nivel == 2 or $nivel == 4 or $nivel ==  5) { ?>
@@ -87,7 +90,8 @@ if ($_SESSION["user_portal"]) {
                     </ul>
 
                 </li>
-                <?php if ($nivel == 2 or $nivel == 4 or $nivel ==  5) { ?>
+                <?php } ?>
+                <?php if ($nivel == 2 or $nivel == 4 or $nivel ==  5 or $nivel == 6) { ?>
                 <li><a>Nota fiscal<i class="fa-solid fa-arrow-down"></i></a>
                     <ul>
                         <li><a href="../../../marvolt/nota_fiscal/consulta_nota_fiscal.php">NFE - Entrada</a></li>
@@ -99,7 +103,7 @@ if ($_SESSION["user_portal"]) {
                 </li>
                 <?php } ?>
 
-                <?php if ($nivel == 2 or $nivel == 4 or $nivel ==  5) { ?>
+                <?php if ($nivel == 2 or $nivel == 4 or $nivel ==  5 or $nivel == 6) { ?>
                 <li><a>Financeiro<i class="fa-solid fa-arrow-down"></i></a>
                     <ul>
                         <li><a href="../../../marvolt/financeiro/consulta_financeiro.php">Lançar no Financeiro</a></li>
@@ -111,7 +115,7 @@ if ($_SESSION["user_portal"]) {
 
                 <?php }
                 ?>
-                <?php if ($nivel == 4 or $nivel ==  5) { ?>
+                <?php if ($nivel == 4 or $nivel ==  5 or $nivel ==6) { ?>
 
                 <li><a>Relatório<i class="fa-solid fa-arrow-down"></i></a>
                     <ul>
@@ -128,6 +132,14 @@ if ($_SESSION["user_portal"]) {
                 <li><a>Patrimônio<i class="fa-solid fa-arrow-down"></i></a>
                     <ul>
                         <li><a href="../../../marvolt/patrimonio/consulta_patrimonio.php">Consultar</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li><a>Documento<i class="fa-solid fa-arrow-down"></i></a>
+                    <ul>
+                        <li><a href="../../../marvolt/documento/consulta_doc.php">Gerênciar certificado</a>
                         </li>
 
                     </ul>

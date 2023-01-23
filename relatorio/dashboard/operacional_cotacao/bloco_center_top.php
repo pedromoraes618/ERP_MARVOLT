@@ -1,11 +1,11 @@
 <?php 
-include "../crud/comparativo.php";
+include "../crud/operacional_cotacao.php";
 include "../../../_incluir/funcoes.php";
 ?>
 
 <div class="relatorio_center_top">
     <div class="title">
-        <h4>Cotação Total x Ganha x Ganha Parcial</h4>
+        <h4>Volume de Cotação</h4>
     </div>
     <!-- <div class="bloco-tipo">
         <button id="rb1">R1</button>
@@ -104,17 +104,7 @@ include "../../../_incluir/funcoes.php";
                        
                          caretSize:10,
                          titleFontStyle:'bold',
-                       
-                        
-                        // callbacks: {
-                        // title:function(chart){
-                        //     console.log(chart[0])
-                        // },
-                        //  afterBody:function(context){
-                        
-                        //  },
-                          
-                        // }
+            
                     },
                     legend: {
                         display: false,
@@ -123,9 +113,7 @@ include "../../../_incluir/funcoes.php";
                     scales: {
                         yAxes: [{
                             locale: 'pt-BR',
-
                             ticks: {
-                              
                                 beginAtZero: true,
                                 fontColor: 'white' // aqui branco
                             },

@@ -4,7 +4,7 @@ include "../../../_incluir/funcoes.php";
 ?>
 <div class="relatorio">
     <div class="title">
-        <h4>Receita & Despesa Detalhada</h4>
+        <h4>Demonstração financeira detalhada</h4>
     </div>
     <nav>
         <ul>
@@ -28,10 +28,10 @@ include "../../../_incluir/funcoes.php";
             <li id_cliente=<?php echo $cliente_id; ?> cliente_nome=<?php echo $cliente; ?> style="cursor: pointer;">
                 <div class="info">
                     <p><?php echo $cliente; ?></p>
-                    <p class="sub_title"><i style="margin-right:5px;color: rgb(173,16,16);"
+                    <p title="valor despesa" class="sub_title"><i style="margin-right:5px;color: rgb(173,16,16);"
                             class="fa-solid fa-money-check-dollar"></i><?php echo real_format($valor_total_compra); ?>
                     </p>
-                    <p class="number"> <i style="color: rgb(20,148,71);" class="fa-solid fa-sack-dollar"></i>
+                    <p title="Valor Receita" class="number"> <i style="color: rgb(20,148,71);" class="fa-solid fa-sack-dollar"></i>
                         <?php echo real_format($valor_total_venda); ?></p>
                 </div>
                 <div class="info-2">

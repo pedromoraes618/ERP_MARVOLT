@@ -2,7 +2,7 @@
     <ul>
 
         <li>
-        Cx - Despesa
+            Cx - Despesa
         </li>
 
     </ul>
@@ -16,13 +16,16 @@
                        
                         ?>
             <td>
-                <p>D.Pagamento</p>
+                <p>Dt.Pagamento</p>
             </td>
             <td>
                 <p>Documento</p>
             </td>
             <td>
                 <p>Empresa</p>
+            </td>
+            <td>
+                <p>Sub Grupo</p>
             </td>
             <td>
                 <p>Forma Pgto</p>
@@ -70,11 +73,17 @@
                     <font size="2"><?php echo utf8_encode($clienteL)?></font>
                 </p>
             </td>
+            <td style="width:200px;">
+
+                <p>
+                    <font size="2"><?php echo utf8_encode($subGrupo)?></font>
+                </p>
+            </td>
 
             <td style="width:200px;">
 
                 <p>
-                    <font size="2"><?php echo utf8_encode($formaPagamento)?></font>
+                    <font size="2"><?php echo ($formaPagamento)?></font>
                 </p>
             </td>
             <td style="width:100px;">
@@ -98,6 +107,9 @@
                 <p>Valor</p>
             </td>
 
+            <td>
+                <p></p>
+            </td>
             <td>
                 <p></p>
             </td>

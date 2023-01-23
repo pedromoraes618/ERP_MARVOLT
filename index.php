@@ -23,7 +23,7 @@ include("conexao/sessao.php");
 
     <main>
         <?php
-        if($nivel == 4 or $nivel ==  5){
+        if($nivel == 4 or $nivel ==  5 or $nivel == 6){
          include("_incluir/dashboard.php");
         }
          ?>

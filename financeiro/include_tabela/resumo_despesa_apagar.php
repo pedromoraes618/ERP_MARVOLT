@@ -2,7 +2,7 @@
     <ul>
 
         <li>
-        Cx - Despesa
+            Cx - Despesa
         </li>
 
     </ul>
@@ -16,13 +16,16 @@
                        
                         ?>
             <td>
-                <p>D.Vencimento</p>
+                <p>Dt. Vencimento</p>
             </td>
             <td>
                 <p>Documento</p>
             </td>
             <td>
                 <p>Empresa</p>
+            </td>
+            <td>
+                <p>Sub Grupo</p>
             </td>
             <td>
                 <p>Forma Pgto</p>
@@ -42,7 +45,7 @@
                     $valorReceita = $linha_pesquisa['valor'];
                     $subGrupo = ($linha_pesquisa["subgrupo"]);
                     $grupo = utf8_encode($linha_pesquisa["grupo"]);
-                    $formaPagamento = utf8_encode($linha_pesquisa['nome']);
+                    $formaPagamento = ($linha_pesquisa['nome']);
                     $documentoL = $linha_pesquisa["documento"];
                     $receite_despesa = $linha_pesquisa["receita_despesa"];
                     $lancamentoID = $linha_pesquisa["lancamentoFinanceiroID"];
@@ -74,6 +77,12 @@
             <td style="width:200px;">
 
                 <p>
+                    <font size="2"><?php echo utf8_encode($subGrupo)?></font>
+                </p>
+            </td>
+            <td style="width:200px;">
+
+                <p>
                     <font size="2"><?php echo utf8_encode($formaPagamento)?></font>
                 </p>
             </td>
@@ -98,6 +107,9 @@
                 <p>Valor</p>
             </td>
 
+            <td>
+                <p></p>
+            </td>
             <td>
                 <p></p>
             </td>

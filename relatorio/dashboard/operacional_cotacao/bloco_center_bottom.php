@@ -6,7 +6,7 @@ include "../../../_incluir/funcoes.php";
 <div class="relatorio_center_bottom">
 
     <div class="title">
-        <h4>Total cotação</h4>
+        <h4>Valor em Cotação</h4>
     </div>
     <!-- <div class="bloco-tipo">
         <button id="rb1">R1</button>
