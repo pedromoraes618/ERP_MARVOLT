@@ -65,27 +65,26 @@ die("Falha no banco de dados");
 
 if(isset($_POST['btnremover'])){
    //query para remover o cliente no banco de dados
-   $remover = "DELETE FROM tb_nfe_entrada WHERE numero_nf = '$numero_nf' ";
-
+     $remover = "DELETE FROM tb_nfe_entrada WHERE numero_nf = '$numero_nf' ";
      $operacao_remover = mysqli_query($conecta, $remover);
      if(!$operacao_remover) {
          die("Erro na tabela || tb_nfe_entrada");   
      } else {
+        //ao deletar a nota fiscal o provisionamento tmb é removido
+    $select = "DELETE FROM  lancamento_financeiro WHERE numeroNotaFiscal = '$numero_nf' and modalidade = 'NFE_ENTRADA'";
+    $remover_provisionamento = mysqli_query($conecta,$select);
+    if(!$remover_provisionamento){
+        die("Falha no banco de dados || select no financeiro");
+    }
+        
         ?>
 <script>
-alertify.error("Nota fiscal Removida com sucesso");
+alertify.error("Nota fiscal e o seu provisionamento removido com sucesso");
 </script>
 <?php
-         //header("location:listagem.php"); 
+        
           
      }
-     $remover = "DELETE FROM tb_nfe_entrada_item WHERE numero_nf = '$numero_nf' ";
-
-     $operacao_remover = mysqli_query($conecta, $remover);
-     if(!$operacao_remover) {
-         die("Erro na tabela || tb_nfe_entrada_item");   
-     }
-   
    }
 
 ?>
@@ -127,7 +126,7 @@ alertify.error("Nota fiscal Removida com sucesso");
 
                     <form action="" method="post">
                         <td><input id="remover" type="submit" name="btnremover" value="Remover" class="btn btn-danger"
-                                onClick="return confirm('Deseja remover esse lembrete?');"></input></td>
+                                onClick="return confirm('Deseja remover essa nota fiscal? Lembrando o provisionamento também será removido do financeiro');"></input></td>
                         <td align=left> <button type="button" name="btnfechar" onclick="fechar();"
                                 class="btn btn-secondary">Voltar</button>
                         </td>

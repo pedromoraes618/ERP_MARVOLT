@@ -389,7 +389,7 @@ if(isset($_GET["CampoPesquisa"])){
 
                         <td>
                             <font size="2"> <?php
-                        if($nivel != 5 ){
+                        if($nivel != 5 and $nivel != 6 ){
                             if($subGrupoID == 18 ){
                                 echo "Confidencial";
                             }else{

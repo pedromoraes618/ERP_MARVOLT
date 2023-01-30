@@ -30,14 +30,14 @@ $detalhe = mysqli_query($conecta, $select);
         die("Erro no banco de dados ");
         }else{
             $dados_detalhe = mysqli_fetch_assoc($detalhe);
-            $categoriaID=  utf8_encode($dados_detalhe['categoriaID']);
-            $categoria =  utf8_encode($dados_detalhe['nome_categoria']);
+            $categoriaID=  ($dados_detalhe['categoriaID']);
+            $categoria =   ($dados_detalhe['nome_categoria']);
         }
         
 
 //salvar no banco de dados
 if(isset($_POST['salvar'])){
-    $categoria = $_POST['txtCategoria'];
+    $categoria = ($_POST['txtCategoria']);
 
     if($categoria == "" ){
         ?>
@@ -131,7 +131,7 @@ alertify.error("Categoria removida com sucesso");
                             <div style="margin-left: 120px;margin-top:10px">
                                 <input type="submit" name=salvar value="Alterar" class="btn btn-info btn-sm"></input>
 
-                                <button type="button" onclick="fechar();" class="btn btn-secondary">Voltar</button>
+                                <button type="button"     onclick="window.opener.location.reload();fechar();" class="btn btn-secondary">Voltar</button>
 
                                 <input id="remover" type="submit" name="btnremover" value="Remover"
                                     class="btn btn-danger"

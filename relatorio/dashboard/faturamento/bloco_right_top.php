@@ -60,6 +60,13 @@ include "../../../_incluir/funcoes.php";
         <div class="card_media">
             <div class="leg-1"><img src="../../images/total_cotacao.png"></div>
             <Div class="info-card">
+                <p class="cabecalho">Desconto valor orçado</p>
+                <p><?php echo real_format($valor_desconto_total); ?> </p>
+            </Div>
+        </div>
+        <div class="card_media">
+            <div class="leg-1"><img src="../../images/total_cotacao.png"></div>
+            <Div class="info-card">
                 <p class="cabecalho">Média desconto Vlr Orçado e fechado</p>
                 <p><?php echo real_format($media_desconto_orcado); ?> </p>
             </Div>
@@ -76,6 +83,7 @@ include "../../../_incluir/funcoes.php";
     $(".relatorio-right-top .bloco-dados .info").mouseover(function(e) {
         e.preventDefault();
         let id_tipo = $(this).attr("id_tipo")
+        
 
         $(".relatorio-right-top .bloco-dados  #" + id_tipo).css("display", "block")
     })

@@ -9,6 +9,7 @@ $hoje = date('Y-d-m');
 if (isset($_GET["codigo"])){
     $codProduto=$_GET["codigo"];
 }
+
 //deckara as varuaveus
 if(isset($_POST['btnremover'])){
  
@@ -381,8 +382,9 @@ if(!$operacao_select){
             <table style="float:left;">
                 <tr>
                     <div>
+                    
                         <td align=left style="width:70px;"><b>Und:</b></td>
-                        <td align=left><input type="text" size=10 name="campoUnidade" id="campoUnidade"
+                        <td align=left><input <?php if(isset($_GET['servico'])){ echo 'readonly'; }?> type="text" size=10 name="campoUnidade" id="campoUnidade"
                                 autocomplete="off" value="<?php echo $unidade; ?>">
                         </td>
                         <td align=left><b>Qtd:</b></td>
@@ -409,19 +411,18 @@ if(!$operacao_select){
                                 <?php  
                    
                         while($linha  = mysqli_fetch_assoc($lista_categoria)){
-                            $categoriaPrincipal_produto = utf8_encode($linha["categoriaID"]);
+                            $categoriaPrincipal_produto = ($linha["categoriaID"]);
                             if($categoria_prodB==$categoriaPrincipal_produto){
-                            ?> <option value="<?php echo utf8_encode($linha["categoriaID"]);?>"
+                            ?> <option value="<?php echo ($linha["categoriaID"]);?>"
                                     selected>
-                                    <?php echo utf8_encode($linha["nome_categoria"]);?>
+                                    <?php echo ($linha["nome_categoria"]);?>
                                 </option>
-
                                 <?php
              }else{
     
    ?>
-                                <option value="<?php echo utf8_encode($linha["categoriaID"]);?>">
-                                    <?php echo utf8_encode($linha["nome_categoria"]);?>
+                                <option value="<?php echo ($linha["categoriaID"]);?>">
+                                    <?php echo ($linha["nome_categoria"]);?>
                                 </option>
                                 <?php
 

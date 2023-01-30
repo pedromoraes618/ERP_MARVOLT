@@ -72,7 +72,7 @@ while($row_cliente = mysqli_fetch_assoc($dados_cliente)){
 
 
 //consultar cotacao pelo codigo cotação
-$consulta = "SELECT cotacao.data_lancamento,cotacao.data_envio,cotacao.numero_orcamento, cotacao.cod_cotacao, cotacao.numero_solicitacao, cotacao.validade, cotacao.prazo_entrega,cotacao.valorTotal,cotacao.desconto, cotacao.valorTotalComDesconto, forma_pagamento.nome as formapagamento,forma_pagamento.nome,frete.descricao as frete from forma_pagamento inner join cotacao on cotacao.forma_pagamentoID = forma_pagamento.formapagamentoID inner join  frete on cotacao.freteID = frete.freteID ";
+$consulta = "SELECT cotacao.data_lancamento,cotacao.observacao,cotacao.data_envio,cotacao.numero_orcamento, cotacao.cod_cotacao, cotacao.numero_solicitacao, cotacao.validade, cotacao.prazo_entrega,cotacao.valorTotal,cotacao.desconto, cotacao.valorTotalComDesconto, forma_pagamento.nome as formapagamento,forma_pagamento.nome,frete.descricao as frete from forma_pagamento inner join cotacao on cotacao.forma_pagamentoID = forma_pagamento.formapagamentoID inner join  frete on cotacao.freteID = frete.freteID ";
 $codCotacaoB =  $_GET["codigo"];
 $consulta .= " WHERE cod_cotacao = {$codCotacaoB}";  
 $dados_cotacao= mysqli_query($conecta, $consulta);
@@ -88,7 +88,7 @@ while($row_cotacao = mysqli_fetch_assoc($dados_cotacao)){
     $prazoEntregaB = $row_cotacao['prazo_entrega'];
     $cliente = $row_cotacao['clienteID'];
     $valor = $row_cotacao['valorTotal'];
-    
+    $observacao = $row_cotacao['observacao'];
     $desconto = $row_cotacao['desconto'];
     $totalComDesconto = $row_cotacao['valorTotalComDesconto'];
     
@@ -122,7 +122,7 @@ $html .="<tr><td align=left><font size=3>E-MAIL:" . $email . " CONTATO:".$telefo
 $html .="<tr><td align=left><font size=3>SITE: " . $site ."</font></td></tr>";
 $html .= "</table>";
 $html .= "<p>";
-$html .= "<p align=center><b>ORÇAMENTO DE MATERIAIS Nº ".$numeroOrcamentoB ."</b><p>";
+$html .= "<p align=center><b>ORÇAMENTO Nº ".$numeroOrcamentoB ."</b><p>";
 $html .= "<p>";
 
 //dados cotacao
@@ -214,11 +214,7 @@ $html .="<td align=left><font size=2>".$textoCotacao."</font></td>";
 $html .="</tr>";
 $html .= "</table>";
 
-$html .= "<table>";
-$html .="<tr>";
-$html .="<td></td>";
-$html .="</tr>";
-$html .= "</table>";
+
 
 if($desconto!=0){
 $html .= "<table width=100%  ";
@@ -229,6 +225,19 @@ $html .="</tr>";
 $html .= "</table>";
 }
 
+
+if($observacao !=""){
+$html .="<div  style='margin-top:30px'>";
+$html .= "<table width=50%>";
+$html .="<tr>";
+$html .="<td><font size=2><b>OBS:</b></font></td>";
+$html .="</tr>";
+$html .="<tr>";
+$html .="<td >$observacao</td>";
+$html .="</tr>";
+$html .= "</table>";
+$html .="</div>";
+}
 
 if($totalDeProdutosComImg != 0){
 $html .="<div class='page-break'></div>";
@@ -259,7 +268,9 @@ $html .="</div>";
 $html .="</div>";
 
 }
+
 }
+
 }
 $date = date('d/m/Y');
 
@@ -285,4 +296,3 @@ file_put_contents("cotacao.pdf", $output);
 // redirecionamos o usuário para o download do arquivo
 die("<script>location.href='minuta.pdf';</script>");
 ?>
-

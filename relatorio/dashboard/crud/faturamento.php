@@ -118,6 +118,26 @@ $mes_fim = $_GET['filtromesfim'];
     return $valor_total_nota_fiscal;
     }
     
+    function consultar_quantidade_nfes_total($ano){
+        include("../../../conexao/conexao.php"); 
+        $select = "SELECT count(*) as qtdnfes from  
+        tb_nfe_saida where status_processamento = '1' and data_emissao between '$ano-01-01' and '$ano-12-31'";
+        $consultar_quantidade_nfe_saida = mysqli_query($conecta,$select);
+        $linha = mysqli_fetch_assoc($consultar_quantidade_nfe_saida);
+        $quantidade_nfe_saida = $linha['qtdnfes'];
+
+        //valor total nfs saida
+        $select = "SELECT count(*) as qtdnfss from tb_nfs where dt_emissao between '$ano-01-01' and '$ano-12-31' ";
+        $consultar_valor_total_nfs_saida = mysqli_query($conecta,$select);
+        $linha = mysqli_fetch_assoc($consultar_valor_total_nfs_saida);
+        $quantidade_nota_nfs_saida = $linha['qtdnfss'];
+        $quantidade_nota_fiscal_saida = $quantidade_nfe_saida + $quantidade_nota_nfs_saida;
+        return $quantidade_nota_fiscal_saida;
+
+        
+        
+    }
+
     function consultar_quantidade_nfes($i,$ano){
         include("../../../conexao/conexao.php"); 
         $select = "SELECT count(*) as qtdnfes from  
@@ -135,7 +155,9 @@ $mes_fim = $_GET['filtromesfim'];
         return $quantidade_nota_fiscal_saida;
 
         
+        
     }
+
 
 
     if(isset($_GET['cliente_id'])){
@@ -154,6 +176,8 @@ $mes_fim = $_GET['filtromesfim'];
         $valor_total_nfe_saida_cliente = $linha['valor_total'];
         return $valor_total_nfe_saida_cliente;
     }
+         
+
 
         
     }
@@ -181,6 +205,56 @@ $mes_fim = $_GET['filtromesfim'];
             $quantidade_nfe_entrada = $linha['qtdnfes'];
             return $quantidade_nfe_entrada;
         }
+
+
+
+    //nome fantasia cliiente
+    $select = "SELECT * from clientes where cpfcnpj = '$clientecnpj'";
+    $consultar_cliente = mysqli_query($conecta,$select);
+    $linha = mysqli_fetch_assoc($consultar_cliente);
+    $nome_fantasia=  utf8_encode($linha['nome_fantasia']);
+
+    //media faturamento cliente
+    //valor total nfs saida
+    $select = "SELECT sum(vLiquido_servico) AS valor_total, count(*) as qtdnfss from tb_nfs where dt_emissao between '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and cnpj_tomador = '$clientecnpj' ";
+    $consultar_valor_total_nfs_saida = mysqli_query($conecta,$select);
+    $linha = mysqli_fetch_assoc($consultar_valor_total_nfs_saida);
+    $valor_total_nfs_saida= $linha['valor_total'];
+    $quantidade_nfs_saida = $linha['qtdnfss'];
+    //valor total nfe saida
+    $select = "SELECT sum(valor_total_nota) as valor_total_nfe_saida,count(*) as qtdnfes  from tb_nfe_saida where status_processamento = '1' and data_emissao between '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and cnpj_cpf = '$clientecnpj' ";
+    $consultar_valor_total_nfe_saida = mysqli_query($conecta,$select);
+    $linha = mysqli_fetch_assoc($consultar_valor_total_nfe_saida);
+    $valor_total_nfe_saida = $linha['valor_total_nfe_saida'];
+    $quantidade_nfe_saida = $linha['qtdnfes'];
+
+    $valor_soma_media_faturamento = $valor_total_nfe_saida + $valor_total_nfs_saida;
+    $media_faturamento = $valor_soma_media_faturamento / 12;
+    $quantidade_nfs_nfe = $quantidade_nfs_saida + $quantidade_nfe_saida;
+
+    //sabe o ticket medio por data
+    $ticket_medio = $valor_soma_media_faturamento/$quantidade_nfs_nfe;
+
+     //margem 
+     $select ="SELECT sum(nfes.valor_total_nota) as valorVenda, sum(pdc.valor_total_compra) as valorCompra from tb_nfe_saida as nfes inner join pedido_compra as pdc 
+     on pdc.numero_nf = nfes.numero_nf where nfes.status_processamento = '1' and nfes.data_emissao between '$ano-$mes_ini-01' and '$ano-$mes_fim-31'and nfes.cnpj_cpf = '$clientecnpj'";
+     $consulta_valor_margem = mysqli_query($conecta,$select);
+     $linha = mysqli_fetch_assoc($consulta_valor_margem);
+     $valor_total_venda = $linha['valorVenda'];
+     $valor_total_compra= $linha['valorCompra'];
+     
+     $margem_total = ((($valor_total_venda - $valor_total_compra)/$valor_total_venda)*100);
+
+      //calulcar a media de desconto orcamento
+        //valor total nfs saida
+        $select = "SELECT sum(ctc.valorTotal-ctc.valorTotalComDesconto) as valorDesconto,count(*) as qtdOrcamento from cotacao as ctc inner join clientes AS clt on clt.clienteID = ctc.clienteiD  where ctc.data_fechamento between '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and clt.cpfcnpj = '$clientecnpj' ";
+        $consultar_valor_total_nfs_saida = mysqli_query($conecta,$select);
+        $linha = mysqli_fetch_assoc($consultar_valor_total_nfs_saida);
+        $valor_desconto_total= $linha['valorDesconto'];
+        $quantidade_orcamento = $linha['qtdOrcamento'];
+        
+        $media_desconto_orcado = $valor_desconto_total / $quantidade_orcamento;
+
     }
 
 

@@ -37,14 +37,14 @@ include "../../../_incluir/funcoes.php";
                             borderColor: 'rgba(45, 0, 255, 1)',
                             pointStyle: 'circle',
                             fill: false,
-
+                     
                             data: [
                                 <?php
                             $i = 0;
                             while($i<=11){
                             $i = $i+ 1;
                             //verificar a quantidade de receita por mes 
-                            echo       "'". (consultar_faturamento_nfes_cliente($i,$ano,$clienteid))   ."',";
+                            echo       "'". (consultar_faturamento_nfes_cliente($i,$ano,$clienteid)*0.001)   ."',";
                         }
                             ?>
 
@@ -103,11 +103,9 @@ include "../../../_incluir/funcoes.php";
 
 
                             ticks: {
+                                stepSize:10,
                                 callback: (value, index, values) => {
-                                    return new Intl.NumberFormat('pt-br', {
-                                        style: 'currency',
-                                        currency: 'BRL',
-                                    }).format(value);
+                                   return "R$ "+ value + " K"
                                 },
                                 beginAtZero: true,
                                 fontColor: 'white' // aqui branco

@@ -7,9 +7,6 @@ include "../../_incluir/funcoes.php";
 <table border="0" cellspacing="0" width="100%" class="tabela_pesquisa">
     <tbody>
         <tr id="cabecalho_pesquisa_consulta">
-            <td  style="width: 70px;">
-                <p>Código</p>
-            </td>
 
             <td>
                 <p>Data de lançamento</p>
@@ -21,9 +18,12 @@ include "../../_incluir/funcoes.php";
             <td style="width: 500px;">
                 <p>Descrição</p>
             </td>
-          
+
             <td>
                 <p>Doc</p>
+            </td>
+            <td>
+                <p></p>
             </td>
             <td>
                 <p></p>
@@ -38,26 +38,32 @@ include "../../_incluir/funcoes.php";
            
             ?>
         <tr id="linha_pesquisa">
-            <td>
-                <font size="3"><?php echo $id_certificado; ?> </font>
-            </td>
+
             <td>
                 <p><?php echo formatardataB2($data_lancamento_b); ?></p>
             </td>
             <td>
                 <p><?php echo formatardataB2($data_expirar_b); ?></p>
             </td>
-            <td >
+            <td>
                 <p><?php echo ($descricao_b); ?></p>
             </td>
 
-            <td >
+            <td>
                 <a target="blank" href="<?php echo $diretorio?>">
                     <i class="fa-regular fa-folder-open"></i>
                 </a>
             </td>
             <td>
-                <button type="button" style="background-color: red;" id="remover_certificado"
+                <a
+                    onclick="window.open('editar_arquivo.php?codigo=<?php echo $id_certificado;?>', 
+'Editar_cotacao', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1600, HEIGHT=900');">
+
+                    <button type="button" style="background-color: DARKORANGE;" name="editar">Editar</button>
+                </a>
+            </td>
+            <td>
+                <button type="button"  style="background-color: red;" id="remover_certificado"
                     id_certificado="<?php echo $id_certificado ?>" class="btn btn-danger">Remover</button>
             </td>
             <!-- <td id="botaoEditar">
@@ -75,7 +81,8 @@ include "../../_incluir/funcoes.php";
 <script src="../jquery.js"></script>
 
 <script>
-$('td button').click(function(e) {
+$('td #remover_certificado').click(function(e) {
+ 
     var id_certificado = $(this).attr("id_certificado");
 
     Swal.fire({

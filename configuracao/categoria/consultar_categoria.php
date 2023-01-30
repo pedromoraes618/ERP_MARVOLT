@@ -90,7 +90,7 @@ if(!$resultado){
                 if(isset($_GET["pesquisa"])){
                     while($linha = mysqli_fetch_assoc($resultado)){
                         $categoriaID = $linha["categoriaID"];
-                        $categoria = utf8_encode($linha["nome_categoria"]);
+                        $categoria = ($linha["nome_categoria"]);
                       
 
                         

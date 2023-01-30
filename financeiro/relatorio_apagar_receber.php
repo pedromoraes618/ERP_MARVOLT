@@ -35,13 +35,13 @@ if (isset($_GET["apagar"]) or (isset($_GET["areceber"]))) {
     $select = "SELECT  clientes.nome_fantasia,DATEDIFF(CURRENT_DATE(),lancamento_financeiro.data_a_pagar) as atraso,lancamento_financeiro.data_do_pagamento,lancamento_financeiro.grupoID as subgrupoID,  forma_pagamento.nome,lancamento_financeiro.descricao,grupo_lancamento.nome  as grupo, lancamento_financeiro.lancamentoFinanceiroID, tb_subgrupo_receita_despesa.subgrupo, tb_subgrupo_receita_despesa.subgrupo, lancamento_financeiro.data_movimento,  lancamento_financeiro.documento,lancamento_financeiro.lancamentoFinanceiroID,  lancamento_financeiro.data_a_pagar, lancamento_financeiro.status,lancamento_financeiro.valor,lancamento_financeiro.documento,  lancamento_financeiro.receita_despesa from  clientes  inner join lancamento_financeiro on lancamento_financeiro.clienteID = clientes.clienteID inner join tb_subgrupo_receita_despesa on lancamento_financeiro.grupoID = tb_subgrupo_receita_despesa.subGrupoID inner join forma_pagamento on lancamento_financeiro.forma_pagamentoID = forma_pagamento.formapagamentoID inner join grupo_lancamento on  tb_subgrupo_receita_despesa.grupo = grupo_lancamento.grupo_lancamentoID ";
     $pesquisa = $_GET["CampoPesquisa"];
     if (isset($_GET["apagar"])) {
-        $select  .= " WHERE data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and lancamento_financeiro.status = 'A Pagar' ";
+        $select  .= " WHERE data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and lancamento_financeiro.status = 'A Pagar' order by data_a_pagar asc ";
     } elseif (isset($_GET["areceber"])) {
-        $select  .= " WHERE data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'A Receber' ";
+        $select  .= " WHERE data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'A Receber' order by data_a_pagar asc ";
     } elseif (isset($_GET["pagas"])) {
-        $select  .= " WHERE data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'Pago' ";
+        $select  .= " WHERE data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'Pago' order by data_a_pagar asc ";
     } elseif (isset($_GET["recebidas"])) {
-        $select  .= " WHERE data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'Recebido' ";
+        $select  .= " WHERE data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'Recebido' order by data_a_pagar asc ";
     }
     //consultar cliente
     $lista_pesquisa = mysqli_query($conecta, $select);
@@ -69,9 +69,9 @@ if ((isset($_GET["recebidas"])) or (isset($_GET["pagas"]))) {
     $pesquisa = $_GET["CampoPesquisa"];
 
     if (isset($_GET["pagas"])) {
-        $select  .= " WHERE data_do_pagamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'Pago' ";
+        $select  .= " WHERE data_do_pagamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'Pago' order by data_do_pagamento asc ";
     } elseif (isset($_GET["recebidas"])) {
-        $select  .= " WHERE data_do_pagamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'Recebido' ";
+        $select  .= " WHERE data_do_pagamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and  lancamento_financeiro.status = 'Recebido' order by data_do_pagamento asc ";
     }
     $lista_pesquisa = mysqli_query($conecta, $select);
 }

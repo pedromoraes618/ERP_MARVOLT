@@ -102,11 +102,91 @@ alertify.alert("Unidade do produto não foi informado");
 
                  } else{
                     $_SESSION['last_request']  = $request;
+
 //inserir o produto
   $inserir_produto = "INSERT INTO produto_cotacao";
   $inserir_produto .= "(cotacaoID, numero_orcamento, descricao,quantidade,preco_compra,preco_venda,margem,unidade,status,categoria_produto,prazo)";
   $inserir_produto .= " VALUES ";
   $inserir_produto .= "('$codCotacao','$numeroOrcamento','$nomeProduto','$qtdProduto','$precoCompra', '$precoVenda', '$margem','$unidade','1','$categoria_prod','$prazo' )";
+  $operacao_inserir_produto = mysqli_query($conecta, $inserir_produto);
+
+    $nomeProduto = "";
+    $qtdProduto = "";
+    $precoCompra = "";
+    $precoVenda = "";
+    $margem = "";
+    $unidade = "";
+
+  if(!$operacao_inserir_produto){
+      die("Falaha no banco de dados || inserir produto cotacao");
+          }
+        }
+      } 
+    }
+}
+
+//inserir o produto com a condição
+if(isset($_POST['servico']))
+{
+
+        if($nomeProduto==""){
+            ?>
+<script>
+alertify.alert("Favor informe a descrição do produto");
+</script>
+<?php 
+        
+        }elseif($precoVenda==""){
+            ?>
+<script>
+alertify.alert("Preço de venda do produto não foi informado");
+</script>
+<?php 
+        }elseif($precoCompra==""){
+            ?>
+<script>
+alertify.alert("Preço cotado não foi informado");
+</script>
+<?php 
+        }elseif($qtdProduto==""){
+            ?>
+<script>
+alertify.alert("Quantidade do produto não foi informado");
+</script>
+<?php 
+        }else{
+            if( $_SERVER['REQUEST_METHOD']=='POST' )
+            {
+                $request = md5( implode( $_POST ) );
+                
+                
+                if( isset( $_SESSION['last_request'] ) && $_SESSION['last_request']== $request )
+                {
+                    $nomeProduto = "";
+                    $qtdProduto = "";
+                    $precoCompra = "";
+                    $precoVenda = "";
+                    $margem = "";
+                    $unidade = "";
+
+                 } else{
+                $_SESSION['last_request']  = $request;
+                        //buscar o id da categoria para serviço
+                $select = "SELECT * FROM tb_parametros where parametroID = '4' ";
+                $consultar_parametro = mysqli_query($conecta, $select);
+                if(!$consultar_parametro){
+                die("Falaha no banco de dados");
+                }else{
+                $linha = mysqli_fetch_assoc($consultar_parametro);
+                $cod_parametro_4 = $linha['valor'];
+                }
+
+                $sevico = utf8_decode('Serviço');
+//inserir o produto
+  $inserir_produto = "INSERT INTO produto_cotacao";
+  $inserir_produto .= "(cotacaoID, numero_orcamento, descricao,quantidade,preco_compra,preco_venda,margem,unidade,status,categoria_produto,prazo)";
+  $inserir_produto .= " VALUES ";
+  $inserir_produto .= "('$codCotacao','$numeroOrcamento','$nomeProduto ($sevico)','$qtdProduto','$precoCompra', '$precoVenda', '$margem','SE','1','$cod_parametro_4','$prazo' )";
   $operacao_inserir_produto = mysqli_query($conecta, $inserir_produto);
 
     $nomeProduto = "";
@@ -469,7 +549,7 @@ die("Falaha no banco de dados");
 }
 
 //consultar os produto da cotação, codição de clicar no botao adicionar
-if((isset($_POST['adicionar'])) or (isset($_POST['fecharPesquisa']))  or (isset($_POST['gerar_pedido'])) or (isset($_GET['cotacaoCod']))) {
+if((isset($_POST['adicionar']))  or (isset($_POST['servico'])) or (isset($_POST['servico']))or (isset($_POST['fecharPesquisa']))  or (isset($_POST['gerar_pedido'])) or (isset($_GET['cotacaoCod']))) {
 
     $selectProdutoCotacao =  " SELECT * from produto_cotacao where cotacaoID = '$codCotacao'";
     $lista_Produto_cotacao= mysqli_query($conecta, $selectProdutoCotacao);
@@ -543,7 +623,7 @@ if(isset($_POST['pesquisar'])) {
 }
 
 //soma dos produos
-if((isset($_POST['adicionar'])) or (isset($_POST['fecharPesquisa']))or (isset($_POST['salvar'])) or (isset($_POST['pesquisar'])) or (isset($_POST['gerar_pedido'])) or (!isset($_POST['inicar']))) {
+if((isset($_POST['adicionar']))  or (isset($_POST['servico'])) or (isset($_POST['servico']))or (isset($_POST['fecharPesquisa']))or (isset($_POST['salvar'])) or (isset($_POST['pesquisar'])) or (isset($_POST['gerar_pedido'])) or (!isset($_POST['inicar']))) {
     $selectProdutoCotacaoTotal =  " SELECT sum(preco_venda*quantidade) as soma, sum(preco_compra*quantidade) as somaCompra from produto_cotacao where cotacaoID = '$codCotacao'";
     $lista_Produto_cotacao_total= mysqli_query($conecta, $selectProdutoCotacaoTotal);
     if(!$lista_Produto_cotacao_total){
@@ -1212,7 +1292,7 @@ die("Erro no banco de dados || adicionar o produto pedido de compra no banco de 
                 <tr>
                     <td align=left><b>Produto:</b></td>
                     <td align=left><input style="margin-right:5px;" type="text" size=60 name="campoNomeProduto"
-                            value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($nomeProduto);}?>">
+                            value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($nomeProduto);}?>">
                     </td>
                     <td><button style="border:0px;  background-color:white;" id="buttonPesquisa" name="pesquisar"><i
                                 class="fa-solid fa-magnifying-glass"></i></button></td>
@@ -1221,6 +1301,11 @@ die("Erro no banco de dados || adicionar o produto pedido de compra no banco de 
 
                     <td align=left><input type="submit" onclick="calculavalordesconto()" name="adicionar"
                             class="btn btn-success" value="Adicionar">
+
+                    <td align=left>
+                        <input type="submit" style="margin-right: 50px;"
+                            onclick="calculavalordesconto();calculavalormargemGeral();" name="servico"
+                            class="btn btn-info" value="Serviço">
                     </td>
 
                     <td align=left><b>Categoria prod:</b></td>
@@ -1230,28 +1315,28 @@ die("Erro no banco de dados || adicionar o produto pedido de compra no banco de 
                                     
 
                                     while($linha  = mysqli_fetch_assoc($lista_categoria)){
-                                        $categoriaPrincipal_produto = utf8_encode($linha["categoriaID"]);
+                                        $categoriaPrincipal_produto = ($linha["categoriaID"]);
                                     if(!isset($categoria_prod)){
                                     
                                     ?>
-                            <option value="<?php echo utf8_encode($linha["categoriaID"]);?>">
-                                <?php echo utf8_encode($linha["nome_categoria"]);?>
+                            <option value="<?php echo ($linha["categoriaID"]);?>">
+                                <?php echo ($linha["nome_categoria"]);?>
                             </option>
                             <?php
    
                                     }else{
 
                                         if($categoria_prod == $categoriaPrincipal_produto){
-                                        ?> <option value="<?php echo utf8_encode($linha["categoriaID"]);?>" selected>
-                                <?php echo utf8_encode($linha["nome_categoria"]);?>
+                                        ?> <option value="<?php echo ($linha["categoriaID"]);?>" selected>
+                                <?php echo ($linha["nome_categoria"]);?>
                             </option>
 
                             <?php
                                             }else{
                                     
                                 ?>
-                            <option value="<?php echo utf8_encode($linha["categoriaID"]);?>">
-                                <?php echo utf8_encode($linha["nome_categoria"]);?>
+                            <option value="<?php echo ($linha["categoriaID"]);?>">
+                                <?php echo ($linha["nome_categoria"]);?>
                             </option>
                             <?php
 
@@ -1277,36 +1362,36 @@ die("Erro no banco de dados || adicionar o produto pedido de compra no banco de 
                         <td align=left style="width:70px;"><b>Und:</b></td>
                         <td align=left><input type="text" size=10 name="campoUnidade" id="campoUnidade"
                                 autocomplete="off"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($unidade);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($unidade);}?>">
                         </td>
                         <td align=left><b>Quantidade:</b></td>
                         <td align=left><input type="text" size=10 onkeypress="return onlynumber();"
                                 name="campoQtdProduto" id="campoQtdProduto" onblur="calculavalormargem()"
                                 autocomplete="off"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($qtdProduto);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($qtdProduto);}?>">
                         </td>
                         <td align=left><b>Preço cotado:</b></td>
                         <td align=left><input type="text" size=10 onkeypress="return onlynumber();"
                                 name="campoPrecoCotado" id="campoPrecoCotado" onblur="calculavalormargem()"
                                 autocomplete="off"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($precoCompra);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($precoCompra);}?>">
                         </td>
                         <td align=left><b>Margem:</b></td>
                         <td align=left><input type="text" size=10 onkeypress="return onlynumber();" name="campoMargem"
                                 id="campoMargem" onblur="calculavalorPrecoVenda()" autocomplete="off"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($margem);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($margem);}?>">
                         </td>
                         <td align=left><b>Preço venda:</b></td>
                         <td align=left><input type="text" size=10 onkeypress="return onlynumber();"
                                 name="campoPrecoVenda" id="campoPrecoVenda" onblur="calculavalormargem()"
                                 autocomplete="off"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($precoVenda);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($precoVenda);}?>">
                         </td>
 
                         <td align=left><b>Prazo:</b></td>
                         <td align=left><input type="text" size=10 name="campoPrazo" id="campoPrazo"
                                 onblur="calculavalormargem()" autocomplete="off" onkeypress="return onlynumber();"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($prazo);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($prazo);}?>">
                         </td>
 
 
@@ -1326,11 +1411,23 @@ die("Erro no banco de dados || adicionar o produto pedido de compra no banco de 
                 <table style="float:left; margin-bottom: 20px;">
                     <tr>
 
-                        <td align=left><input type="submit" style="margin-right:120px ;"
-                                onclick="calculavalordesconto()" name="fecharPesquisa" class="btn btn-danger"
-                                value="Atualizar">
+                        <td align=left><input type="submit" onclick="calculavalordesconto()" name="fecharPesquisa"
+                                class="btn btn-danger" value="Atualizar">
                         </td>
 
+                        <!-- adicionar observacao na cotacao -->
+                        <td align=left>
+                            <a
+                                onclick="window.open('obscotacao.php?cotacaoCod=<?php echo $codCotacaoB;?>', 'popuppageSelecionarProduto',
+                                                    'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1500, HEIGHT=500');">
+
+                                <button type="button" style="margin-right:120px ;" onclick="calculavalordesconto()"
+                                    name="fecharPesquisa" class="btn btn-warning" value="Observação">Observação</button>
+
+                            </a>
+
+
+                        </td>
                         <td align=left style="width:100px; "><b>Desconto:</b></td>
                         <td align=right><input type="text" size=10 name="campoDesconto" id="campoDesconto"
                                 onblur="calculavalordesconto();calculavalormargemGeral();" autocomplete="off" value="<?php
@@ -1345,7 +1442,7 @@ die("Erro no banco de dados || adicionar o produto pedido de compra no banco de 
                         <td align=right><input readonly type="text" size=10 name="campoValorTotal" id="campoValorTotal"
                                 autocomplete="off" value="<?php 
             
-                            if((isset($_POST['adicionar'])) or (isset($_POST['salvar'])) or (isset($_POST['fecharPesquisa']))or (isset($_POST['pesquisar']))){
+                            if((isset($_POST['adicionar']))  or (isset($_POST['servico']))or (isset($_POST['salvar'])) or (isset($_POST['fecharPesquisa']))or (isset($_POST['pesquisar']))){
                                 echo $valorTotalComDesconto;
                                 }else{
                                     echo $valorComDescontoB;
@@ -1357,12 +1454,12 @@ die("Erro no banco de dados || adicionar o produto pedido de compra no banco de 
 
                         <td align=right><input type="hidden" size=10 name="campoValorTotalHidden"
                                 id="campoValorTotalHidden" autocomplete="off" value="<?php 
-                           if((isset($_POST['adicionar'])) or (isset($_POST['salvar'])) or (!isset($_POST['iniciar']))or (isset($_POST['fecharPesquisa']))or (isset($_POST['pesquisar']))){
+                           if((isset($_POST['adicionar']))  or (isset($_POST['servico']))or (isset($_POST['salvar'])) or (!isset($_POST['iniciar']))or (isset($_POST['fecharPesquisa']))or (isset($_POST['pesquisar']))){
                                 echo ($somaTotal);}
                        ?>"></td>
 
                         <td><input type="hidden" size=5 id="txtValorMargem" name="txtValorMargem" value="<?php
-                if((isset($_POST['adicionar'])) or (isset($_POST['salvar'])) or (isset($_POST['fecharPesquisa']))or (isset($_POST['pesquisar']))){
+                if((isset($_POST['adicionar']))  or (isset($_POST['servico']))or (isset($_POST['salvar'])) or (isset($_POST['fecharPesquisa']))or (isset($_POST['pesquisar']))){
                  echo $margemGeral;
                                     } else{
                                         echo $margemGeralB;
@@ -1502,7 +1599,7 @@ while($linha = mysqli_fetch_assoc($lista_Produto_cotacao)){
 
 
                         <a
-                            onclick="window.open('editar_produto_cotacao.php?codigo=<?php echo $linha['produto_cotacao'];?>&cod_produto=<?php echo $linha['cod_produto'];?>', 
+                            onclick="window.open('editar_produto_cotacao.php?codigo=<?php echo $linha['produto_cotacao'];?>&cod_produto=<?php echo $linha['cod_produto'];?>&<?php if($unidade =='SE'){ echo ('servico=true');}; ?>', 
 'editar_produto_cotacao', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1500, HEIGHT=900');">
                             <input type="submit" class="btn btn-warning" name="editar" value="Editar">
 

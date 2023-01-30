@@ -202,23 +202,20 @@ $pesquisaDataf=$_GET["campoPesquisaDataf"];
             $mensagem = utf8_decode("Duplicata $numeroNF/1 referente a nota fiscal de entrada $numeroNF");
             $hoje = date('Y-m-d');
 
-            $select = "SELECT count(*) as qtd FROM lancamento_financeiro where numeroNotaFiscal = '$numeroNF' and modalidade = 'NFE_ENTRADA'";
-            $consulta_cliente = mysqli_query($conecta,$select);
-            $linha = mysqli_fetch_assoc($consulta_cliente);
-            $provisionada = $linha['qtd'];
+        //     $select = "SELECT count(*) as qtd FROM lancamento_financeiro where numeroNotaFiscal = '$numeroNF' and modalidade = 'NFE_ENTRADA'";
+        //     $consulta_cliente = mysqli_query($conecta,$select);
+        //     $linha = mysqli_fetch_assoc($consulta_cliente);
+        //     $provisionada = $linha['qtd'];
 
-            // if($provisionada == 0){
-            //     $inserir = "INSERT INTO lancamento_financeiro ";
-            //     $inserir .= "( data_movimento,data_a_pagar,data_do_pagamento,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,numeroNotaFiscal,modalidade)";
-            //     $inserir .= " VALUES ";
-            //     $inserir .= "( '$hoje','$dataEmissao','$dataEmissao','Despesa','Pago','3','$idcliente','$mensagem','$numeroNF/1','17','$valorNota','$numeroNF','NFE_ENTRADA' )";
-            //     $insert_lancamento_nota = mysqli_query($conecta,$inserir);
-
-            // }
+        //     if($provisionada > 1){
+        //       $update ="UPDATE lancamento_financeiro set grupoID = '21' where numeroNotaFiscal = '$numeroNF' and  modalidade = 'NFE_ENTRADA' ";
+        //       $update_provisionamento = mysqli_query($conecta,$update);
+            
+        //     }
             
 
-        //     $update = "UPDATE lancamento_financeiro set modalidade = 'NFE_ENTRADA' where numeroNotaFiscal = '$numeroNF' and grupoID = 17 ";
-        // $realizar_update = mysqli_query($conecta,$update);
+        // //     $update = "UPDATE lancamento_financeiro set modalidade = 'NFE_ENTRADA' where numeroNotaFiscal = '$numeroNF' and grupoID = 17 ";
+        // //     $realizar_update = mysqli_query($conecta,$update);
 
          
            ?>

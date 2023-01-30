@@ -35,7 +35,7 @@ include "../../../_incluir/funcoes.php";
                             borderColor: 'rgba(45, 0, 255, 1)',
                             pointStyle: 'circle',
                             fill: false,
-
+                            yAxesID:'Y',
                             data: [
                                 <?php
                             $i = 0;
@@ -53,13 +53,16 @@ include "../../../_incluir/funcoes.php";
 
                             label: 'Quatidade ',
                             backgroundColor: 'rgba(20,148,71,1)',
-
+                            yAxesID:'s',
 
                             data: [
                                 <?php
                             $i = 0;
                             while($i<=11){
                             $i = $i+ 1;
+
+                            
+                            
                             //verificar a quantidade de receita por mes 
                             echo       "'". (consultar_quantidade_nfes($i,$ano))  ."',";
                             }
@@ -85,7 +88,6 @@ include "../../../_incluir/funcoes.php";
                         caretPadding: 10,
                         xPadding: 5,
                         yPadding: 15,
-                        caretSize: 10,
                         titleFontStyle: 'bold',
                     },
 
@@ -97,22 +99,38 @@ include "../../../_incluir/funcoes.php";
                         
                         yAxes: [{
                             display: true,
-                     
+                            beginAtZero: true,
+                            position:'left',
+                          
+                         
                             ticks: {
-                           
+                                stepSize:10,
                                 callback: (value, index, values) => {
                                    return "R$ "+ value + " K"
                                 },
                                 
                                 fontColor: 'white' // aqui branco
                             },
-                            min:20,
-                            max:100,
+                        
                          
                            
                         }],
+                        // sAxes:[{
+                        //     display: true,
+                        //     position:'right',
+                        //     grid:{
+                        //         drawOnChartArea:false
+                        //     },
+                        //     ticks:{
+                        //         callback: (value, index, values) => {
+                        //            return "R$ "+ value + " K"
+                        //         },
+                        //     }
+                          
+                        // }],
                         xAxes: [{
                             ticks: {
+                              
                                 beginAtZero: true,
                                 fontColor: 'white' // aqui branco
                             },

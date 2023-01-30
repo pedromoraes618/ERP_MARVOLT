@@ -11,6 +11,7 @@ $select .= "where  status = 'Pago' and data_do_pagamento BETWEEN '$ano-01-01' an
 }else{
 $select .= "where  status = 'Pago' and data_do_pagamento BETWEEN '$ano_anterior-$mes-01' and '$ano-$mes-$dia'";
 }
+
 $consulta_despesa = mysqli_query($conecta,$select);
 $linha = mysqli_fetch_assoc($consulta_despesa);
 $valor_despesa = $linha['valor_despesa'];

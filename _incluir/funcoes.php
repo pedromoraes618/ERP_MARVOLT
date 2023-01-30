@@ -85,6 +85,10 @@ function real_percent_grafico($valor) {
    function formatardataB2($value){
     if($value == "0000-00-00"){
       return "";
+    }elseif($value =="1970-01-01"){
+      return "";
+    }elseif($value =="01/01/1970"){
+      return "";
     }else{
       $value = date("d/m/Y",strtotime($value));
       return $value;

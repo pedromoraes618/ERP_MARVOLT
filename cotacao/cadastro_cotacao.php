@@ -8,6 +8,17 @@ echo ",";
 //deckara as varuaveus
 
 
+     //buscar o id da categoria para serviço
+     $select = "SELECT * FROM tb_parametros where parametroID = '4' ";
+     $consultar_parametro = mysqli_query($conecta, $select);
+     if(!$consultar_parametro){
+     die("Falaha no banco de dados");
+     }else{
+     $linha = mysqli_fetch_assoc($consultar_parametro);
+     $cod_parametro_4 = $linha['valor'];
+     }
+//inserir o produto
+
 if($_POST){
     $formulario = 0;
     $hoje = date('Y-m-d'); 
@@ -167,6 +178,69 @@ alertify.alert("Favor informar a quantidade do produto");
         }
     }
 
+}
+if(isset($_POST['servico'])){
+
+    if($codCotacao==""){
+        ?>
+<script>
+alertify.alert("É necessario inciar a cotação !! Favor clique em iniciar cotação");
+</script>
+<?php
+    }elseif($nomeProduto==""){
+       
+            ?>
+<script>
+alertify.alert("É necessario informar a descrição do produto");
+</script>
+<?php 
+      
+    }elseif($qtdProduto==""){
+        ?>
+<script>
+alertify.alert("Favor informar a quantidade do produto");
+</script>
+<?php 
+              
+    }else{
+        if( $_SERVER['REQUEST_METHOD']=='POST' )
+        {
+            $request = md5( implode( $_POST ) );
+            
+            if( isset( $_SESSION['last_request'] ) && $_SESSION['last_request']== $request )
+            {
+                $nomeProduto = "";
+                $qtdProduto = "";
+                $precoCompra = "";
+                $precoVenda = "";
+                $margem = "";
+                $unidade = "";
+            }
+            else
+            {
+                $_SESSION['last_request']  = $request;
+                $sevico = utf8_decode('Serviço');
+                   
+  $inserir = "INSERT INTO produto_cotacao ";
+  $inserir .= "(cotacaoID,numero_orcamento,descricao,quantidade,preco_compra,preco_venda,margem,unidade,status,categoria_produto,prazo)";
+  $inserir .= " VALUES ";
+  $inserir .= "('$codCotacao','$paramentroNumeroOrcamento','$nomeProduto ($sevico)','$qtdProduto','$precoCompra', '$precoVenda', '$margem','SE','1','$cod_parametro_4','$prazo' )";
+  $operacao_inserir = mysqli_query($conecta, $inserir);
+
+            if(!$operacao_inserir){
+                die("Falaha no banco de dados || adicionar produto cotacao");
+                }else{
+                    $nomeProduto = "";
+                    $qtdProduto = "";
+                    $precoCompra = "";
+                    $precoVenda = "";
+                    $margem = "";
+                    $unidade = "";
+                }
+            }
+        }
+    }
+    
 }
 
 //consultar os produto da cotação, codição de clicar no botao adicionar
@@ -455,7 +529,7 @@ if(!$lista_status_produto_cotacao){
                     <td align=left><input readonly type="text" size="10" id="codigo_cotacao" name="codigoCotacao" value="<?php 
          if(isset($_POST['iniciar'])){
               echo rand(1,1000000000);
-         }elseif((isset($_POST['adicionar'])) or (isset($_POST['fecharPesquisa']))  or (isset($_POST['editar'])) or (isset($_POST['pesquisar'])) or (isset($_POST['salvar']))){
+         }elseif(((isset($_POST['adicionar'])) or (isset($_POST['servico']))) or (isset($_POST['fecharPesquisa']))  or (isset($_POST['editar'])) or (isset($_POST['pesquisar'])) or (isset($_POST['salvar']))){
              echo $codCotacao;
          }
          ?>"> </td>
@@ -470,7 +544,7 @@ if(!$lista_status_produto_cotacao){
             }elseif(isset($_POST['iniciar'])or isset($_POST['pesquisar'])or isset($_POST['fecharPesquisa'])){
                 echo 0;
             }
-            if(isset($_POST['adicionar'])){
+            if(((isset($_POST['adicionar'])) or (isset($_POST['servico']))) or (isset($_POST['salvar']))){
                 echo $_POST['cotacaofinalizada'];
             }
 
@@ -829,19 +903,19 @@ if($freteID==$frete_principal){
                 <tr>
                     <td align=left><b>Produto:</b></td>
                     <td align=left><input style="margin-right:5px;" type="text" size=60 name="campoNomeProduto"
-                            value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($nomeProduto);}?>">
+                            value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($nomeProduto);}?>">
                     </td>
 
                     <td><button style="border:0px;  background-color:white;" id="buttonPesquisa" name="pesquisar"><i
                                 class="fa-solid fa-magnifying-glass"></i></button></td>
 
                     <td>
+                        <input type="submit" onclick="calculavalordesconto()" name="adicionar" class="btn btn-success"
+                            value="Adicionar">
 
-
-
-                        <input style="margin-right: 50px;" type="submit" onclick="calculavalordesconto()"
-                            name="adicionar" class="btn btn-success" value="Adicionar">
-
+                        <input type="submit" style="margin-right: 50px;"
+                            onclick="calculavalordesconto();calculavalormargemGeral();" name="servico"
+                            class="btn btn-info" value="Serviço">
                     </td>
 
                     <td align=left><b>Categoria prod:</b></td>
@@ -850,28 +924,28 @@ if($freteID==$frete_principal){
                             <?php 
                                     
                                     while($linha  = mysqli_fetch_assoc($lista_categoria)){
-                                        $categoriaPrincipal_produto = utf8_encode($linha["categoriaID"]);
+                                        $categoriaPrincipal_produto = ($linha["categoriaID"]);
                                     if(!isset($categoria_prod)){
                                     
                                     ?>
-                            <option value="<?php echo utf8_encode($linha["categoriaID"]);?>">
-                                <?php echo utf8_encode($linha["nome_categoria"]);?>
+                            <option value="<?php echo ($linha["categoriaID"]);?>">
+                                <?php echo ($linha["nome_categoria"]);?>
                             </option>
                             <?php
    
                                     }else{
 
                                         if($categoria_prod == $categoriaPrincipal_produto){
-                                        ?> <option value="<?php echo utf8_encode($linha["categoriaID"]);?>" selected>
-                                <?php echo utf8_encode($linha["nome_categoria"]);?>
+                                        ?> <option value="<?php echo ($linha["categoriaID"]);?>" selected>
+                                <?php echo ($linha["nome_categoria"]);?>
                             </option>
 
                             <?php
                                             }else{
                                     
                                 ?>
-                            <option value="<?php echo utf8_encode($linha["categoriaID"]);?>">
-                                <?php echo utf8_encode($linha["nome_categoria"]);?>
+                            <option value="<?php echo ($linha["categoriaID"]);?>">
+                                <?php echo ($linha["nome_categoria"]);?>
                             </option>
                             <?php
 
@@ -897,33 +971,33 @@ if($freteID==$frete_principal){
                         <td align=left style="width:70px;"><b>Und:</b></td>
                         <td align=left><input type="text" size=10 name="campoUnidade" id="campoUnidade"
                                 autocomplete="off"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($unidade);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($unidade);}?>">
                         </td>
                         <td align=left><b>Quantidade:</b></td>
                         <td align=left><input type="text" size=10 name="campoQtdProduto" id="campoQtdProduto"
                                 onblur="calculavalormargem()" autocomplete="off" onkeypress="return onlynumber();"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($qtdProduto);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($qtdProduto);}?>">
                         </td>
                         <td align=left><b>Preço cotado:</b></td>
                         <td align=left><input type="text" size=10 name="campoPrecoCotado" id="campoPrecoCotado"
                                 onkeypress="return onlynumber();" onblur="calculavalormargem()" autocomplete="off"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($precoCompra);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($precoCompra);}?>">
                         </td>
                         <td align=left><b>Margem:</b></td>
                         <td align=left><input type="text" size=10 name="campoMargem" id="campoMargem"
                                 onkeypress="return onlynumber();" onblur="calculavalorPrecoVenda()" autocomplete="off"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($margem);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($margem);}?>">
                         </td>
                         <td align=left><b>Preço venda:</b></td>
                         <td align=left><input type="text" size=10 name="campoPrecoVenda" id="campoPrecoVenda"
                                 onkeypress="return onlynumber();" onblur="calculavalormargem()" autocomplete="off"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($precoVenda);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($precoVenda);}?>">
                         </td>
 
                         <td align=left><b>Prazo:</b></td>
                         <td align=left><input type="text" size=10 name="campoPrazo" id="campoPrazo"
                                 onblur="calculavalormargem()" autocomplete="off" onkeypress="return onlynumber();"
-                                value="<?php if(isset($_POST['adicionar'])){ echo utf8_encode($prazo);}?>">
+                                value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($prazo);}?>">
                         </td>
 
 
@@ -946,17 +1020,23 @@ if($freteID==$frete_principal){
             <table style="float:left;  margin-bottom: 20px;">
                 <tr>
 
-                    <td align=left><input type="submit" style="margin-right:120px ;" onclick="calculavalordesconto()"
+                    <td align=left><input type="submit" style="margin-right:100px ;" onclick="calculavalordesconto()"
                             name="fecharPesquisa" class="btn btn-danger" value="Atualizar">
                     </td>
+
+                    <!-- adicionar serviço na cotacao -->
 
                     <td align=left style="width:100px; "><b>Desconto:</b></td>
                     <td align=left><input type="text" size=10 name="campoDesconto" id="campoDesconto"
                             onblur="calculavalordesconto();calculavalormargemGeral();" autocomplete="off" value="<?php 
                             if($_POST){
-                            echo $desconto;}
+                            echo $desconto;
+                            }
 
                             if((isset($_POST['adicionar'])) && $desconto==""){
+                                echo 0;
+                            }
+                            if(((isset($_POST['servico']))) && $desconto==""){
                                 echo 0;
                             }
 
@@ -995,7 +1075,7 @@ if($freteID==$frete_principal){
 
 
         <table border="0" cellspacing="0" width="1400px" class="tabela_pesquisa">
-            <?php if((isset($_POST['iniciar']))or (isset($_POST['adicionar'])) or (isset($_POST['editar'])) or (isset($_POST['fecharPesquisa']))   or (isset($_POST['salvar'])) && ($codCotacao !="")) {?>
+            <?php if((isset($_POST['iniciar']))or ((isset($_POST['adicionar'])) or (isset($_POST['servico']))) or (isset($_POST['editar'])) or (isset($_POST['fecharPesquisa']))   or (isset($_POST['salvar'])) && ($codCotacao !="")) {?>
             <tbody>
                 <tr id="cabecalho_pesquisa_consulta">
                     <td>
@@ -1118,7 +1198,7 @@ while($linha = mysqli_fetch_assoc($lista_Produto_cotacao)){
 
 
                         <a
-                            onclick="window.open('editar_produto_cotacao.php?codigo=<?php echo $linha['produto_cotacao'];?>&cod_produto=<?php echo $linha['cod_produto'];?>', 
+                            onclick="window.open('editar_produto_cotacao.php?codigo=<?php echo $linha['produto_cotacao'];?>&cod_produto=<?php echo $linha['cod_produto'];?>&<?php if($unidade =='SE'){ echo ('servico=true');}; ?>', 
 'editar_produto_cotacao', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1500, HEIGHT=900');">
 
                             <input type="submit" class="btn btn-warning" name="editar" value="Editar">
@@ -1374,6 +1454,7 @@ $("#voltar_tela").click(function(e) {
     }
 })
 
+
 function fechar() {
 
     window.close()
@@ -1383,10 +1464,10 @@ function fechar() {
 
 <script>
 //abrir uma nova tela de cadastro
-function abrepopupProdutoAvulso() {
 
-    var janela = "produto_avulso_cotacao.phpcodigo=<?php echo $codCotacao; ?>";
-    window.open(janela, 'popuppageProdutoAvulso',
+function addservico() {
+    var janela = "addservico.php?codigo=";
+    window.open(janela, 'popuppageservicoavulso',
         'width=1500,toolbar=0,resizable=1,scrollbars=yes,height=800,top=100,left=100');
 }
 

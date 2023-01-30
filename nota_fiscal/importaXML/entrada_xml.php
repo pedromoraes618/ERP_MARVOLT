@@ -332,10 +332,87 @@ $hoje = date('Y-m-d');
                 <td width="33%">Valor</td>
             </tr>
             <?php
-	$id = 0;
+		$cont_parcelas = 0;
+		$id =0;
 	if (!empty($xml->NFe->infNFe->cobr->dup))
 	{
-	
+		foreach($xml->NFe->infNFe->cobr->dup as $dup) 
+		{
+			$cont_parcelas = $cont_parcelas + 1;	
+		}
+
+		//se o numero de parcelas for  1 avista será informado o grupo nota fiscal
+		if($cont_parcelas == 1 ){
+			foreach($xml->NFe->infNFe->cobr->dup as $dup) 
+			{
+			  $id++;+
+			  $titulo = $dup->nDup;
+			  $vencimento = $dup->dVenc;
+			  $vencimentoN = $dup->dVenc;
+			  $vencimentoN = formatardataB($vencimentoN);
+		  
+			  $vlr_parcela = number_format((double) $dup->vDup, 2, ".", "");	
+			  $class = "class='cor1'";
+			  
+			  
+			  echo
+				  "<tr ".$class.">
+					<td><input $class type='text' name='titulo[]' size='15' value='$titulo' readonly='readonly' /></td>
+					<td><input $class type='text' name='vencimento' size='15' value='$vencimentoN' readonly='readonly' /></td>
+					<td><input $class type='text' name='vlr_parcela[]' size='15' value='$vlr_parcela' readonly='readonly' /></td>
+				  </tr>";
+  
+				  if($chave!=""){
+					  $select = " SELECT * from tb_nfe_entrada where chave_acesso = '$chave' ";
+					  $consulta = mysqli_query($conecta,$select);
+					  if(!$consulta){
+					  die("Falha na consulta ao banco de dados || tabela tb_nfe_entrada");
+					  }else{
+					  $row_banco = mysqli_fetch_assoc($consulta);
+					  $chave_acesso = $row_banco['chave_acesso'];}
+			 
+					 if($chave == $chave_acesso){
+					  
+					 }else{
+						 if($emit_CNPJ!=""){
+							 $select = " SELECT * from clientes where cpfcnpj = '$emit_CNPJ' ";
+							 $consulta_fornecedor = mysqli_query($conecta,$select);
+							 if(!$consulta_fornecedor){
+							 die("Falha na consulta ao banco de dados cliente");
+							 }else{
+								 $row_banco_fornecedor = mysqli_fetch_assoc($consulta_fornecedor);
+								 $cnpj = $row_banco_fornecedor['cpfcnpj'];
+								 $clienteID = $row_banco_fornecedor['clienteID'];
+							  
+							  }
+			 
+								 if($cnpj!= $emit_CNPJ){
+								  
+	  
+								  }else{
+									   	//verificar o paramentro codigo 2
+									$select = " SELECT * from tb_parametros where parametroID = '3' ";
+									$consulta_parametro_2 = mysqli_query($conecta,$select);
+									$linha = mysqli_fetch_assoc($consulta_parametro_2);
+									$valor_p_3 = $linha['valor'];
+									 
+			  $inserir = "INSERT INTO lancamento_financeiro ";
+			  $inserir .= "( data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,grupoID,descricao,valor,numeroNotaFiscal,documento,modalidade )";
+			  $inserir .= " VALUES ";
+			  $inserir .= "( '$hoje','$vencimento','Despesa','A Pagar','5','$clienteID','$valor_p_3','Duplicata $titulo referente a nota fiscal de entrada $nNF','$vlr_parcela','$nNF','$nNF/$titulo','NFE_ENTRADA' )";
+			  $operacao_inserir_iten = mysqli_query($conecta, $inserir);
+			  if(!$operacao_inserir_iten){
+				  die("Erro no banco de dados tabela lancamento_financeiro");
+					  }
+			  
+				  }
+			  }
+		  }
+	  }
+  
+		   } 
+		}else{
+			//notas faturadas é adicionada ao finannceiro com o grupo
     	foreach($xml->NFe->infNFe->cobr->dup as $dup) 
   		{
 			$id++;+
@@ -345,8 +422,7 @@ $hoje = date('Y-m-d');
 			$vencimentoN = formatardataB($vencimentoN);
 		
 			$vlr_parcela = number_format((double) $dup->vDup, 2, ".", "");	
-			
-				$class = "class='cor1'";
+			$class = "class='cor1'";
 			
 			
 			echo
@@ -384,12 +460,16 @@ $hoje = date('Y-m-d');
 								
 	
 								}else{
-									 
+									//verificar o paramentro codigo 2
+									$select = " SELECT * from tb_parametros where parametroID = '2' ";
+									$consulta_parametro_2 = mysqli_query($conecta,$select);
+									$linha = mysqli_fetch_assoc($consulta_parametro_2);
+									$valor_p_2 = $linha['valor'];
 								   
 			$inserir = "INSERT INTO lancamento_financeiro ";
 			$inserir .= "( data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,grupoID,descricao,valor,numeroNotaFiscal,documento,modalidade )";
 			$inserir .= " VALUES ";
-			$inserir .= "( '$hoje','$vencimento','Despesa','A Pagar','5','$clienteID','17','Duplicata $titulo referente a nota fiscal de entrada $nNF','$vlr_parcela','$nNF','$nNF/$titulo','NFE_ENTRADA' )";
+			$inserir .= "( '$hoje','$vencimento','Despesa','A Pagar','5','$clienteID','$valor_p_2','Duplicata $titulo referente a nota fiscal de entrada $nNF','$vlr_parcela','$nNF','$nNF/$titulo','NFE_ENTRADA' )";
 			$operacao_inserir_iten = mysqli_query($conecta, $inserir);
 			if(!$operacao_inserir_iten){
 				die("Erro no banco de dados tabela lancamento_financeiro");
@@ -398,7 +478,7 @@ $hoje = date('Y-m-d');
 				}
 			}
 		}
-	}
+	}}
 
     	 } 
 	}?>

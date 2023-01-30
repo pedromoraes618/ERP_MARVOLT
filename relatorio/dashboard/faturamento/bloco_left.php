@@ -59,16 +59,26 @@ include "../../../_incluir/funcoes.php";
     $(".relatorio nav ul li ").click(function(e) {
 
     let id_cliente = $(this).attr("id_cliente")
-    let cnpj = $(this).attr("cnpj")
-
+    let cnpj = $(this).attr("cnpjclt")
+  
+    
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value + "&cliente_id=" + id_cliente+"&cliente_cnpj="+cnpj,
+        url: "faturamento/bloco_center_top_detalhado.php",
+        success: function(result) {
+            return $(".bloco-center-top").html(result);
+        },
+    });
 
     $.ajax({
         type: 'GET',
         data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value + "&cliente_id=" + id_cliente,
-        url: "faturamento/bloco_center_top_detalhado.php",
+            .value + "&cliente_id=" + id_cliente+"&cliente_cnpj="+cnpj,
+            url: "faturamento/bloco_right_top_detalhado.php",
         success: function(result) {
-            return $(".bloco-center-top").html(result);
+            return $(".bloco-right-footer").html(result);
         },
     });
 

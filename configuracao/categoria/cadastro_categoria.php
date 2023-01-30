@@ -20,7 +20,7 @@ echo ".";
 
 
 if(isset($_POST['enviar'])){
-    $categoria = $_POST['txtCategoria'];
+    $categoria = ($_POST['txtCategoria']);
 
     if($categoria == "" ){
         ?>
@@ -39,16 +39,17 @@ alertify.alert("Categoria não informada");
     $operacao_inserir = mysqli_query($conecta, $inserir);
     if(!$operacao_inserir){
         die("Erro no banco de dados ");
-        }
+    }else{
+        ?>
+<script>
+alertify.success("Categoria cadastrar com sucesso");
+</script>
+<?php   
+         }
 
     }
         
 }
-
-
-
-
-
 
 
 
@@ -90,7 +91,7 @@ alertify.alert("Categoria não informada");
                             <td>
                                 <label for="txtrazaosocial" style="width:115px;"> <b>Categoria:</b></label>
                                 <input type="text" size=55 name="txtCategoria" id="txtCategoria"
-                                    value="<?php if(isset($_POST['enviar'])){ echo utf8_encode($categoria);}?>">
+                                    value="<?php if(isset($_POST['enviar'])){ echo ($categoria);}?>">
                             </td>
                         </tr>
                     </div>
@@ -98,10 +99,10 @@ alertify.alert("Categoria não informada");
 
                         <td>
                             <div style="margin-left: 120px;margin-top:10px">
-                                <input type="submit" name=enviar value="Incluir" class="btn btn-info btn-sm"
-                                    onClick="return confirm('Confirmar o cadastro da categoria?');"></input>
+                                <input type="submit" name=enviar value="Incluir" class="btn btn-info btn-sm"></input>
 
-                                <button type="button" onclick="fechar();" class="btn btn-secondary">Voltar</button>
+                                <button type="button" onclick="window.opener.location.reload();fechar();"
+                                    class="btn btn-secondary">Voltar</button>
                             </div>
 
                         </td>
