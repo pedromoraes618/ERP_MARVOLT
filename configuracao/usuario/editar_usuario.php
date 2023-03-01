@@ -31,7 +31,7 @@ $hoje = date('y-m-d');
     $usuario = utf8_decode($_POST['campoUsuario']);
     $nivel = utf8_decode($_POST['campoNivel']);
     $senha = utf8_decode($_POST['campoSenha']);
-
+    $convidado = utf8_decode($_POST['convidado']);
 
       if($nivel=="0"){
           
@@ -76,7 +76,7 @@ alertify.success("Dados alterados!");
 <?php
                 
         //inserindo as informações no banco de dados
-            $inserir = "UPDATE usuarios set email = '{$email}', usuario = '{$usuario}', nivel = '{$nivel}',nome = '{$nome}',senha = '{$senha}' where usuarioID = {$usuarioID}  ";
+            $inserir = "UPDATE usuarios set email = '{$email}', usuario = '{$usuario}', nivel = '{$nivel}',nome = '{$nome}',senha = '{$senha}',convidado='{$convidado}' where usuarioID = {$usuarioID}  ";
   
             $operacao_inserir = mysqli_query($conecta, $inserir);
             if(!$operacao_inserir){
@@ -110,6 +110,8 @@ $nomeB =  utf8_encode($linha['nome']);
 $emailB = utf8_encode($linha['email']);
 $nivelB = utf8_encode( $linha['nivel']);
 $senhaB = utf8_encode($linha['senha']);
+$convidado_b = utf8_encode($linha['convidado']);
+
 }
 
 
@@ -265,6 +267,20 @@ alertify.error("Usuário removido com sucesso");
                             <td style="width: 90px;" align=left><b>Senha:</b></td>
                             <td align=left><input type="password" size=20 name="campoSenha" id="campoSenha"
                                     value="<?php echo $senhaB;?>"></td>
+                        </tr>
+                    </table>
+
+                    <table style="float: left;">
+                        <tr>
+                            <td style="width: 90px;" align=left><b>Convidado:</b></td>
+                            <td align=left>
+                                <select id="convidado" style="width: 210px;" name="convidado">
+                                    <option value="0">Selecione</option>
+                                
+                                    <option <?php if($convidado_b=="1"){echo "selected";} ?> value="1">Sim</option>
+                                    <option   <?php if($convidado_b=="2"){echo "selected";} ?>  value="2">Não</option>
+                                </select>
+                            </td>
                         </tr>
                     </table>
 

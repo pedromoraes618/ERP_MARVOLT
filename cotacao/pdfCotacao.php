@@ -21,6 +21,13 @@ while($row_empresa = mysqli_fetch_assoc($dados_empresa)){
     $site = utf8_encode($row_empresa['site']);
 }
 
+
+//Consultar parametro
+$consulta = "SELECT * from tb_parametros where parametroID = 5 ";
+$consultar_parametro_cliente_avulso= mysqli_query($conecta, $consulta);
+$linha = mysqli_fetch_assoc($consultar_parametro_cliente_avulso);
+$cliente_avulso = $linha['valor'];
+
 //consultar Comprador
 if(isset($_GET['compradorID'])){
     $compradorID =$_GET['compradorID'];
@@ -70,6 +77,15 @@ while($row_cliente = mysqli_fetch_assoc($dados_cliente)){
     $emailCliente = utf8_encode($row_cliente['email']);
 }
 
+if($clienteID == $cliente_avulso){
+    $nomeFantasiaCliente ="";
+    $cnpjCliente = "";
+    $enderecoCliente = "";
+    $cidadeCliente = "";
+    $ufCliente = "";
+    $telefoneCliente ="";
+    $emailComprador ="";
+}
 
 //consultar cotacao pelo codigo cotação
 $consulta = "SELECT cotacao.data_lancamento,cotacao.observacao,cotacao.data_envio,cotacao.numero_orcamento, cotacao.cod_cotacao, cotacao.numero_solicitacao, cotacao.validade, cotacao.prazo_entrega,cotacao.valorTotal,cotacao.desconto, cotacao.valorTotalComDesconto, forma_pagamento.nome as formapagamento,forma_pagamento.nome,frete.descricao as frete from forma_pagamento inner join cotacao on cotacao.forma_pagamentoID = forma_pagamento.formapagamentoID inner join  frete on cotacao.freteID = frete.freteID ";

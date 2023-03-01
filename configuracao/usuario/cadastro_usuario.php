@@ -2,6 +2,7 @@
 
 include("../../conexao/sessao.php");
 require_once("../../conexao/conexao.php");
+
 //inportar o alertar js
 include('../../alert/alert.php');
 echo ".";
@@ -16,7 +17,7 @@ if(isset($_POST['enviar'])){
     $usuario =utf8_decode( $_POST['campoUsuario']);
     $nivel = $_POST['campoNivel'];
     $senha = utf8_decode($_POST['campoSenha']);
-
+    $convidado = utf8_decode($_POST['convidado']);
 
       if($nivel=="0"){
           
@@ -52,6 +53,15 @@ alertify.alert("Favor informe o campo senha");
 
 <?php 
 
+}elseif($convidado =="0"){
+              
+    ?>
+<script>
+alertify.alert("Favor informe o campo Convidado");
+</script>
+
+<?php 
+
 }else{ 
     if($usuario!=""){
         //verificar se o usuario já está cadastrado
@@ -77,9 +87,9 @@ alertify.alert("Usuario Já cadastrado");
                 
         //inserindo as informações no banco de dados
             $inserir = "INSERT INTO usuarios ";
-            $inserir .= "(data_cadastro, email,usuario,nivel,nome,senha)";
+            $inserir .= "(data_cadastro, email,usuario,nivel,nome,senha,convidado)";
             $inserir .= " VALUES ";
-            $inserir .= "('$hoje','$email','$usuario','$nivel','$nome','$senha' )";
+            $inserir .= "('$hoje','$email','$usuario','$nivel','$nome','$senha','$convidado' )";
 
             $email = "";
             $usuario = "";
@@ -87,7 +97,7 @@ alertify.alert("Usuario Já cadastrado");
             $nome = "";
             $senha= "";
             $nivel = 1;
-        
+            $convidado = "0";
   
             $operacao_inserir = mysqli_query($conecta, $inserir);
             if(!$operacao_inserir){
@@ -237,6 +247,7 @@ if(!$consulta){
                     </table>
 
 
+
                     <table style="float: left;">
                         <tr>
                             <td style="width: 90px;" align=left><b>Senha:</b></td>
@@ -245,6 +256,23 @@ if(!$consulta){
                         </tr>
                     </table>
 
+                    <table style="float: left;">
+                        <tr>
+                            <td style="width: 90px;" align=left><b>Convidado:</b></td>
+                            <td align=left>
+                                <select id="convidado" style="width: 210px;" name="convidado">
+                                    <option value="0">Selecione</option>
+
+                                    <option <?php if(isset($_POST['enviar']) and $convidado == "1"){ 
+                                        echo "selected";
+                                    }?> value="1">Sim</option>
+                                    <option <?php if(isset($_POST['enviar']) and $convidado == "2"){ 
+                                        echo "selected";
+                                    }?> value="2">Não</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
 
                     <table style="float: left;">
                         <tr>

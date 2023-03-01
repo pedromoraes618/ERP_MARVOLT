@@ -5,7 +5,8 @@ include ("../_incluir/funcoes.php");
 //inportar o alertar js
 include('../alert/alert.php');
 
-
+//usuario logado
+$user= $_SESSION["user_portal"];
 
 
 //importar tabelas
@@ -116,18 +117,37 @@ alertify.alert("Favor informe a forma de pagamento");
 
 
         if($dataPagamento==""){
-        
+            $ano_caixa = "2000";
+            $mes_caixa = "01";
         }else{
             
         $div3 = explode("/",$_POST['campoDataPagamento']);
         $dataPagamento = $div3[2]."-".$div3[1]."-".$div3[0];
+        //verifificar se o caixa está aberto
+        
+        $ano_caixa = $div3[2];
+        $mes_caixa = $div3[1];
         }
-
-
+        
 
         if($dataapagar==""){
           $dataapagar=$dataLancamento;
-      }
+       }
+
+      if(($statusLancamento =="Pago") and (verifica_caixa_descricao($conecta,$mes_caixa,$ano_caixa) == "fechado")){
+        //reformatar data
+        $dataLancamento = formatDateB($dataLancamento);
+        $dataapagar = formatDateB($dataapagar);
+        $dataPagamento = formatDateB($dataPagamento);
+             
+  ?>
+<script>
+alertify.alert("Não é possivel adicionar esse lançamento, o caixa desse periodo já foi fechado, favor verifique");
+</script>
+<?php
+      
+      }else{
+
 //inserindo as informações no banco de dados
   $inserir = "INSERT INTO lancamento_financeiro ";
   $inserir .= "( data_movimento,data_a_pagar,data_do_pagamento,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,observacao,numeroPedido,numeroNotaFiscal )";
@@ -142,6 +162,15 @@ alertify.alert("Favor informe a forma de pagamento");
       die("Erro no banco de dados inserir_no_banco_de_dados");
    
   }else{
+         $hoje = date('Y-m-d'); 
+        //adicionar ao log
+        $mensagem = "Usuario lançou o lancamento financeiro tipo: Despesa doc Nº $documento, valor R$ $valor ";
+        $inserir = "INSERT INTO tb_log";
+        $inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+        $inserir .= " VALUES ";
+        $inserir .= "('$hoje','$user','$mensagem' )";
+        $operacao_insert_log = mysqli_query($conecta, $inserir);
+           
 
     $dataLancamento = "";
   $dataapagar ="";
@@ -168,7 +197,7 @@ alertify.success("Lançamento <?php echo ($ultimoID + 1)?> Realizado com sucesso
     
   }
 
-
+      }
 }
 }
 }
@@ -525,7 +554,7 @@ alertify.success("Lançamento <?php echo ($ultimoID + 1)?> Realizado com sucesso
                                     <div style="margin-left:100px;">
 
                                         <input type="submit" style="height:37px" name=enviar value="Incluir"
-                                         onClick="return confirm('Deseja realizar o lançamento?');"
+                                            onClick="return confirm('Deseja realizar o lançamento?');"
                                             class="btn btn-info btn-sm"></input>
                                         <button type="button" name="btnfechar"
                                             onclick="window.opener.location.reload();fechar();"

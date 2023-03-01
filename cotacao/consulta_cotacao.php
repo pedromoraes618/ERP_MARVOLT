@@ -304,11 +304,19 @@ if(isset($_GET["CampoPesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaData
             $comprador = $linha['compradorID'];
             $nSolicitacao = $linha['numero_solicitacao'];
             
-            
-            
-          
-         
-
+            /*scrip para preencher data de fechamento dos orçamentos que estão sem datas, data retirada do pedido de compra */
+        //     if($status="3" or $status="4"){
+        //         if($DataFechamento=="0000-00-00" or $DataFechamento =="1970-01-01"){
+        //             $select="SELECT * from pedido_compra where numero_orcamento = '$nOrcamento'";
+        //             $consultar_data_fechamento_pedido = mysqli_query($conecta,$select);
+        //             $linha = mysqli_fetch_assoc($consultar_data_fechamento_pedido);
+        //             $data_fechamento_pd = $linha['data_fechamento'];
+        
+        //         $select ="UPDATE cotacao set data_fechamento = '$data_fechamento_pd' where numero_orcamento = '$nOrcamento'";
+        //         $update_data_fechamento= mysqli_query($conecta,$select);
+        
+        //         }
+        // }
          
            ?>
 
@@ -379,7 +387,7 @@ if(isset($_GET["CampoPesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaData
                                   }else{echo formatardataB($DataFechamento); } ?></font>
                         </td>
                         <td style="width: 100px;">
-                            <font size="2"><?php echo $desconto ?></font>
+                            <font size="2"><?php echo $desconto ." %" ?></font>
                         </td>
                         <td style="width: 100px;">
                             <font size="2"><?php echo real_format($valor) ?></font>

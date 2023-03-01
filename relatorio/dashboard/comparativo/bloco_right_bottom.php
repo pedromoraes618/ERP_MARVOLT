@@ -11,7 +11,7 @@ include "../../../_incluir/funcoes.php";
     <div class="bloco">
         <div class="bloco-1">
 
-        
+
             <div class="grafico" style="width:200;height:150px">
 
                 <canvas width="90" height="80" id="grafico_piizza"></canvas>
@@ -53,11 +53,17 @@ include "../../../_incluir/funcoes.php";
                     datasets: [{
                         backgroundColor: [
                             <?php 
-                            for($i = 0; $i<5; $i++){
+                            for($i = 0; $i<7; $i++){
                                 echo    "'".random_color()."',";
-                            }echo    "'#FFFF00',"."'#0000CD'";
+                            }
                             ?>
                         ],
+                        // backgroundColor: [
+                        //     <?php
+                        //                 foreach($array_dados_despesa_top_5 as $linha) {
+                        //                     echo "'".random_color()."',"; }?>
+                        // ],
+
 
                         data: [
                             <?php
@@ -100,26 +106,26 @@ include "../../../_incluir/funcoes.php";
                         }
                     },
                     tooltips: {
-                        backgroundColor:'rgba(255, 255, 255, 1)',
-                        bodyFontColor:'rgba(0, 0, 0, 1)',
-                        titleFontColor:'rgba(0, 0, 0, 1)',
-                        titleFontSize:20,
-                        caretPadding:10,
-                        xPadding:5,
-                        yPadding:15,
-                      
-                         caretSize:10,
-                         titleFontStyle:'bold',
-                       
-                        
+                        backgroundColor: 'rgba(255, 255, 255, 1)',
+                        bodyFontColor: 'rgba(0, 0, 0, 1)',
+                        titleFontColor: 'rgba(0, 0, 0, 1)',
+                        titleFontSize: 20,
+                        caretPadding: 10,
+                        xPadding: 5,
+                        yPadding: 15,
+
+                        caretSize: 10,
+                        titleFontStyle: 'bold',
+
+
                         // callbacks: {
                         // title:function(chart){
                         //     console.log(chart[0])
                         // },
                         //  afterBody:function(context){
-                        
+
                         //  },
-                          
+
                         // }
                     },
 

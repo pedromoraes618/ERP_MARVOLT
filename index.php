@@ -1,5 +1,5 @@
 <?php
- require_once("conexao/conexao.php"); 
+require_once("conexao/conexao.php"); 
 include("conexao/sessao.php");
 
 ?>
@@ -17,9 +17,10 @@ include("conexao/sessao.php");
 </head>
 
 <body>
+<?php include_once("_incluir/funcoes.php"); ?>
     <?php include_once("_incluir/topo.php"); ?>
     <?php include_once("_incluir/body.php"); ?>
-    <?php include_once("_incluir/funcoes.php"); ?>
+
 
     <main>
         <?php

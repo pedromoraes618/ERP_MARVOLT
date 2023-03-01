@@ -3,7 +3,7 @@
 
 
     <div id="header_central">
-        <?php if($_SESSION["user_portal"]){
+        <?php if(isset($_SESSION["user_portal"])){
 
             $user= $_SESSION["user_portal"];
             $saudacao = "SELECT usuario FROM usuarios where usuarioID = {$user}";

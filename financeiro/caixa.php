@@ -16,7 +16,7 @@ if($_GET){
     }else{
         $div1 = explode("/",$_GET['CampoPesquisaData']);
         $pesquisaData = $div1[2]."-".$div1[1]."-".$div1[0];  
-       
+    
     }
     if($pesquisaDataf==""){
        
@@ -140,6 +140,22 @@ if($_GET){
         $linha = mysqli_fetch_assoc($lista_Soma_Valor_despesa_a_pagar);
         $somaDespesaApagar = $linha['soma'];
     }
+
+    $ano = $div1[2];
+    $mes = $div1[1];
+   
+    if($mes =="01"){
+        $mes = 12;
+        $ano = $ano-1;
+    }else{
+        $mes = $mes-1;
+        $ano = $ano;
+    }
+    $select = "SELECT  * from tb_caixa where cl_mes = $mes and cl_ano=$ano " ;
+    $consulta_saldo_inicial = mysqli_query($conecta,$select);
+    $linha = mysqli_fetch_assoc($consulta_saldo_inicial);
+    $saldo_inicial = $linha['cl_valor_fechamento'];
+
 }
 
 
@@ -191,7 +207,8 @@ if (isset($_GET["CampoPesquisaData"])){
                 <div id="BotaoLancar">
                     <form action="consulta_produto.php" method="get">
 
-                        <input type="submit" style="width: 130px;margin-left: 10px;" name="pesquisar" id="pesquisar" value="Pesquisar cx">
+                        <input type="submit" style="width: 130px;margin-left: 10px;" name="pesquisar" id="pesquisar"
+                            value="Pesquisar cx">
                         <input type="submit" style="width: 130px;" name="resumo" id="pesquisar" value="Resumo futuro">
 
 
@@ -218,6 +235,9 @@ if (isset($_GET["CampoPesquisaData"])){
         </div>
 
         <?php 
+           
+  
+
         //receita
         if(isset($_GET['pesquisar'])){
         include ("include_tabela/receita.php");

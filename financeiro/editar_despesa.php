@@ -4,7 +4,8 @@ require_once("../conexao/conexao.php");
 include ("../_incluir/funcoes.php");
 //inportar o alertar js
 include('../alert/alert.php');
-
+//usuario logado
+$user= $_SESSION["user_portal"];
 
 //importar tabelas
 include('select_financeiro_despesaSQL.php');
@@ -108,13 +109,33 @@ alertify.alert("Favor informe a data do pagamento");
 
 
         if($dataPagamento==""){
-        
+            $ano_caixa = "2000";
+            $mes_caixa = "01";
         }else{
             
         $div3 = explode("/",$_POST['campoDataPagamento']);
         $dataPagamento = $div3[2]."-".$div3[1]."-".$div3[0];
+        //verifificar se o caixa está aberto
+        
+        $ano_caixa = $div3[2];
+        $mes_caixa = $div3[1];
         }
         
+
+        
+        if(($statusLancamento =="Pago") and (verifica_caixa_descricao($conecta,$mes_caixa,$ano_caixa) == "fechado")){
+            //reformatar data
+            $dataLancamento = formatDateB($dataLancamento);
+            $dataapagar = formatDateB($dataapagar);
+            $dataPagamento = formatDateB($dataPagamento);
+                 
+      ?>
+    <script>
+    alertify.alert("Não é possivel adicionar esse lançamento, o caixa desse periodo já foi fechado, favor verifique");
+    </script>
+    <?php
+          
+          }else{
 
     //alterando as informações no banco de dados
   
@@ -133,6 +154,17 @@ alertify.success("Dados alterados");
 </script>
 <?php
           //header("location:listagem.php"); 
+          $hoje = date('Y-m-d'); 
+          //adicionar ao log
+          $mensagem = "Usuario editou  um lançamento do tipo: Despesa doc Nº $documento, valor R$ $valor, codigo $lancamentoID ";
+          $inserir = "INSERT INTO tb_log";
+          $inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+          $inserir .= " VALUES ";
+          $inserir .= "('$hoje','$user','$mensagem' )";
+          $operacao_insert_log = mysqli_query($conecta, $inserir);
+          
+                 
+      }
            
                 }
 
@@ -214,15 +246,33 @@ alertify.alert("Favor informe a data do pagamento");
         
         
                 if($dataPagamento==""){
-                
+                    $ano_caixa = "2000";
+                    $mes_caixa = "01";
                 }else{
                     
                 $div3 = explode("/",$_POST['campoDataPagamento']);
                 $dataPagamento = $div3[2]."-".$div3[1]."-".$div3[0];
+                //verifificar se o caixa está aberto
+                
+                $ano_caixa = $div3[2];
+                $mes_caixa = $div3[1];
                 }
                 
         
     
+                if(($statusLancamento =="Pago") and (verifica_caixa_descricao($conecta,$mes_caixa,$ano_caixa) == "fechado")){
+                    //reformatar data
+                    $dataLancamento = formatDateB($dataLancamento);
+                    $dataapagar = formatDateB($dataapagar);
+                    $dataPagamento = formatDateB($dataPagamento);
+                         
+              ?>
+            <script>
+            alertify.alert("Não é possivel adicionar esse lançamento, o caixa desse periodo já foi fechado, favor verifique");
+            </script>
+            <?php
+                  
+                  }else{
           
             $insert = "INSERT INTO lancamento_financeiro ";
             $insert .= "( data_movimento,data_a_pagar,data_do_pagamento,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,observacao,numeroPedido,numeroNotaFiscal )";
@@ -240,6 +290,16 @@ alertify.alert("Favor informe a data do pagamento");
 alertify.success("Lançamento duplicado");
 </script>
 <?php
+
+$hoje = date('Y-m-d'); 
+//adicionar ao log
+$mensagem = "Usuario duplicou o lançamento Nº $lancamentoID tipo: Depesa doc Nº $documento, valor R$ $valor ";
+$inserir = "INSERT INTO tb_log";
+$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+$inserir .= " VALUES ";
+$inserir .= "('$hoje','$user','$mensagem' )";
+$operacao_insert_log = mysqli_query($conecta, $inserir);
+              }
     }
 }
         }
@@ -288,6 +348,35 @@ if(!$detalhe){
 
 if(isset($_POST['btnremover'])){
   
+    $dataPagamento = utf8_decode($_POST["campoDataPagamento"]);
+    $statusLancamento = utf8_decode($_POST["campoStatusLancamento"]);
+
+    if($dataPagamento==""){
+        $ano_caixa = "2000";
+        $mes_caixa = "01";
+    }else{
+        
+    $div3 = explode("/",$_POST['campoDataPagamento']);
+    $dataPagamento = $div3[2]."-".$div3[1]."-".$div3[0];
+    //verifificar se o caixa está aberto
+    
+    $ano_caixa = $div3[2];
+    $mes_caixa = $div3[1];
+    }
+    
+
+    
+    if(($statusLancamento =="Pago") and (verifica_caixa_descricao($conecta,$mes_caixa,$ano_caixa) == "fechado")){
+        //reformatar data
+    
+             
+  ?>
+<script>
+alertify.alert("Não é possivel adicionar esse lançamento, o caixa desse periodo já foi fechado, favor verifique");
+</script>
+<?php
+      
+      }else{
 
     //query para remover o produto no banco de dados
     $remover = "DELETE FROM lancamento_financeiro WHERE lancamentoFinanceiroID = {$lancamentoID}";
@@ -301,10 +390,17 @@ if(isset($_POST['btnremover'])){
 <script>
 alertify.error('Lancamento removido com sucesso');
 </script>
-
 <?php
+$hoje = date('Y-m-d'); 
+//adicionar ao log
+$mensagem = "Usuario removeu o lançamento do tipo: Despesa codigo $lancamentoID";
+$inserir = "INSERT INTO tb_log";
+$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+$inserir .= " VALUES ";
+$inserir .= "('$hoje','$user','$mensagem' )";
+$operacao_insert_log = mysqli_query($conecta, $inserir);
       }
-    
+      }
     }
 
 ?>

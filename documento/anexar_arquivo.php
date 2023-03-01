@@ -8,10 +8,14 @@ include ("../_incluir/funcoes.php");
 
 
 echo "<p style=display:none>'</p>";
+//usuario logado
+$user = $_SESSION["user_portal"];
 
 //funcao para anexar o inserir as informacoes no banco de dados
-function anexarArquivoCertificado($hoje,$data_vencimento,$descricao,$codigo,$pasta,$novo_nome){
+function anexarArquivoCertificado($hoje,$data_vencimento,$descricao,$codigo,$pasta,$novo_nome,$user){
     include("../conexao/conexao.php");
+    $hoje = date('Y-m-d'); 
+
     $insert = "INSERT INTO tb_anexo_certificado ";
     $insert .= "( cl_data_lancamento,cl_data_vencimento,cl_descricao,cl_codigo,cl_diretorio )";
     $insert .= " VALUES ";
@@ -19,6 +23,15 @@ function anexarArquivoCertificado($hoje,$data_vencimento,$descricao,$codigo,$pas
     $operacao_insert = mysqli_query($conecta, $insert);
     if(!$operacao_insert){
         die("Erro no banco de dados || Inserir o diretorio no banco de dados");
+    }else{
+          //adicionar ao log
+    $mensagem = "Usuario Anexou o documento $descricao";
+    $inserir = "INSERT INTO tb_log ";
+    $inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+    $inserir .= " VALUES ";
+    $inserir .= "('$hoje','$user','$mensagem' )";
+    $operacao_insert_log = mysqli_query($conecta, $inserir);
+    
     }
 
 }
@@ -55,7 +68,7 @@ alertify.alert("Favor informe a descrição");
 
         if(move_uploaded_file($temporario,$pasta.$novo_nome)){
             //incliur no banco de dados         
-            anexarArquivoCertificado($hoje,$data_vencimento,$descricao,$codigo,$pasta,$novo_nome);
+            anexarArquivoCertificado($hoje,$data_vencimento,$descricao,$codigo,$pasta,$novo_nome,$user);
 
             ?>
 <script>

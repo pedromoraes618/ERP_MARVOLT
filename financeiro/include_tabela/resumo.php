@@ -2,7 +2,7 @@
     <ul>
 
         <li>
-        Cx - Resumo
+            Cx - Resumo
         </li>
 
     </ul>
@@ -10,6 +10,29 @@
 
 <table border="0" cellspacing="0" width="100%" class="tabela_pesquisa">
     <tbody>
+
+        <tr id="cabecalho_pesquisa_consulta">
+
+            <td>
+                <p>Saldo inicial</p>
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+                <p><?php echo real_format($saldo_inicial); ?></p>
+            </td>
+
+        </tr>
 
         <tr id="cabecalho_pesquisa_consulta">
 
@@ -74,7 +97,7 @@
 
             </td>
             <td>
-                <p><?php echo real_format($somaReceita-$somaDespesa); ?></p>
+                <p><?php echo real_format($saldo_inicial + $somaReceita-$somaDespesa); ?></p>
             </td>
 
         </tr>

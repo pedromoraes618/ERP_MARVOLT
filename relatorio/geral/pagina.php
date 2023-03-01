@@ -20,8 +20,8 @@ include("../../conexao/conexao.php");
 </head>
 
 <body class="rla_operacional">
-    <?php include_once("../../_incluir/topo.php"); ?>
-    <?php include_once("../../_incluir/body.php"); ?>
+    <?php include("../../_incluir/topo.php"); ?>
+    <?php include("../../_incluir/body.php"); ?>
 
     <main>
         <div class="bloco-principal">
@@ -42,7 +42,7 @@ include("../../conexao/conexao.php");
                             <h4>Ano</h4>
                         </div>
                         <div class="bloco">
-                            <diiv id="filtro-1" class="filtro-group">
+                            <div id="filtro-1" class="filtro-group">
                                 <select id="ano_ini" name="ano">
 
                                     <?php
@@ -75,7 +75,7 @@ include("../../conexao/conexao.php");
                                 ?>
 
                                 </select>
-                            </diiv>
+                            </div>
 
                         </div>
 

@@ -18,7 +18,8 @@ session_start();
 require_once("../../conexao/conexao.php");
 include("../../_incluir/funcoes.php");
 echo ".";
-
+$user= $_SESSION["user_portal"];
+$hoje = date('y-m-d');
 
 $formatosPermitidos = array("xml");
 $extensao = pathinfo($_FILES['xml_nfs']['name'], PATHINFO_EXTENSION);
@@ -559,6 +560,13 @@ vDesconto_incondicionado,vLiquido_servico,outras_informacoes,id_referencia,vIss_
             alertify.success("Nota de Serviço importada com sucesso!");
             </script>
             <?php
+            				        //inserindo as informações no banco de dados
+	$mensagem = "Usuario importou via xml a nota de Serviço (venda) Nº $nNF";
+	$inserir = "INSERT INTO tb_log ";
+	$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+	$inserir .= " VALUES ";
+	$inserir .= "('$hoje','$user','$mensagem' )";
+	$operacao_insert_log = mysqli_query($conecta, $inserir);
                                     }
                                 }
                             }

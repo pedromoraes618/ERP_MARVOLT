@@ -5,15 +5,17 @@ include("../conexao/conexao.php");
 //inportar o alertar js
 include('../alert/alert.php');
 include ("../_incluir/funcoes.php"); 
-
-
 echo "<p style=display:none>'</p>";
+
+
+$hoje = date('Y-m-d'); 
+//user logado
+$user = $_SESSION["user_portal"];
+
 
 if(isset($_GET['codigo'])){
     $id_doc = $_GET['codigo'];
 }
-
-
 
 
 if(isset($_POST['salvar'])){
@@ -45,6 +47,15 @@ alertify.alert("Favor informe a descrição");
 alertify.success("Doumento alterado com sucesso");
 </script>
 <?php
+
+       //adicionar ao log
+       $mensagem = "Usuario editou o documento de codigo $id_doc";
+       $inserir = "INSERT INTO tb_log ";
+       $inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+       $inserir .= " VALUES ";
+       $inserir .= "('$hoje','$user','$mensagem' )";
+       $operacao_insert_log = mysqli_query($conecta, $inserir);
+       
         }
 
         

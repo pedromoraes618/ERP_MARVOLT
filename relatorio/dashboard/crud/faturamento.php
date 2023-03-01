@@ -167,16 +167,16 @@ $mes_fim = $_GET['filtromesfim'];
         $linha = mysqli_fetch_assoc($consultar_cliente);
         $cliente_nome = utf8_encode($linha['nome_fantasia']);
          //nota fiscal entrada    
-    function consultar_faturamento_nfes_cliente($i,$ano,$clienteid){
-        include("../../../conexao/conexao.php"); 
-        $select = "SELECT sum(nfes.valor_total_nota) as valor_total from  
-        tb_nfe_saida as nfes inner join  clientes as clt on clt.cpfcnpj = nfes.cnpj_cpf where  nfes.data_emissao between '$ano-$i-01' and '$ano-$i-31' and clt.clienteID= $clienteid;";
-        $consultar_valor_total_nfe_entrada = mysqli_query($conecta,$select);
-        $linha = mysqli_fetch_assoc($consultar_valor_total_nfe_entrada);
-        $valor_total_nfe_saida_cliente = $linha['valor_total'];
-        return $valor_total_nfe_saida_cliente;
-    }
-         
+    // function consultar_faturamento_nfes_cliente($i,$ano,$clienteid){
+    //     include("../../../conexao/conexao.php"); 
+    //     $select = "SELECT sum(nfes.valor_total_nota) as valor_total from  
+    //     tb_nfe_saida as nfes inner join  clientes as clt on clt.cpfcnpj = nfes.cnpj_cpf where  nfes.data_emissao between '$ano-$i-01' and '$ano-$i-31' and clt.clienteID= $clienteid;";
+    //     $consultar_valor_total_nfe_entrada = mysqli_query($conecta,$select);
+    //     $linha = mysqli_fetch_assoc($consultar_valor_total_nfe_entrada);
+    //     $valor_total_nfe_saida_cliente = $linha['valor_total'];
+    //     return $valor_total_nfe_saida_cliente;
+    // }
+   
 
 
         
@@ -206,7 +206,46 @@ $mes_fim = $_GET['filtromesfim'];
             return $quantidade_nfe_entrada;
         }
 
+        function consultar_faturamento_nfes_cliente($i,$ano,$clientecnpj){
+            include("../../../conexao/conexao.php"); 
+            $select = "SELECT sum(valor_total_nota) as valor_total from  
+            tb_nfe_saida where status_processamento = '1' and data_emissao between '$ano-$i-01' and '$ano-$i-31' and cnpj_cpf='$clientecnpj' ";
+            $consultar_valor_total_nfe_saida = mysqli_query($conecta,$select);
+            $linha = mysqli_fetch_assoc($consultar_valor_total_nfe_saida);
+            $valor_total_nfe_saida = $linha['valor_total'];
 
+
+            //valor total nfs saida
+            $select = "SELECT sum(vLiquido_servico) AS valor_total, count(*) as qtdnfss from tb_nfs where dt_emissao between '$ano-$i-01' and '$ano-$i-31' and cnpj_tomador = '$clientecnpj' ";
+            $consultar_valor_total_nfs_saida = mysqli_query($conecta,$select);
+            $linha = mysqli_fetch_assoc($consultar_valor_total_nfs_saida);
+            $valor_total_nfs_saida= $linha['valor_total'];
+            $valor_total_nota_fiscal = $valor_total_nfe_saida + $valor_total_nfs_saida;
+
+            return $valor_total_nota_fiscal;
+        }
+
+        
+        function consultar_quantidade_nfes_cliente($i,$ano,$clientecnpj){
+            include("../../../conexao/conexao.php"); 
+            $select = "SELECT count(*) as qtdnfes from  
+            tb_nfe_saida where status_processamento = '1' and data_emissao between '$ano-$i-01' and '$ano-$i-31' and cnpj_cpf = '$clientecnpj' ";
+            $consultar_quantidade_nfe_saida = mysqli_query($conecta,$select);
+            $linha = mysqli_fetch_assoc($consultar_quantidade_nfe_saida);
+            $quantidade_nfe_saida = $linha['qtdnfes'];
+    
+            //valor total nfs saida
+            $select = "SELECT count(*) as qtdnfss from tb_nfs where dt_emissao between '$ano-$i-01' and '$ano-$i-31' and cnpj_tomador = '$clientecnpj' ";
+            $consultar_valor_total_nfs_saida = mysqli_query($conecta,$select);
+            $linha = mysqli_fetch_assoc($consultar_valor_total_nfs_saida);
+            $quantidade_nota_nfs_saida = $linha['qtdnfss'];
+            $quantidade_nota_fiscal_saida = $quantidade_nfe_saida + $quantidade_nota_nfs_saida;
+            return $quantidade_nota_fiscal_saida;
+    
+            
+            
+        }
+             
 
     //nome fantasia cliiente
     $select = "SELECT * from clientes where cpfcnpj = '$clientecnpj'";

@@ -5,6 +5,10 @@ require_once("../conexao/conexao.php");
 //inportar o alertar js
 include('../alert/alert.php');
 echo ",";
+//usuario logado
+$user= $_SESSION["user_portal"];
+
+
 //deckara as varuaveus
 
 
@@ -308,7 +312,23 @@ alertify.alert("Favor informar o comprador");
 </script>
 
 <?php
-} elseif($formaPagamento == "0"){
+} elseif(($dataFechamento == "") and ($statusProposta =="3" ) ){
+    ?>
+
+<script>
+alertify.alert("Favor informar a data de fechamento");
+</script>
+
+<?php
+}elseif(($dataFechamento == "") and ($statusProposta =="4" ) ){
+    ?>
+
+<script>
+alertify.alert("Favor informar a data de fechamento");
+</script>
+
+<?php
+}elseif($formaPagamento == "0"){
     ?>
 
 <script>
@@ -358,7 +378,6 @@ $freteID = "1";
 $compradorID = "1";
 $clienteID = "1";
 $codCotacao = "";
-$numeroOrcamento = "";
 $desconto = 0;
 $valorTotal = 0;
 
@@ -372,23 +391,34 @@ $valorTotal = 0;
 alertify.success("Cotação <?php echo $codCotacao; ?> finalizada com sucesso");
 </script>
 <?php
- $dataRecebida = "";
- $validade = "";
- $dataEnvio = "";
- $dataFechamento= "";
- $diasNegociacao = "";
- $statusProposta = "2";
- $prazoEntrega ="";
- $dataResponder = "";
- $dataFechamento = "";
- $numeroSolicitacao = "";
- $formaPagamento = "0";
- $freteID = "0";
- $compradorID = "0";
- $clienteID = "0";
- $numeroOrcamento = "";
- $desconto = 0;
- $valorTotal = 0;
+
+$mensagem = "Usuario Adicionou uma nova cotação Nº $numeroOrcamento";
+$inserir = "INSERT INTO tb_log ";
+$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+$inserir .= " VALUES ";
+$inserir .= "('$hoje','$user','$mensagem' )";
+$operacao_insert_log = mysqli_query($conecta, $inserir);
+
+
+$dataRecebida = "";
+$validade = "";
+$dataEnvio = "";
+$dataFechamento= "";
+$diasNegociacao = "";
+$statusProposta = "2";
+$prazoEntrega ="";
+$dataResponder = "";
+$dataFechamento = "";
+$numeroSolicitacao = "";
+$formaPagamento = "0";
+$freteID = "0";
+$compradorID = "0";
+$clienteID = "0";
+$numeroOrcamento = "";
+$categoria_prod = "0";
+$desconto = 0;
+$valorTotal = 0;
+
         }
 
             //atualizar o numero da cotacao

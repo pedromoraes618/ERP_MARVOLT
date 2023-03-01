@@ -31,7 +31,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
     count(cotacao.status_proposta) as qtdGanha, min(valorTotalComDesconto) as somaMin, sum(valorTotalComDesconto) as totalVlrCotacao, cotacao.compradorID, 
     cotacao.desconto,cotacao.valorTotalComDesconto, cotacao.cod_cotacao, clientes.clienteID, clientes.nome_fantasia as cliente,situacao_proposta.descricao as situacao,
      cotacao.validade,cotacao.data_responder,cotacao.data_envio, cotacao.data_fechamento from clientes inner join cotacao on cotacao.clienteID = clientes.clienteID INNER Join situacao_proposta on cotacao.status_proposta = situacao_proposta.statusID " ;
-    $select .= " WHERE data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf'  and status_proposta = '3'  group by cliente order by qtdGanha desc,totalVlrCotacao desc";
+    $select .= " WHERE data_fechamento BETWEEN '$pesquisaData' and '$pesquisaDataf'  and status_proposta = '3'  group by cliente order by qtdGanha desc,totalVlrCotacao desc";
     $resultado = mysqli_query($conecta, $select);
     if(!$resultado){
         die("Falha na consulta ao banco de dados");
@@ -43,7 +43,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
     cotacao.compradorID, cotacao.desconto,cotacao.valorTotalComDesconto, cotacao.cod_cotacao, clientes.clienteID, clientes.nome_fantasia as cliente,
     situacao_proposta.descricao as situacao, cotacao.validade,cotacao.data_responder,cotacao.data_envio, cotacao.data_fechamento from clientes inner join 
     cotacao on cotacao.clienteID = clientes.clienteID INNER Join situacao_proposta on cotacao.status_proposta = situacao_proposta.statusID " ;
-    $selectParcial .= " WHERE data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf'  and status_proposta = '4'  group by cliente order by  qtdGanhaParcial desc,totalVlrCotacao desc";
+    $selectParcial .= " WHERE data_fechamento BETWEEN '$pesquisaData' and '$pesquisaDataf'  and status_proposta = '4'  group by cliente order by  qtdGanhaParcial desc,totalVlrCotacao desc";
     $resultadoParcial = mysqli_query($conecta, $selectParcial);
     if(!$resultadoParcial){
         die("Falha na consulta ao banco de dados Parcial");
@@ -54,7 +54,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
      cotacao.desconto,cotacao.valorTotalComDesconto, cotacao.cod_cotacao, clientes.clienteID, clientes.nome_fantasia as cliente,situacao_proposta.descricao as 
      situacao, cotacao.validade,cotacao.data_responder,cotacao.data_envio, cotacao.data_fechamento from clientes inner join cotacao on 
      cotacao.clienteID = clientes.clienteID INNER Join situacao_proposta on cotacao.status_proposta = situacao_proposta.statusID " ;
-    $selectPedidas .= " WHERE data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf'  and status_proposta = '5'  group by cliente order by  somaMin";
+    $selectPedidas .= " WHERE data_envio BETWEEN '$pesquisaData' and '$pesquisaDataf'  and status_proposta = '5'  group by cliente order by  somaMin";
     $resultadoPerdidas = mysqli_query($conecta, $selectPedidas);
     if(!$resultadoPerdidas){
         die("Falha na consulta ao banco de dados Perdida");
@@ -63,7 +63,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
       
     //quantidades de cotação
     $selectResumoTotalCotacao = " SELECT count(status_proposta) as qtdCotacao from cotacao " ;
-    $selectResumoTotalCotacao .= " WHERE data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf' ";
+    $selectResumoTotalCotacao .= " WHERE data_envio BETWEEN '$pesquisaData' and '$pesquisaDataf' ";
     $resultadoResumo = mysqli_query($conecta, $selectResumoTotalCotacao);
     if(!$resultadoResumo){
         die("Falha na consulta ao banco de dados");
@@ -75,7 +75,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
 
        $selectEmpresaMaisCoutou = " SELECT count(status_proposta) as qtdEmpresa, clientes.nome_fantasia as cliente from clientes 
        inner join cotacao on cotacao.clienteID = clientes.clienteID " ;
-       $selectEmpresaMaisCoutou .= " WHERE data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf' group by cliente order by qtdEmpresa desc ";
+       $selectEmpresaMaisCoutou .= " WHERE data_envio BETWEEN '$pesquisaData' and '$pesquisaDataf' group by cliente order by qtdEmpresa desc ";
        $resultadoEmpresaMaisCoutou = mysqli_query($conecta, $selectEmpresaMaisCoutou);
        if(!$resultadoEmpresaMaisCoutou){
         die("Falha na consulta ao banco de dados");
@@ -113,7 +113,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
         cotacao.cod_cotacao, clientes.clienteID, clientes.nome_fantasia as cliente,situacao_proposta.descricao as situacao, cotacao.validade,
         cotacao.data_responder,cotacao.data_envio, cotacao.data_fechamento from clientes inner join cotacao on 
         cotacao.clienteID = clientes.clienteID INNER Join situacao_proposta on cotacao.status_proposta = situacao_proposta.statusID " ;
-        $selectSoma .= " WHERE data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and status_proposta = '3'  ";
+        $selectSoma .= " WHERE data_fechamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and status_proposta = '3'  ";
         $lista_Soma_Valor = mysqli_query($conecta, $selectSoma);
         if(!$lista_Soma_Valor){
             die("Falha na consulta ao banco de dados");
@@ -129,7 +129,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
         cotacao.cod_cotacao, clientes.clienteID, clientes.nome_fantasia as cliente,situacao_proposta.descricao as situacao, cotacao.validade,cotacao.data_responder,
         cotacao.data_envio, cotacao.data_fechamento from clientes inner join cotacao on cotacao.clienteID = clientes.clienteID INNER Join situacao_proposta on 
         cotacao.status_proposta = situacao_proposta.statusID " ;
-        $selectSomaParcial .= " WHERE data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and status_proposta = '4'  ";
+        $selectSomaParcial .= " WHERE data_fechamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and status_proposta = '4'  ";
         $lista_Soma_Valor_Parcial = mysqli_query($conecta, $selectSomaParcial);
         if(!$lista_Soma_Valor_Parcial){
             die("Falha na consulta ao banco de dados Parcial");
@@ -144,7 +144,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
         cotacao.cod_cotacao, clientes.clienteID, clientes.nome_fantasia as cliente,situacao_proposta.descricao as situacao, 
         cotacao.validade,cotacao.data_responder,cotacao.data_envio, cotacao.data_fechamento from clientes inner join cotacao on 
         cotacao.clienteID = clientes.clienteID INNER Join situacao_proposta on cotacao.status_proposta = situacao_proposta.statusID " ;
-        $selectSomaPerdidas .= " WHERE data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and status_proposta = '5'  ";
+        $selectSomaPerdidas .= " WHERE data_envio BETWEEN '$pesquisaData' and '$pesquisaDataf' and status_proposta = '5'  ";
         $lista_Soma_Valor_perdidas = mysqli_query($conecta, $selectSomaPerdidas);
         if(!$lista_Soma_Valor_perdidas){
             die("Falha na consulta ao banco de dados Perdida");
@@ -161,7 +161,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
         cotacao.cod_cotacao, clientes.clienteID, clientes.nome_fantasia as cliente,situacao_proposta.descricao as situacao, 
         cotacao.validade,cotacao.data_responder,cotacao.data_envio, cotacao.data_fechamento from clientes inner join cotacao on 
         cotacao.clienteID = clientes.clienteID INNER Join situacao_proposta on cotacao.status_proposta = situacao_proposta.statusID " ;
-        $selectSomaAberta .= " WHERE data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and status_proposta = '2'  ";
+        $selectSomaAberta .= " WHERE data_envio BETWEEN '$pesquisaData' and '$pesquisaDataf' and status_proposta = '2'  ";
         $lista_Soma_Valor_Aberta = mysqli_query($conecta, $selectSomaAberta);
         if(!$lista_Soma_Valor_Aberta){
             die("Falha na consulta ao banco de dados Perdida");
@@ -260,9 +260,11 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                         <td>
                             <p>Ranking</p>
                         </td>
+
                         <td>
                             <p>Empresa</p>
                         </td>
+
                         <td>
                             <p>Cotações ganhas</p>
                         </td>
@@ -276,7 +278,9 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                             <p>Perda</p>
                         </td>
 
-
+                        <td>
+                            <p>Data fechamento</p>
+                        </td>
 
 
                     </tr>
@@ -341,6 +345,9 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                             </p>
                         </td>
 
+
+
+
                         <td style="width:200px;">
                             <font size="2" style="margin-left:50px"><?php echo ($qtdCotacaoGanho);?></font>
                         </td>
@@ -350,7 +357,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                         </td>
                         <td style="width:200px;">
                             <?php 
-                             $selectProdutoCotacaoTotal =  "SELECT sum(preco_venda*quantidade) as soma, cotacao.clienteID,cotacao.data_lancamento  from produto_cotacao inner join cotacao on produto_cotacao.cotacaoID = cotacao.cod_cotacao  where  cotacao.data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf'   and cotacao.status_proposta = 3 and cotacao.clienteID = '{$clienteID}' and produto_cotacao.status = 2 " ;
+                             $selectProdutoCotacaoTotal =  "SELECT sum(preco_venda*quantidade) as soma, cotacao.clienteID,cotacao.data_lancamento  from produto_cotacao inner join cotacao on produto_cotacao.cotacaoID = cotacao.cod_cotacao  where  cotacao.data_fechamento BETWEEN '$pesquisaData' and '$pesquisaDataf'   and cotacao.status_proposta = 3 and cotacao.clienteID = '{$clienteID}' and produto_cotacao.status = 2 " ;
                              $lista_Produto_cotacao_total= mysqli_query($conecta, $selectProdutoCotacaoTotal);
                              if(!$lista_Produto_cotacao_total){
                              die("Falha no banco de dados || pesquisar produto cotacao");
@@ -377,8 +384,14 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                             
                             ?></font>
                         </td>
+                        <td style="width: 500px;">
+                            <p>
+                                <font size="2"><?php echo formatDateB($DataFechamento);?> </font>
+                            </p>
+                        </td>
 
                     </tr>
+
                     <?php
                       
                         $total_fechados = $soma_produtos_fechados + $total_fechados;
@@ -404,6 +417,9 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
 
                         <td>
                             <p><?php echo real_format($total_fechados); ?></p>
+                        </td>
+                        <td>
+                            <p></p>
                         </td>
                         <td>
                             <p></p>
@@ -455,7 +471,9 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                         <td>
                             <p>Perda</p>
                         </td>
-
+                        <td>
+                            <p>Data fechamento</p>
+                        </td>
 
                     </tr>
 
@@ -518,7 +536,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                         </td>
                         <td style="width:200px;">
                             <?php 
-                            $selectProdutoCotacaoTotal =  "SELECT sum(preco_venda*quantidade) as soma, cotacao.clienteID,cotacao.data_lancamento  from produto_cotacao inner join cotacao on produto_cotacao.cotacaoID = cotacao.cod_cotacao  where  cotacao.data_lancamento BETWEEN '$pesquisaData' and '$pesquisaDataf'   and cotacao.status_proposta = 4 and cotacao.clienteID = '{$clienteID}' and produto_cotacao.status = 2 " ;
+                            $selectProdutoCotacaoTotal =  "SELECT sum(preco_venda*quantidade) as soma, cotacao.clienteID,cotacao.data_lancamento  from produto_cotacao inner join cotacao on produto_cotacao.cotacaoID = cotacao.cod_cotacao  where  cotacao.data_fechamento BETWEEN '$pesquisaData' and '$pesquisaDataf'   and cotacao.status_proposta = 4 and cotacao.clienteID = '{$clienteID}' and produto_cotacao.status = 2 " ;
                              $lista_Produto_cotacao_total= mysqli_query($conecta, $selectProdutoCotacaoTotal);
                              if(!$lista_Produto_cotacao_total){
                              die("Falha no banco de dados || pesquisar produto cotacao");
@@ -539,7 +557,11 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                             
                             ?></font>
                         </td>
-
+                        <td style="width: 500px;">
+                            <p>
+                                <font size="2"><?php echo formatDateB($DataFechamento);?> </font>
+                            </p>
+                        </td>
 
                     </tr>
                     <?php
@@ -574,6 +596,9 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                         <td>
                             <p></p>
                         </td>
+                        <td>
+
+</td>
 
 
 
@@ -622,7 +647,7 @@ if(isset($_GET["pesquisa"]) && ["CampoPesquisaData"] && ["CampoPesquisaDataf"]) 
                         <td>
 
                         </td>
-
+                  
 
 
 

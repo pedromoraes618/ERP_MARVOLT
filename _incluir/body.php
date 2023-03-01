@@ -1,8 +1,8 @@
 <?php
 //pegar o nivel do usuario
-if ($_SESSION["user_portal"]) {
+if (($_SESSION["user_portal"])) {
     $user = $_SESSION["user_portal"];
-    $saudacao = "SELECT usuarios.usuario,usuarios.nivel,usuarios.nome, tb_nivel_usuario.descricao FROM usuarios
+    $saudacao = "SELECT usuarios.convidado,usuarios.ip_principal, usuarios.usuario,usuarios.nivel,usuarios.nome, tb_nivel_usuario.descricao FROM usuarios
      inner join tb_nivel_usuario on usuarios.nivel = tb_nivel_usuario.nivel_usuarioID where usuarioID = {$user}";
     $saudacao_login = mysqli_query($conecta, $saudacao);
     if (!$saudacao_login) {
@@ -12,6 +12,29 @@ if ($_SESSION["user_portal"]) {
     $nome = $saudacao_login['usuario'];
     $nivel = $saudacao_login['nivel'];
     $descricaoNivel = $saudacao_login['descricao'];
+    $convidado = $saudacao_login['convidado'];
+    $ip_convidado = $saudacao_login['ip_principal'];
+    
+    //pegar o ip do usuario
+    $ip_user = $_SERVER['REMOTE_ADDR'];
+
+    if($convidado =="1" and $ip_convidado != $ip_user){
+        $inserir = "UPDATE usuarios set ip_principal = '{$ip_user}'  where usuarioID = {$user}  ";
+        $operacao_update_ip = mysqli_query($conecta, $inserir);
+        if(!$operacao_update_ip){
+            die("Erro no banco de dados Linha 63 inserir_no_banco_de_dados");
+        }else{
+            $hoje = date('y-m-d');
+    //adicionar ao log
+        $mensagem = "Usuario $nome acessou o sistema em uma nova maquina";
+        $inserir = "INSERT INTO tb_log ";
+        $inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+        $inserir .= " VALUES ";
+        $inserir .= "('$hoje','$user','$mensagem' )";
+        $operacao_insert_log = mysqli_query($conecta, $inserir);
+             
+    }
+    }
 }
 ?>
 
@@ -106,8 +129,9 @@ if ($_SESSION["user_portal"]) {
                 <?php if ($nivel == 2 or $nivel == 4 or $nivel ==  5 or $nivel == 6) { ?>
                 <li><a>Financeiro<i class="fa-solid fa-arrow-down"></i></a>
                     <ul>
+                        <li><a href="../../../marvolt/caixa/gerenciar_caixa.php">Abertura e fechamento CX</a></li>
                         <li><a href="../../../marvolt/financeiro/consulta_financeiro.php">Lançar no Financeiro</a></li>
-                        <li><a href="../../../marvolt/financeiro/caixa.php">Caixa</a></li>
+                        <li><a href="../../../marvolt/financeiro/caixa.php">Movimento do Caixa</a></li>
                         <li><a href="../../../marvolt/financeiro/relatorio_apagar_receber.php">Relatórios Pagamentos e
                                 Recebimentos</a></li>
                     </ul>
@@ -154,6 +178,8 @@ if ($_SESSION["user_portal"]) {
                         <li><a
                                 href="../../../marvolt/configuracao/empresa/registro_empresa.php?codEmpresa=<?php echo 1 ?>">Empresa</a>
                         </li>
+                        <li><a href="../../../marvolt/configuracao/log/consultar_log.php">Log</a>
+                        </li>
                         <?php } ?>
                         <li><a href="../../../marvolt/configuracao/categoria/consultar_categoria.php">Categoria de
                                 Produtos</a></li>
@@ -165,9 +191,12 @@ if ($_SESSION["user_portal"]) {
                         <?php if ($nivel == 4 or $nivel ==  5) { ?>
                         <li><a href="../../../marvolt/configuracao/parametros/consultar_parametro.php">Parâmetros</a>
                         </li>
-                        <?php } ?>
+                        <?php 
+              
+                    } ?>
 
                     </ul>
+
                 </li>
                 <?php
                 }

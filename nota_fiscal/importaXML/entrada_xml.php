@@ -18,7 +18,8 @@ session_start();
 require_once("../../conexao/conexao.php");
 include ("../../_incluir/funcoes.php");
 echo ".";
-
+$hoje = date('y-m-d');
+$user= $_SESSION["user_portal"];
 
 	$formatosPermitidos = array("xml");
 	$extensao = pathinfo($_FILES['xml_nfe']['name'],PATHINFO_EXTENSION);
@@ -473,7 +474,8 @@ $hoje = date('Y-m-d');
 			$operacao_inserir_iten = mysqli_query($conecta, $inserir);
 			if(!$operacao_inserir_iten){
 				die("Erro no banco de dados tabela lancamento_financeiro");
-					}
+			}
+
 			
 				}
 			}
@@ -749,15 +751,25 @@ $hoje = date('Y-m-d');
 	$inserir .= "( '$hoje','$chave','$nNF','$nProt','$serie','$dEmi','$dSaiEnt','$emit_xNome','$emit_CNPJ','$emit_IE','$vBC','$vICMS','$vBCST','$vST','$vFrete','$vSeg','$vDesc','$vIPI','$vProdTotal','$vNF' )";
 		
 				
-	?>
+
+				$operacao_inserir = mysqli_query($conecta, $inserir);
+				if(!$operacao_inserir){
+					die("Erro no banco de dados Linha");
+				}else{
+					?>
         <script>
         alertify.success("Nota fiscal importada com sucesso!");
         </script>
         <?php 
-			
-				$operacao_inserir = mysqli_query($conecta, $inserir);
-				if(!$operacao_inserir){
-					die("Erro no banco de dados Linha");
+			        //inserindo as informações no banco de dados
+	$mensagem = "Usuario importou via xml a nota de compra nº $nNF";
+	$inserir = "INSERT INTO tb_log ";
+	$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+	$inserir .= " VALUES ";
+	$inserir .= "('$hoje','$user','$mensagem' )";
+	$operacao_insert_log = mysqli_query($conecta, $inserir);
+
+	
 				}
 			}
 		}

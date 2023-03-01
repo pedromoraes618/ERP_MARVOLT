@@ -1,5 +1,5 @@
 <?php
-
+$mes = date('m');
     function real_format($valor) {
         $valor  = number_format($valor,2,",",".");
         return "R$ " . $valor;
@@ -104,9 +104,97 @@ function real_percent_grafico($valor) {
         return $value;
     }
 }
-   $hoje = date('Y--m-d');
+   $hoje = date('Y-m-d');
   //gerar cor automatico
    function random_color($start = 0x000000, $end = 0xFFFFFF) {
     return sprintf('#%06x', mt_rand($start, $end));
+ }
+
+
+ function saldo_inicial($conecta,$mes,$ano){
+  if($mes == 01){
+  $ano = $ano -1;
+  $mes = 12;
+  }else{
+    $mes = $mes -1;
+  }
+
+  $select ="SELECT sum(valor) as valorreceita From lancamento_financeiro where Status='Recebido' and data_do_pagamento between '$ano-$mes-01' and '$ano-$mes-31' ";
+  $consulta_valor_caixa_anterior = mysqli_query($conecta,$select);
+  $linha = mysqli_fetch_assoc($consulta_valor_caixa_anterior);
+  $valor_receita  = $linha['valorreceita'];
+
+  $select ="SELECT sum(valor) as valordespesa From lancamento_financeiro where Status='Pago' and data_do_pagamento between '$ano-$mes-01' and '$ano-$mes-31' ";
+  $consulta_valor_caixa_anterior = mysqli_query($conecta,$select);
+  $linha = mysqli_fetch_assoc($consulta_valor_caixa_anterior);
+  $valor_despesa  = $linha['valordespesa'];
+
+
+  $saldo_inicial = $valor_receita - $valor_despesa;
+  return $saldo_inicial;
+ }
+ function verifica_status_caixa($conecta,$mes,$ano){
+  $select ="SELECT count(*) as qtd from tb_caixa where cl_mes = $mes and cl_ano = $ano";
+  $consulta_caixa = mysqli_query($conecta,$select);
+  $linha = mysqli_fetch_assoc($consulta_caixa);
+  $qtd  = $linha['qtd'];
+  return $qtd;
+ }
+
+ function verifica_caixa_descricao($conecta,$mes,$ano){
+  $select ="SELECT * from tb_caixa where cl_mes = $mes and cl_ano = $ano";
+  $consulta_caixa = mysqli_query($conecta,$select);
+  $linha = mysqli_fetch_assoc($consulta_caixa);
+  $descricao_b  = $linha['cl_descricao'];
+  return $descricao_b;
+ }
+
+
+
+ function saldo_caixa($conecta,$mes,$ano){
+  $select ="SELECT sum(valor) as valorreceita From lancamento_financeiro where Status='Recebido' and data_do_pagamento between '$ano-$mes-01' and '$ano-$mes-31' ";
+  $consulta_valor_caixa = mysqli_query($conecta,$select);
+  $linha = mysqli_fetch_assoc($consulta_valor_caixa);
+  $valor_receita = $linha['valorreceita'];
+
+  $select ="SELECT sum(valor) as valordespesa From lancamento_financeiro where Status='Pago' and data_do_pagamento between '$ano-$mes-01' and '$ano-$mes-31' ";
+  $consulta_valor_caixa = mysqli_query($conecta,$select);
+  $linha = mysqli_fetch_assoc($consulta_valor_caixa);
+  $valor_despesa = $linha['valordespesa'];
+
+  $saldo_caixa = $valor_receita - $valor_despesa;
+
+  return $saldo_caixa;
+ }
+
+
+ function consulta_saldo_final($conecta,$mes,$ano){
+
+  if($mes == 01){
+    $ano = $ano -1;
+    $mes = 12;
+    }else{
+      $mes = $mes -1;
+    }
+
+  $select ="SELECT * from tb_caixa where cl_mes = $mes and cl_ano = $ano";
+  $consulta_caixa = mysqli_query($conecta,$select);
+  $linha = mysqli_fetch_assoc($consulta_caixa);
+  $saldo_fechamento  = $linha['cl_valor_fechamento'];
+  return $saldo_fechamento;
+ }
+
+function registrar_log($conecta,$data,$user_id,$mensagem){
+$inserir = "INSERT INTO tb_log ";
+$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+$inserir .= " VALUES ";
+$inserir .= "('$data','$user_id','$mensagem' )";
+$operacao_insert_log = mysqli_query($conecta, $inserir);
+if($operacao_insert_log){
+  return true;
+}
+
+
+//veriificar se o caix
  }
 ?>

@@ -1,10 +1,11 @@
 <?php 
 include("../conexao/sessao.php");
 require_once("../conexao/conexao.php"); 
-
 //inportar o alertar js
 include('../alert/alert.php');
 
+//usuario logado
+$user= $_SESSION["user_portal"];
 echo ",";
 //deckara as varuaveus
 if($_POST){
@@ -247,22 +248,27 @@ alertify.alert("Favor fechar o campo Data fechamento");
 
     $nao_definido = utf8_decode("Realizado");
     $inserir = "INSERT INTO pedido_compra ";
-    $inserir .= "( data_movimento,data_fechamento,codigo_pedido,numero_orcamento,forma_pagamento,clienteID,status_da_compra,desconto_geral,valor_total,valor_total_margem,valor_total_compra )";
+    $inserir .= "(data_movimento,data_fechamento,codigo_pedido,numero_orcamento,forma_pagamento,clienteID,status_da_compra,desconto_geral,valor_total,valor_total_margem,valor_total_compra )";
     $inserir .= " VALUES ";
     $inserir .= "( '$hoje','$dataFechamento', '$codCotacao','$numeroOrcamento','$formaPagamento','$clienteID','$nao_definido','$desconto','$valorTotalComDesconto','$margemGeral','$valorCompra' )";
-  
+    //verificando se está havendo conexão com o banco de dados
+    $operacao_inserir = mysqli_query($conecta, $inserir);
+    if(!$operacao_inserir){
+     die("Erro no banco de dados insert na tabela pedido_compra");
+    }else{
     ?>
 <script>
 alertify.success("Pedido de compra lançado com sucesso");
 </script>
 <?php
-    
-    //verificando se está havendo conexão com o banco de dados
-    $operacao_inserir = mysqli_query($conecta, $inserir);
-    if(!$operacao_inserir){
-      print_r($_POST);
-        die("Erro no banco de dados insert na tabela pedido_compra");
-     
+        
+     //adicionar ao log
+    $mensagem = "Usuario gerou da cotação Nº $numeroOrcamento um novo pedido de compra ";
+    $inserir = "INSERT INTO tb_log ";
+    $inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+    $inserir .= " VALUES ";
+    $inserir .= "('$hoje','$user','$mensagem' )";
+    $operacao_insert_log = mysqli_query($conecta, $inserir);
     }
 }
      
@@ -377,6 +383,15 @@ alertify.success("Cotação duplicada com sucesso <?php echo $paramentroNumeroOr
 </script>
 <?php
 
+     //adicionar ao log
+    $mensagem = "Usuario duplicou a cotação Nº $numeroOrcamento";
+    $inserir = "INSERT INTO tb_log ";
+    $inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+    $inserir .= " VALUES ";
+    $inserir .= "('$hoje','$user','$mensagem' )";
+    $operacao_insert_log = mysqli_query($conecta, $inserir);
+    
+
     }
 //insert no tb produto cotacao
     $inserir = "INSERT INTO produto_cotacao ";
@@ -450,6 +465,22 @@ alertify.alert("Favor informar a forma de pagamento");
 </script>
 
 <?php
+    }elseif(($dataFechamento == "") and ($statusProposta =="3" ) ){
+        ?>
+
+<script>
+alertify.alert("Favor informar a data de fechamento");
+</script>
+
+<?php
+    }elseif(($dataFechamento == "") and ($statusProposta =="4" ) ){
+        ?>
+
+<script>
+alertify.alert("Favor informar a data de fechamento");
+</script>
+
+<?php
     }else{    
     
 if($dataRecebida==""){
@@ -498,6 +529,15 @@ alertify.success("Dados alterado");
 </script>
 
 <?php
+//adicionar ao log
+$mensagem = "Usuario editou a cotação Nº $numeroOrcamento";
+$inserir = "INSERT INTO tb_log ";
+$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+$inserir .= " VALUES ";
+$inserir .= "('$hoje','$user','$mensagem' )";
+$operacao_insert_log = mysqli_query($conecta, $inserir);
+
+
     }   if($statusProposta=="3"){
             $update = "UPDATE produto_cotacao set status = '2' where cotacaoID = '{$codCotacao}' ";
             $operacao_update = mysqli_query($conecta, $update);
@@ -657,6 +697,12 @@ die("Erro no banco de dados || adicionar o produto pedido de compra no banco de 
 }
 }
 
+$select =  "SELECT * from pedido_compra where numero_orcamento='$numeroOrcamentoB'";
+$consultar_pedido_compra= mysqli_query($conecta, $select);
+$linha = mysqli_fetch_assoc($consultar_pedido_compra);
+$qtd_pedido = mysqli_num_rows($consultar_pedido_compra);
+$codigo_pedido = $linha['codigo_pedido'];
+$pedido_id = $linha['pedidoID'];
 
 
 ?>
@@ -713,6 +759,16 @@ die("Erro no banco de dados || adicionar o produto pedido de compra no banco de 
                                 class="btn btn-info" onClick="return confirm('Deseja duplicar essa cotação?');"
                                 value="Duplicar">
                         </td>
+                        <?php if($qtd_pedido > 0){ ?>
+                        <td>
+                            <a
+                                onclick="window.open('../pdcompra/editar_pdcompra.php?codigo=<?PHP echo $pedido_id; ?>&codigoPedido=<?php echo $codigo_pedido; ?>', 
+'editar_produto_cotacao', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1500, HEIGHT=900');">
+                                <button type="button" class="btn btn-warning" >Pd compra</button>
+
+                            </a>
+                        </td>
+                            <?php } ?>
                         <td align=left> <button type="button" name="btnfechar"
                                 onclick="window.opener.location.reload();fechar();"
                                 class="btn btn-secondary">Voltar</button>

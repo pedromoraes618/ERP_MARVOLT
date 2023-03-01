@@ -6,6 +6,9 @@ include('../alert/alert.php');
 
 include_once("../_incluir/funcoes.php"); 
 echo",";
+//usuario logado
+$user= $_SESSION["user_portal"];
+
 
 if($_POST){
 
@@ -151,6 +154,14 @@ die("Erro no banco de dados salvar o pedido no banco de dados");
 alertify.success("Pedido de compra lançado com sucesso");
 </script>
 <?php
+
+$hoje = date('y-m-d');
+$mensagem = "Adicionou um novo pedido de compra nº $numeroPedidoCompra";
+$inserir = "INSERT INTO tb_log ";
+$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+$inserir .= " VALUES ";
+$inserir .= "('$hoje','$user','$mensagem' )";
+$operacao_insert_log = mysqli_query($conecta, $inserir);
 
     //limpando os campos apos ser feito o insert no banco de dados
     $codPedido = "";
@@ -594,28 +605,28 @@ if(!$lista_statuscompra){
                                                     <?php 
                                     
                                     while($linha  = mysqli_fetch_assoc($lista_categoria)){
-                                        $categoriaPrincipal_produto = utf8_encode($linha["categoriaID"]);
+                                        $categoriaPrincipal_produto = ($linha["categoriaID"]);
                                     if(!isset($categoria_produto_geral)){
                                     
                                     ?>
-                                                    <option value="<?php echo utf8_encode($linha["categoriaID"]);?>">
-                                                        <?php echo utf8_encode($linha["nome_categoria"]);?>
+                                                    <option value="<?php echo ($linha["categoriaID"]);?>">
+                                                        <?php echo ($linha["nome_categoria"]);?>
                                                     </option>
                                                     <?php
    
                                     }else{
 
                                         if($categoria_produto_geral == $categoriaPrincipal_produto){
-                                        ?> <option value="<?php echo utf8_encode($linha["categoriaID"]);?>" selected>
-                                                        <?php echo utf8_encode($linha["nome_categoria"]);?>
+                                        ?> <option value="<?php echo ($linha["categoriaID"]);?>" selected>
+                                                        <?php echo ($linha["nome_categoria"]);?>
                                                     </option>
 
                                                     <?php
                                             }else{
                                     
                                 ?>
-                                                    <option value="<?php echo utf8_encode($linha["categoriaID"]);?>">
-                                                        <?php echo utf8_encode($linha["nome_categoria"]);?>
+                                                    <option value="<?php echo ($linha["categoriaID"]);?>">
+                                                        <?php echo ($linha["nome_categoria"]);?>
                                                     </option>
                                                     <?php
 

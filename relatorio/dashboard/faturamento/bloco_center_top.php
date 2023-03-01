@@ -104,7 +104,7 @@ include "../../../_incluir/funcoes.php";
                           
                          
                             ticks: {
-                                stepSize:10,
+                                stepSize:30,
                                 callback: (value, index, values) => {
                                    return "R$ "+ value + " K"
                                 },

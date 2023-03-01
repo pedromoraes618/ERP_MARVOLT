@@ -18,6 +18,8 @@ session_start();
 require_once("../../conexao/conexao.php");
 include ("../../_incluir/funcoes.php");
 echo ".";
+$user= $_SESSION["user_portal"];
+
 
 
 	$formatosPermitidos = array("xml");
@@ -35,7 +37,7 @@ echo ".";
 	}else{
 	   $mensagem="Formato inválido";
 	}
-	echo $mensagem;
+	//echo $mensagem;
 
 
 
@@ -634,6 +636,15 @@ $dest_IE = $xml->NFe->infNFe->dest->IE;                           //<IE>25332302
         alertify.success("Nota fiscal importada com sucesso!");
         </script>
         <?php 
+
+				        //inserindo as informações no banco de dados
+	$mensagem = "Usuario importou via xml a nota de venda Nº $nNF";
+	$inserir = "INSERT INTO tb_log ";
+	$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+	$inserir .= " VALUES ";
+	$inserir .= "('$hoje','$user','$mensagem' )";
+	$operacao_insert_log = mysqli_query($conecta, $inserir);
+
 						
 				}
 			}

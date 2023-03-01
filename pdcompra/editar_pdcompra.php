@@ -4,6 +4,8 @@ require_once("../conexao/conexao.php");
 //inportar o alertar js
 include('../alert/alert.php');
 include_once("../_incluir/funcoes.php"); 
+$user= $_SESSION["user_portal"];
+
 echo",";
 
 //consultar forma de pagamento
@@ -207,8 +209,14 @@ alertify.alert("Data do fechamento não informada || Campo D.Fch");
 alertify.success('Dados alterados');
 </script>
 <?php
-         //header("location:listagem.php"); 
-          
+              //inserindo as informações no banco de dados
+$hoje = date('y-m-d');
+$mensagem = "Usuario editou o pedido de compra Nº $numeroPedidoCompra";
+$inserir = "INSERT INTO tb_log ";
+$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+$inserir .= " VALUES ";
+$inserir .= "('$hoje','$user','$mensagem' )";
+$operacao_insert_log = mysqli_query($conecta, $inserir);
      }
    
    }
@@ -361,6 +369,16 @@ if(isset($_POST['remover'])){
 alertify.success("Pedido de compra removido com sucesso!");
 </script>
 <?php
+
+              //inserindo as informações no banco de dados log
+              $hoje = date('y-m-d');
+              $mensagem = "Usuario removeu o pedido de compra Nº $numeroPedidoCompraB";
+              $inserir = "INSERT INTO tb_log ";
+              $inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+              $inserir .= " VALUES ";
+              $inserir .= "('$hoje','$user','$mensagem' )";
+              $operacao_insert_log = mysqli_query($conecta, $inserir);
+
         }
     }
 

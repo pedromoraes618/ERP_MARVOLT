@@ -20,13 +20,11 @@ if(!$lista_Max_ID){
 }else{
     $idMax = mysqli_fetch_assoc($lista_Max_ID);
     $ultimoID = $idMax['ultimoID'];
-
 }
-
-
-
 echo ",";
-//iniciar a tela com o campo preenchido
+//usuario logado
+$user= $_SESSION["user_portal"];
+
 
 //variaveis 
 if(isset($_POST["enviar"])){
@@ -108,8 +106,8 @@ alertify.alert("Favor informe a forma de pagamento");
         }else{
             $div1 = explode("/",$_POST['campoDataLancamento']);
             $dataLancamento = $div1[2]."-".$div1[1]."-".$div1[0];  
-           
         }
+
         if($dataapagar==""){
            
         }else{
@@ -119,27 +117,44 @@ alertify.alert("Favor informe a forma de pagamento");
 
 
         if($dataPagamento==""){
-        
+            $ano_caixa = "2000";
+            $mes_caixa = "01";
         }else{
             
         $div3 = explode("/",$_POST['campoDataPagamento']);
         $dataPagamento = $div3[2]."-".$div3[1]."-".$div3[0];
+        //verifificar se o caixa está aberto
+        
+        $ano_caixa = $div3[2];
+        $mes_caixa = $div3[1];
         }
-
-
 
         if($dataapagar==""){
           $dataapagar=$dataLancamento;
-      }
+        }
+        
+        
+        
+      if(($statusLancamento =="Recebido") and (verifica_caixa_descricao($conecta,$mes_caixa,$ano_caixa) == "fechado")){
+        //reformatar data
+        $dataLancamento = formatDateB($dataLancamento);
+        $dataapagar = formatDateB($dataapagar);
+        $dataPagamento = formatDateB($dataPagamento);
+             
+  ?>
+<script>
+alertify.alert("Não é possivel adicionar esse lançamento, o caixa desse periodo já foi fechado, favor verifique");
+</script>
+<?php
+      
+      }else{
+  
 //inserindo as informações no banco de dados
 
   $inserir = "INSERT INTO lancamento_financeiro ";
   $inserir .= "( data_movimento,data_a_pagar,data_do_pagamento,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,observacao,numeroPedido,numeroNotaFiscal )";
   $inserir .= " VALUES ";
   $inserir .= "( '$dataLancamento','$dataapagar','$dataPagamento','Receita','$statusLancamento','$formaPagamento','$cliente','$descricao','$documento','$grupoLancamento','$valor','$observacao','$nPedido','$nNotaFiscal' )";
-
-  //limpando os campos apos inserir no banco de dados
-  
 
 
   //verificando se está havendo conexão com o banco de dados
@@ -150,6 +165,15 @@ alertify.alert("Favor informe a forma de pagamento");
    
   }else{
      
+    //adicionar ao log
+    $mensagem = "Usuario lançou o lancamento financeiro tipo: Receita doc Nº $documento, valor R$ $valor ";
+    $inserir = "INSERT INTO tb_log";
+    $inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";
+    $inserir .= " VALUES ";
+    $inserir .= "('$hoje','$user','$mensagem' )";
+    $operacao_insert_log = mysqli_query($conecta, $inserir);
+       
+
 
   $dataLancamento = "";
   $dataapagar ="";
@@ -174,7 +198,8 @@ alertify.success("Lançamento <?php echo ($ultimoID + 1)?> Realizado com sucesso
 <?php
     
   }
-
+      
+}
 
 }
 }

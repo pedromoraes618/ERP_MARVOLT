@@ -93,7 +93,7 @@ main div#janela_principal form input[type="password"] {
 margin-bottom: 20px;
 }
 
-main div#janela_principal form input[type="submit"] {
+main div#janela_principal form button,input[type="submit"]{
     display: block;
     width: 395px;
     padding:10px 20px;
@@ -105,6 +105,8 @@ main div#janela_principal form input[type="submit"] {
     outline: none;
     cursor: pointer;
 }
+
+
 
 main div#janela_principal form input[type="submit"]:hover {
    letter-spacing: 0.7px;
@@ -184,4 +186,16 @@ width: 10px;
 #janela_principal img{
 	width: 5vw;
 	
+}
+
+#janela_principal .input-senha{
+    position: relative;
+    
+}
+#janela_principal .input-senha i{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #656464;
+    cursor: pointer;
 }

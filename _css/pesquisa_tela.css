@@ -540,3 +540,14 @@ width: 30px;
 
 
 }
+
+
+.operacional .caixa_ilustra{
+    text-align: center;
+}
+.operacional .caixa_ilustra img{
+    width: 300px;
+}
+.operacional .caixa_ilustra p {
+    font-size: 1.2em;
+}
