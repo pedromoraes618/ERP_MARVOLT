@@ -30,7 +30,7 @@ if($_POST){
     $observacao = utf8_decode($_POST["observacao"]);
     $nPedido = utf8_decode($_POST["numeroPedido"]);
     $nNotaFiscal = utf8_decode($_POST["numeroNotaFiscal"]);
-
+    $conta_financeira = utf8_decode($_POST["campoContaFinanceira"]);
 
 
     if(isset($_POST["btnsalvar"])){
@@ -87,6 +87,15 @@ alertify.alert("Favor informe o subGrupo");
 alertify.alert("Favor informe a data do pagamento");
 </script>
 <?php
+}elseif($conta_financeira=="0"){
+      
+    ?>
+
+<script>
+alertify.alert("Favor informe a conta financeira");
+</script>
+<?php
+
 }else{
 
       
@@ -138,10 +147,10 @@ alertify.alert("Favor informe a data do pagamento");
           }else{
 
     //alterando as informações no banco de dados
-  
-    //query para alterar o pedido de compra no banco de dados
+
     $alterar = "UPDATE lancamento_financeiro set data_movimento = '{$dataLancamento}', data_a_pagar = '{$dataapagar}', data_do_pagamento = '{$dataPagamento}',  status = '{$statusLancamento}', ";
-    $alterar .= " forma_pagamentoID = '{$formaPagamento}', clienteID = '{$cliente}', descricao = '{$descricao}', documento = '{$documento}', grupoID = '{$grupoLancamento}', valor = '{$valor}',  observacao  = '{$observacao}', numeroPedido = '{$nPedido}',numeroNotaFiscal = '{$nNotaFiscal}' WHERE lancamentoFinanceiroID = {$lancamentoID} ";
+    $alterar .= " forma_pagamentoID = '{$formaPagamento}', clienteID = '{$cliente}', descricao = '{$descricao}', documento = '{$documento}', grupoID = '{$grupoLancamento}', valor = '{$valor}',  observacao  = '{$observacao}', numeroPedido = '{$nPedido}',numeroNotaFiscal = '{$nNotaFiscal}',
+    cl_conta_financeira_id='{$conta_financeira}' WHERE lancamentoFinanceiroID = {$lancamentoID} ";
 
       $operacao_alterar = mysqli_query($conecta, $alterar);
       if(!$operacao_alterar) {
@@ -275,9 +284,9 @@ alertify.alert("Favor informe a data do pagamento");
                   }else{
           
             $insert = "INSERT INTO lancamento_financeiro ";
-            $insert .= "( data_movimento,data_a_pagar,data_do_pagamento,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,observacao,numeroPedido,numeroNotaFiscal )";
+            $insert .= "( data_movimento,data_a_pagar,data_do_pagamento,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,observacao,numeroPedido,numeroNotaFiscal,cl_conta_financeira_id )";
             $insert .= " VALUES ";
-            $insert .= "( '$dataLancamento','$dataapagar','$dataPagamento','Despesa','$statusLancamento','$formaPagamento','$cliente','$descricao','$documento','$grupoLancamento','$valor','$observacao','$nPedido','$nNotaFiscal' )";
+            $insert .= "( '$dataLancamento','$dataapagar','$dataPagamento','Despesa','$statusLancamento','$formaPagamento','$cliente','$descricao','$documento','$grupoLancamento','$valor','$observacao','$nPedido','$nNotaFiscal','$conta_financeira' )";
 
 
               $operacao_duplicar = mysqli_query($conecta, $insert);
@@ -342,6 +351,7 @@ if(!$detalhe){
     $Bobservacao = utf8_encode($dados_detalhe["observacao"]);
     $BnPedido = utf8_encode($dados_detalhe["numeroPedido"]);
     $BnNotaFiscal = utf8_encode($dados_detalhe["numeroNotaFiscal"]);
+    $bconta_financeira_id = $dados_detalhe['cl_conta_financeira_id'];
     
 
 }
@@ -366,7 +376,7 @@ if(isset($_POST['btnremover'])){
     
 
     
-    if(($statusLancamento =="Pago") and (verifica_caixa_descricao($conecta,$mes_caixa,$ano_caixa) == "fechado")){
+    if(($statusLancamento =="Pago" or $statusLancamento =="Cancelado") and (verifica_caixa_descricao($conecta,$mes_caixa,$ano_caixa) == "fechado")){
         //reformatar data
     
              
@@ -620,7 +630,7 @@ $operacao_insert_log = mysqli_query($conecta, $inserir);
                                 <td>
                                     <label for="campoFormaPagamento" style="width:180px;"> <b>Forma do
                                             pagamento:</b></label>
-                                    <select style="width: 210px; margin-right:27px" id="campoFormaPagamento"
+                                    <select style="width: 212px; margin-right:27px;" id="campoFormaPagamento"
                                         name="campoFormaPagamento">
                                         <option value="0">Selecione</option>
                                         <?php 
@@ -650,6 +660,51 @@ $operacao_insert_log = mysqli_query($conecta, $inserir);
                          
                          ?>
                                     </select>
+                                    <label for="campoContaFinanceira" style="width:80px;"> <b>Conta fin:</b></label>
+                                    <select style="width:170px" id="campoContaFinanceira" name="campoContaFinanceira">
+                                        <option value="0">Selecione</option>
+                                        <?php 
+                          
+                           while($linha = mysqli_fetch_assoc($consulta_conta_financeira )){
+                            $conta_financeira_principal = utf8_encode($linha["cl_id"]);
+                            if($bconta_financeira_id==$conta_financeira_principal){
+                        ?>
+
+                                        <option value="<?php echo utf8_encode($linha["cl_id"]);?>"
+                                            selected>
+                                            <?php echo utf8_encode($linha["cl_banco"]);?>
+                                        </option>
+
+                                        <?php
+                            }else{
+                                ?>
+                                        <option value="<?php echo utf8_encode($linha["cl_id"]);?>">
+                                            <?php echo utf8_encode($linha["cl_banco"]);?>
+                                        </option>
+
+                                        <?php
+                            }
+                         }
+                         
+                         ?>
+
+                                    </select>
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><label for="campoDocumento" style="width:180px;"> <b>N°
+                                            Documento:</b></label>
+                                    <input type="text"  style="width: 212px;margin-right:26px"size=20 name="campoDocumento"
+                                        id="campoDocumento" value="<?php 
+                                           if($_POST){
+                                            echo $documento;
+                                           }else{
+                                            echo $Bdocumento;
+                                           }
+                                       ?>">
+
                                     <label for="campoStatusLancamento" style="width:80px;"> <b>Status:</b></label>
                                     <select style="width:170px" id="campoStatusLancamento" name="campoStatusLancamento">
                                         <option value="0">Selecione</option>
@@ -679,30 +734,7 @@ $operacao_insert_log = mysqli_query($conecta, $inserir);
                          ?>
 
                                     </select>
-
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td><label for="campoDocumento" style="width:180px;"> <b>N°
-                                            Documento:</b></label>
-                                    <input type="text" style="margin-right:40px" size=20 name="campoDocumento"
-                                        id="campoDocumento" value="<?php 
-                                           if($_POST){
-                                            echo $documento;
-                                           }else{
-                                            echo $Bdocumento;
-                                           }
-                                       ?>">
-                                    <label for="numeroNotaFiscal" style="width:80px;"> <b>N°
-                                            NFE:</b></label>
-                                    <input type="text" size=12 name="numeroNotaFiscal" id="numeroNotaFiscal" value="<?php 
-                                        if($_POST){
-                                            echo $nNotaFiscal;
-                                        }else{
-                                            echo $BnNotaFiscal;
-                                        }                                       ?>">
-
+                             
 
                                 </td>
 
@@ -711,11 +743,20 @@ $operacao_insert_log = mysqli_query($conecta, $inserir);
                                 <td>
                                     <label for="numeroPedido" style="width:180px;"> <b>N°
                                             Pedido:</b></label>
-                                    <input type="text" size=20 name="numeroPedido" id="numeroPedido" value="<?php 
+                                    <input   style="width: 212px; margin-right:27px" type="text" size=20 name="numeroPedido" id="numeroPedido" value="<?php 
                                         if($_POST){
                                             echo $nPedido;
                                         }else{
                                         echo $BnPedido;}?>">
+                                               <label for="numeroNotaFiscal" style="width:80px;"> <b>N°
+                                            NFE:</b></label>
+                                    <input type="text" size=16 name="numeroNotaFiscal" id="numeroNotaFiscal" value="<?php 
+                                        if($_POST){
+                                            echo $nNotaFiscal;
+                                        }else{
+                                            echo $BnNotaFiscal;
+                                        }                                       ?>">
+
                                 </td>
 
                                 </td>

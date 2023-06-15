@@ -618,7 +618,8 @@ $dest_IE = $xml->NFe->infNFe->dest->IE;                           //<IE>25332302
 	$inserir = "INSERT INTO tb_nfe_saida";
 	$inserir .= "(data_entrada,chave_acesso,numero_nf,prot_autorizacao,serie,data_emissao,data_saida,razao_social,cnpj_cpf,inscricao_estadual,bc_icms,valor_icms,bc_icms_st,valor_icms_st,valor_frete,valor_seguro,valor_desconto,valor_total_ipi,valor_total_produtos,valor_total_nota,status_processamento )";
 	$inserir .= " VALUES ";
-	$inserir .= "( '$hoje','$chave','$nNF','$nProt','$serie','$dEmi','$dSaiEnt','$dest_xNome','$dest_cnpj','$dest_IE','$vBC','$vICMS','$vBCST','$vST','$vFrete','$vSeg','$vDesc','$vIPI','$vProdTotal','$vNF','1' )";
+	$inserir .= "( '$hoje','$chave','$nNF','$nProt','$serie','$dEmi','$dSaiEnt','$dest_xNome','$dest_cnpj','$dest_IE','$vBC','$vICMS',
+	'$vBCST','$vST','$vFrete','$vSeg','$vDesc','$vIPI','$vProdTotal','$vNF','1' )";
 		
 				
 

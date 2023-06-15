@@ -44,6 +44,7 @@ if(isset($_POST["enviar"])){
    $observacao = utf8_decode($_POST["observacao"]);
    $nPedido = utf8_decode($_POST["numeroPedido"]);
    $nNotaFiscal = utf8_decode($_POST["numeroNotaFiscal"]);
+   $conta_financeira = $_POST['campoContaFinanceira'];
   
 
 //formatar a data para o banco de dados(Y-m-d)
@@ -91,6 +92,15 @@ alertify.alert("Favor informe o subGrupo");
 
 <script>
 alertify.alert("Favor informe a forma de pagamento");
+</script>
+<?php
+
+}elseif($conta_financeira=="0"){
+      
+    ?>
+
+<script>
+alertify.alert("Favor informe a conta financeira");
 </script>
 <?php
 
@@ -150,9 +160,9 @@ alertify.alert("Não é possivel adicionar esse lançamento, o caixa desse perio
 
 //inserindo as informações no banco de dados
   $inserir = "INSERT INTO lancamento_financeiro ";
-  $inserir .= "( data_movimento,data_a_pagar,data_do_pagamento,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,observacao,numeroPedido,numeroNotaFiscal )";
+  $inserir .= "( data_movimento,data_a_pagar,data_do_pagamento,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,observacao,numeroPedido,numeroNotaFiscal,cl_conta_financeira_id )";
   $inserir .= " VALUES ";
-  $inserir .= "( '$dataLancamento','$dataapagar','$dataPagamento','Despesa','$statusLancamento','$formaPagamento','$cliente','$descricao','$documento','$grupoLancamento','$valor','$observacao','$nPedido','$nNotaFiscal' )";
+  $inserir .= "( '$dataLancamento','$dataapagar','$dataPagamento','Despesa','$statusLancamento','$formaPagamento','$cliente','$descricao','$documento','$grupoLancamento','$valor','$observacao','$nPedido','$nNotaFiscal','$conta_financeira' )";
 
   
   //verificando se está havendo conexão com o banco de dados
@@ -186,6 +196,7 @@ alertify.alert("Não é possivel adicionar esse lançamento, o caixa desse perio
   $observacao = "";
   $nPedido = "";
   $nNotaFiscal = "";
+  $conta_financeira = 0;
 
          //vai retornar o ultimo id
      
@@ -431,7 +442,7 @@ alertify.success("Lançamento <?php echo ($ultimoID + 1)?> Realizado com sucesso
                                 <td>
                                     <label for="campoFormaPagamento" style="width:180px;"> <b>Forma do
                                             pagamento:</b></label>
-                                    <select style="width: 212px; margin-right:27px" id="campoFormaPagamento"
+                                    <select style="width: 212px; margin-right:27px;" id="campoFormaPagamento"
                                         name="campoFormaPagamento">
                                         <option value="0">Selecione</option>
 
@@ -477,7 +488,58 @@ alertify.success("Lançamento <?php echo ($ultimoID + 1)?> Realizado com sucesso
                                          ?>
 
                                     </select>
-                                    <label for="campoStatusLancamento" style="width:80px;"> <b>Status:</b></label>
+                                    <label for="campoContaFinanceira" style="width:80px;"> <b>Conta fin:</b></label>
+                                    <select style="width:170px" id="campoContaFinanceira" name="campoContaFinanceira">
+                                        <option value="0">Selecione</option>
+                                        <?php 
+                            while($linha  = mysqli_fetch_assoc($consulta_conta_financeira)){
+                                $conta_financeira_principal = utf8_encode($linha["cl_id"]);
+                               if(!isset($conta_financeira)){
+                               
+                               ?>
+                                        <option <?php if($conta_financeira_principal =="4"){echo "selected"; } ?> value="<?php echo utf8_encode($linha["cl_id"]);?>">
+                                            <?php echo utf8_encode($linha["cl_banco"]);?>
+                                        </option>
+                                        <?php
+                               
+   
+                               }else{
+   
+                                if($conta_financeira==$conta_financeira_principal){
+                                ?> <option value="<?php echo utf8_encode($linha["cl_id"]);?>" selected>
+                                            <?php echo utf8_encode($linha["cl_banco"]);?>
+                                        </option>
+
+                                        <?php
+                                         }else{
+                                
+                               ?>
+                                        <option value="<?php echo utf8_encode($linha["cl_id"]);?>">
+                                            <?php echo utf8_encode($linha["cl_banco"]);?>
+                                        </option>
+                                        <?php
+   
+                                        }
+                                        
+                                    }
+                                
+                                                            
+                                }
+                                                        
+                                                        ?>
+                                    </select>
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><label for="campoDocumento" style="width:180px;"> <b>N°
+                                            Documento:</b></label>
+                                    <input type="text" style="width: 212px;margin-right:26px" size=20 name="campoDocumento"
+                                        id="campoDocumento"
+                                        value="<?php if(isset($_POST['enviar'])){ echo utf8_encode($documento);}?>">
+                              
+                                        <label for="campoStatusLancamento" style="width:80px;"> <b>Status:</b></label>
                                     <select style="width:170px" id="campoStatusLancamento" name="campoStatusLancamento">
                                         <option value="0">Selecione</option>
                                         <?php 
@@ -516,21 +578,7 @@ alertify.success("Lançamento <?php echo ($ultimoID + 1)?> Realizado com sucesso
                                 }
                                                         
                                                         ?>
-
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td><label for="campoDocumento" style="width:180px;"> <b>N°
-                                            Documento:</b></label>
-                                    <input type="text" style="margin-right:40px" size=20 name="campoDocumento"
-                                        id="campoDocumento"
-                                        value="<?php if(isset($_POST['enviar'])){ echo utf8_encode($documento);}?>">
-                                    <label for="numeroNotaFiscal" style="width:80px;"> <b>N°
-                                            NFE:</b></label>
-                                    <input type="text" size=12 name="numeroNotaFiscal" id="numeroNotaFiscal"
-                                        value="<?php if(isset($_POST['enviar'])){ echo utf8_encode($nNotaFiscal);}?>">
-
+                                    </select>
 
                                 </td>
 
@@ -539,9 +587,19 @@ alertify.success("Lançamento <?php echo ($ultimoID + 1)?> Realizado com sucesso
                                 <td>
                                     <label for="numeroPedido" style="width:180px;"> <b>N°
                                             Pedido:</b></label>
-                                    <input type="text" size=20 name="numeroPedido" id="numeroPedido"
+                                    <input style="width: 212px; margin-right:27px" type="text" size=20 name="numeroPedido" id="numeroPedido"
                                         value="<?php if(isset($_POST['enviar'])){ echo utf8_encode($nPedido);}?>">
+
+                                        
+                                        <label for="numeroNotaFiscal" style="width:80px;"> <b>N°
+                                            NFE:</b></label>
+                                    <input type="text" size=16 name="numeroNotaFiscal" id="numeroNotaFiscal"
+                                        value="<?php if(isset($_POST['enviar'])){ echo utf8_encode($nNotaFiscal);}?>">
+
+
+                               
                                 </td>
+
 
                                 </td>
 

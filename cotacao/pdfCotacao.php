@@ -88,7 +88,7 @@ if($clienteID == $cliente_avulso){
 }
 
 //consultar cotacao pelo codigo cotação
-$consulta = "SELECT cotacao.data_lancamento,cotacao.observacao,cotacao.data_envio,cotacao.numero_orcamento, cotacao.cod_cotacao, cotacao.numero_solicitacao, cotacao.validade, cotacao.prazo_entrega,cotacao.valorTotal,cotacao.desconto, cotacao.valorTotalComDesconto, forma_pagamento.nome as formapagamento,forma_pagamento.nome,frete.descricao as frete from forma_pagamento inner join cotacao on cotacao.forma_pagamentoID = forma_pagamento.formapagamentoID inner join  frete on cotacao.freteID = frete.freteID ";
+$consulta = "SELECT cotacao.data_lancamento,cotacao.clienteID,cotacao.observacao,cotacao.data_envio,cotacao.numero_orcamento, cotacao.cod_cotacao, cotacao.numero_solicitacao, cotacao.validade, cotacao.prazo_entrega,cotacao.valorTotal,cotacao.desconto, cotacao.valorTotalComDesconto, forma_pagamento.nome as formapagamento,forma_pagamento.nome,frete.descricao as frete from forma_pagamento inner join cotacao on cotacao.forma_pagamentoID = forma_pagamento.formapagamentoID inner join  frete on cotacao.freteID = frete.freteID ";
 $codCotacaoB =  $_GET["codigo"];
 $consulta .= " WHERE cod_cotacao = {$codCotacaoB}";  
 $dados_cotacao= mysqli_query($conecta, $consulta);
@@ -107,6 +107,7 @@ while($row_cotacao = mysqli_fetch_assoc($dados_cotacao)){
     $observacao = $row_cotacao['observacao'];
     $desconto = $row_cotacao['desconto'];
     $totalComDesconto = $row_cotacao['valorTotalComDesconto'];
+    
     
 }
 
@@ -187,7 +188,7 @@ $unidade = $row_produto['unidade'];
 $status = $row_produto['status'];
 $prazo = $row_produto['prazo'];
 $img = $row_produto['img'];
-  
+$codigo_avulso = $row_produto['codigo_avulso'];
 if($prazo < 5){
     $prazo = "Imediato";
 }else{
@@ -196,8 +197,14 @@ if($prazo < 5){
 $precoTotal = $precoVenda * $quantidade;
 $linha = $linha +1;
 
+if($codigo_avulso !=""){
+    $codigo_avulso = $codigo_avulso;
+}else{
+    $codigo_avulso = $linha;
+}
+
 $html .="<tr>";
-$html .="<td align=center style=width:50px;><font size=2>".$linha."</font></td>";
+$html .="<td align=center style=width:50px;><font size=2>".$codigo_avulso."</font></td>";
 $html .="<td align=left style=width:500px;><font size=2> ".utf8_encode($descricao)." </font></td>";
 $html .="<td align=left ><font size=2>".$unidade." </font></td>";
 $html .="<td align=left><font size=2>".valor_qtd($quantidade)." </font></td>";
@@ -290,10 +297,8 @@ $html .="</div>";
 }
 $date = date('d/m/Y');
 
-
-use Dompdf\Dompdf;
-
 include("../pdf/dompdf/autoload.inc.php");
+use Dompdf\Dompdf;
 
 $dompdf = new DOMPDF();
 $dompdf->setPaper('a4', 'landscape');

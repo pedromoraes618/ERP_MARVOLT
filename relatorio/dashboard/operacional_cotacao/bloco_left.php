@@ -12,7 +12,7 @@ include "../../../_incluir/funcoes.php";
             <?php 
                 $valor_total_cotacao_ganho = 0;
                 $valor_total_cotacao_cliente = 0;
-                 while($linha = mysqli_fetch_assoc($consulta_valores_cotacao)){ 
+                 while($linha = mysqli_fetch_assoc($consulta_valores_cotacao)){
                 $valor_total = ($linha['total']);
                 $cliente = utf8_encode($linha['nome_fantasia']);
                 $cliente_id = $linha['clienteID'];
@@ -33,14 +33,13 @@ include "../../../_incluir/funcoes.php";
                 </div>
                 <div class="info-2">
 
-                    <p style="margin:0 auto;" title="lucratividade referente ao valor de venda e compra">
+                    <p style="margin:0 auto;" title="Margem">
                         <?php echo real_percent((($valor_total * 100)/$valor_total_cotacao));?></p>
 
                 </div>
             </li>
             <?php
-            
-        }
+             }
             ?>
 
         </ul>
@@ -82,6 +81,26 @@ $("#relatorioc nav ul li ").click(function(e) {
         url: "operacional_cotacao/bloco_center_bottom_detalhado.php",
         success: function(result) {
             return $(".bloco-center-bottom").html(result);
+        },
+    });
+ 
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value + "&cliente_id=" + id_cliente + "&cliente_nome=" + cliente.value,
+        url: "operacional_cotacao/bloco_right_footer_detalhado.php",
+        success: function(result) {
+            return $(".bloco-right-footer").html(result);
+        },
+    });
+
+    $.ajax({
+        type: 'GET',
+        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+            .value + "&cliente_id=" + id_cliente + "&cliente_nome=" + cliente.value,
+        url: "operacional_cotacao/bloco_right_bottom_detalhado.php",
+        success: function(result) {
+            return $(".bloco-right-bottom").html(result);
         },
     });
     // $.ajax({

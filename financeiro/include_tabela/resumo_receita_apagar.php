@@ -2,7 +2,7 @@
     <ul>
 
         <li>
-            Cx - Receita
+            Cx - Receita - Futuro
         </li>
 
     </ul>
@@ -12,7 +12,7 @@
     <tbody>
 
         <tr id="cabecalho_pesquisa_consulta">
-            <?php   
+            <?php
             ?>
             <td>
                 <p>Dt.Vencimento</p>
@@ -30,74 +30,83 @@
                 <p>Forma Pgto</p>
             </td>
             <td>
+                <p>Conta financeira</p>
+            </td>
+            <td>
                 <p>Valor</p>
             </td>
         </tr>
 
         <?php
-                    $linhas = 0;
-                    while($linha_pesquisa = mysqli_fetch_assoc($lista_pesquisa_receita_a_receber)){
-                    $dataPagamento = $linha_pesquisa["data_do_pagamento"];
-                    $dataVencimentoL = $linha_pesquisa["data_a_pagar"];
-                    $clienteL = $linha_pesquisa['nome_fantasia'];
-                    $descricao = $linha_pesquisa['descricao'];
-                    $valorReceita = $linha_pesquisa['valor'];
-                    $subGrupo = ($linha_pesquisa["subgrupo"]);
-                    $grupo = utf8_encode($linha_pesquisa["grupo"]);
-                    $formaPagamento = utf8_encode($linha_pesquisa['nome']);
-                    $documentoL = $linha_pesquisa["documento"];
-                    $receite_despesa = $linha_pesquisa["receita_despesa"];
-                    $lancamentoID = $linha_pesquisa["lancamentoFinanceiroID"];
-               
-                   
-                    ?>
+        $linhas = 0;
+        while ($linha_pesquisa = mysqli_fetch_assoc($lista_pesquisa_receita_a_receber)) {
+            $dataPagamento = $linha_pesquisa["data_do_pagamento"];
+            $dataVencimentoL = $linha_pesquisa["data_a_pagar"];
+            $clienteL = $linha_pesquisa['nome_fantasia'];
+            $descricao = $linha_pesquisa['descricao'];
+            $valorReceita = $linha_pesquisa['valor'];
+            $subGrupo = ($linha_pesquisa["subgrupo"]);
+            $grupo = utf8_encode($linha_pesquisa["grupo"]);
+            $formaPagamento = utf8_encode($linha_pesquisa['nome']);
+            $documentoL = $linha_pesquisa["documento"];
+            $receite_despesa = $linha_pesquisa["receita_despesa"];
+            $lancamentoID = $linha_pesquisa["lancamentoFinanceiroID"];
+            $banco = $linha_pesquisa["banco"];
 
-        <tr id="linha_pesquisa">
+        ?>
+
+            <tr id="linha_pesquisa">
 
 
 
-            <td style="width: 50px; ">
-                <p style="margin-left: 5px; margin-top:10px;">
-                    <font size="2"><?php echo formatardataB($dataVencimentoL);?></font>
-                </p>
-            </td>
-            <td style="width:50px;">
-                <p>
-                    <font size="2"><?php echo utf8_encode($documentoL)?></font>
-                </p>
-            </td>
-            <td style="width:200px;">
+                <td style="width: 50px; ">
+                    <p style="margin-left: 5px; margin-top:10px;">
+                        <font size="2"><?php echo formatardataB($dataVencimentoL); ?></font>
+                    </p>
+                </td>
+                <td style="width:50px;">
+                    <p>
+                        <font size="2"><?php echo utf8_encode($documentoL) ?></font>
+                    </p>
+                </td>
+                <td style="width:250px;">
 
-                <p>
-                    <font size="2"><?php echo utf8_encode($clienteL)?></font>
-                </p>
-            </td>
-            <td style="width:200px;">
+                    <p>
+                        <font size="2"><?php echo utf8_encode($clienteL) ?></font>
+                    </p>
+                </td>
+                <td style="width:150px;">
 
-                <p>
-                    <font size="2"><?php echo utf8_encode($subGrupo)?></font>
-                </p>
-            </td>
-            <td style="width:200px;">
+                    <p>
+                        <font size="2"><?php echo utf8_encode($subGrupo) ?></font>
+                    </p>
+                </td>
+                <td style="width:150px;">
 
-                <p>
-                    <font size="2"><?php echo utf8_encode($formaPagamento)?></font>
-                </p>
-            </td>
-            <td style="width:100px;">
+                    <p>
+                        <font size="2"><?php echo utf8_encode($formaPagamento) ?></font>
+                    </p>
+                </td>
+                <td style="width:150px;">
 
-                <p>
-                    <font size="2"><?php echo real_format($valorReceita)?></font>
-                </p>
-            </td>
-        </tr>
+                    <p>
+                        <font size="2"><?php echo utf8_encode($banco) ?></font>
+                    </p>
+                </td>
+                <td style="width:100px;">
+
+                    <p>
+                        <font size="2"><?php echo real_format($valorReceita) ?></font>
+                    </p>
+                </td>
+            </tr>
 
 
         <?php
-                    }
+        }
 
-            
-                        ?>
+
+        ?>
 
         <tr id="cabecalho_pesquisa_consulta">
 
@@ -105,6 +114,9 @@
                 <p>Valor</p>
             </td>
 
+            <td>
+                <p></p>
+            </td>
             <td>
                 <p></p>
             </td>
@@ -126,10 +138,10 @@
         </tr>
 
         <?php
-                             
-                        
-                    
-        
-            ?>
+
+
+
+
+        ?>
     </tbody>
 </table>

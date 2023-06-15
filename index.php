@@ -1,7 +1,7 @@
 <?php
 require_once("conexao/conexao.php"); 
 include("conexao/sessao.php");
-
+ini_set('session.gc_maxlifetime', 10800); // Expire em 3h hora
 ?>
 
 <!doctype html>

@@ -111,11 +111,13 @@ include "../../../_incluir/funcoes.php";
                         titleFontColor: 'rgba(0, 0, 0, 1)',
                         titleFontSize: 20,
                         caretPadding: 10,
-                        xPadding: 5,
+                        xPadding: 10,
                         yPadding: 15,
-
+                        position: 'nearest',
                         caretSize: 10,
                         titleFontStyle: 'bold',
+                        
+                  
 
 
                         // callbacks: {

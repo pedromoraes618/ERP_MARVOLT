@@ -92,17 +92,16 @@ die("Falaha no banco de dados");
 
 //auto incremento do numero do orçamento
 if($_POST){
-$selectCotacaoMax = "SELECT MAX(valor) as maximo FROM tb_parametros where descricao = 'Numero Atual Orcamento' ";
+$selectCotacaoMax = "SELECT valor FROM tb_parametros where parametroID = 1 ";
 $lista_cotacao_max= mysqli_query($conecta, $selectCotacaoMax);
 if(!$lista_cotacao_max){
 die("Falaha no banco de dados");
 }else{
 $linha = mysqli_fetch_assoc($lista_cotacao_max);
-$numeroOrcamentoMax = $linha['maximo'];
-$result = substr($numeroOrcamentoMax,0,3);
-$soma = $result + 1;
+$numeroOrcamentoMax = $linha['valor'];
+$soma_parametro_cotacao = $numeroOrcamentoMax + 1;
 $data = date('Y');
-$paramentroNumeroOrcamento = $soma.$data;
+$paramentroNumeroOrcamento = $soma_parametro_cotacao.$data;
 }
 }
 
@@ -422,7 +421,7 @@ $valorTotal = 0;
         }
 
             //atualizar o numero da cotacao
-        $inserir_parametro = "UPDATE tb_parametros set valor = '{$paramentroNumeroOrcamento}' where descricao = 'Numero Atual Orcamento' ";
+        $inserir_parametro = "UPDATE tb_parametros set valor = '$soma_parametro_cotacao' where parametroID = 1 ";
         $operacao_inserir_parametro = mysqli_query($conecta, $inserir_parametro);
         if(!$operacao_inserir_parametro){
             die("Erro no banco de dados inserir tb_parametro");
@@ -534,7 +533,7 @@ if(!$lista_status_produto_cotacao){
                     <form action="" autocomplete="off" method="post">
 
                         <td align=left> <input style="width:120px" type="submit" name="iniciar"
-                                class="btn btn-info btn-sm" value="Iniciar Cotacão">
+                                class="btn btn-info btn-sm" value="Iniciar">
                         </td>
                         <td align=left> <input type="submit" id="" name="salvar" class="btn btn-success"
                                 onclick="calculavalordesconto();calculavalormargemGeral();" value="Finalizar">
@@ -1162,13 +1161,16 @@ while($linha = mysqli_fetch_assoc($lista_Produto_cotacao)){
     $unidade = $linha['unidade'];
     $status = $linha['status'];
    
-   
+    $codigo_avulso = $linha['codigo_avulso'];
+    if($codigo_avulso !=""){
+        $codigo_avulso =" - ".$codigo_avulso;
+    }
 ?>
                 <tr id="linha_pesquisa">
 
-                    <td style="width: 70px; ">
+                    <td style="max-width: 250px; min-width:70px;">
                         <p style="margin-left: 15px; margin-top:10px;">
-                            <font size="3"><?php echo $linhas = $linhas +1;?></font>
+                            <font size="3"><?php echo ($linhas = $linhas +1) .$codigo_avulso;?></font>
                         </p>
                     </td>
 

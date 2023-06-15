@@ -1,7 +1,7 @@
-<?php 
+<?php
 include("../../conexao/sessao.php");
-include("../../conexao/conexao.php"); 
-include("include/mes.php"); 
+include("../../conexao/conexao.php");
+include("include/mes.php");
 ?>
 
 <!doctype html>
@@ -16,7 +16,7 @@ include("include/mes.php");
     <link href="../../_css/relatorio.css" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 
 <body>
@@ -37,6 +37,7 @@ include("include/mes.php");
                         <button id="btn_c" class="button">Comparativo</button>
                         <button id="btn_o_ctc" class="button">Operacional</button>
                         <button id="btn_ftm" class="button">Faturamento</button>
+                        <button id="" onclick="capturarTela()" class="button">Imprimir</button>
                     </div>
 
                     <div class="filtro">
@@ -48,16 +49,16 @@ include("include/mes.php");
                                 <select id="mes_ini" name="mes_ini">
                                     <option value="0">Não definido</option>
                                     <?php
-                                    while($row = mysqli_fetch_assoc($consulta_mes_ini)){
-                                    $mes_id = utf8_encode($row['cl_id']);
+                                    while ($row = mysqli_fetch_assoc($consulta_mes_ini)) {
+                                        $mes_id = utf8_encode($row['cl_id']);
                                     ?>
-                                    <option <?php if($mes_id == 1){
-                                    ?> selected <?php
-                                    } ?> value="<?php echo $mes_id;?>">
+                                        <option <?php if ($mes_id == 1) {
+                                                ?> selected <?php
+                                                        } ?> value="<?php echo $mes_id; ?>">
 
-                                        <?php echo utf8_encode($row["cl_descricao"]);?>
-                                    </option>
-                                    <?php } 
+                                            <?php echo utf8_encode($row["cl_descricao"]); ?>
+                                        </option>
+                                    <?php }
                                     ?>
                                 </select>
                             </diiv>
@@ -65,18 +66,18 @@ include("include/mes.php");
                                 <select id="mes_fim" name="mes_fim">
                                     <option value="0">Não definido</option>
                                     <?php
-                         
-                                    while($row = mysqli_fetch_assoc($consulta_mes_fim)){
-                                    $mes_id = utf8_encode($row['cl_id']);
-                                    ?>
-                                    <option <?php if($mes_id == 12){
-                                    ?> selected <?php
-                                    } ?> value="<?php echo $mes_id;?>">
 
-                                        <?php echo utf8_encode($row["cl_descricao"]);?>
-                                    </option>
-                                    <?php } 
-    ?>
+                                    while ($row = mysqli_fetch_assoc($consulta_mes_fim)) {
+                                        $mes_id = utf8_encode($row['cl_id']);
+                                    ?>
+                                        <option <?php if ($mes_id == 12) {
+                                                ?> selected <?php
+                                                        } ?> value="<?php echo $mes_id; ?>">
+
+                                            <?php echo utf8_encode($row["cl_descricao"]); ?>
+                                        </option>
+                                    <?php   }
+                                    ?>
                                 </select>
                             </div>
                         </div>
@@ -93,13 +94,12 @@ include("include/mes.php");
                                 <select id="ano" name="ano">
                                     <option value="0">Não definido</option>
                                     <?php
-                                    for ($anoInicio = date('Y') - 3; $anoInicio <= date('Y'); $anoInicio++)
-                                    {
-                                        ?>
-                                    <option <?php if($anoInicio == date('Y')){
-                                        ?> selected <?php
-                                    } ?> value="<?php echo $anoInicio?>"><?php echo $anoInicio ?>
-                                    </option>
+                                    for ($anoInicio = date('Y') - 3; $anoInicio <= date('Y'); $anoInicio++) {
+                                    ?>
+                                        <option <?php if ($anoInicio == date('Y')) {
+                                                ?> selected <?php
+                                                        } ?> value="<?php echo $anoInicio ?>"><?php echo $anoInicio ?>
+                                        </option>
 
                                     <?php
                                     }
@@ -146,7 +146,7 @@ include("include/mes.php");
 
 
     </main>
-  
+
 
 </body>
 <script src="../../jquery.js"></script>
@@ -157,344 +157,349 @@ include("include/mes.php");
 
 
 <script>
-$(document).ready(function(e) {
-    $('.bloco-principal .dados').css("display", "none")
-})
+    $(document).ready(function(e) {
+        $('.bloco-principal .dados').css("display", "none")
+    })
 
-var mes_ini = document.getElementById("mes_ini")
-var mes_fim = document.getElementById("mes_fim")
-var ano = document.getElementById("ano")
-/*Despesa */
-$("#btn_d").click(function(e) {
-    e.preventDefault();
-    $(this).addClass("btn_ativo");
-    $("#btn_r").removeClass("btn_ativo")
-    $("#btn_o_ctc").removeClass("btn_ativo")
-    $("#btn_ftm").removeClass("btn_ativo")
-    $("#btn_c").removeClass("btn_ativo")
+    var mes_ini = document.getElementById("mes_ini")
+    var mes_fim = document.getElementById("mes_fim")
+    var ano = document.getElementById("ano")
 
-   
-    $('.bloco-principal .dados').fadeIn(500)
-    $('.bloco-principal .dados').slideDown(100)
-    $('.bloco-principal .dados').css("display", "")
-    $(".bloco-center-bottom").css("display","block")
-    $(".bloco-center-top").css("height","250px")
-    $('.bloco-right-top').css("display", "block")
-    $('.bloco-right-footer').css("display", "block")
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "despesa/bloco_left.php",
-        success: function(result) {
-            return $(".bloco-left").html(result);
-        },
+    function capturarTela() {
+        html2canvas(document.querySelector(".dados"), {scale: 2}).then(function(canvas) {
+          var novaJanela = window.open();
+          novaJanela.document.body.appendChild(canvas);
+        });
+      }
+    /*Despesa */
+    $("#btn_d").click(function(e) {
+        e.preventDefault();
+        $(this).addClass("btn_ativo");
+        $("#btn_r").removeClass("btn_ativo")
+        $("#btn_o_ctc").removeClass("btn_ativo")
+        $("#btn_ftm").removeClass("btn_ativo")
+        $("#btn_c").removeClass("btn_ativo")
+
+
+        $('.bloco-principal .dados').fadeIn(500)
+        $('.bloco-principal .dados').slideDown(100)
+        $('.bloco-principal .dados').css("display", "")
+        $(".bloco-center-bottom").css("display", "block")
+        $(".bloco-center-top").css("height", "250px")
+        $('.bloco-right-top').css("display", "block")
+        $('.bloco-right-footer').css("display", "block")
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "despesa/bloco_left.php",
+            success: function(result) {
+                return $(".bloco-left").html(result);
+            },
+        });
+
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "despesa/bloco_center_top.php",
+            success: function(result) {
+                return $(".bloco-center-top").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "despesa/bloco_right_top.php",
+            success: function(result) {
+                return $(".bloco-right-top").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "despesa/bloco_right_bottom.php",
+            success: function(result) {
+                return $(".bloco-right-bottom").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "despesa/bloco_right_footer.php",
+            success: function(result) {
+                return $(".bloco-right-footer").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "despesa/bloco_center_bottom.php",
+            success: function(result) {
+                return $(".bloco-center-bottom").html(result);
+            },
+        });
+
     });
+    /*receita */
+    $("#btn_r").click(function(e) {
+        $('.bloco-principal .dados').fadeIn(500)
+        $('.bloco-principal .dados').slideDown(100)
+        $('.bloco-principal .dados').css("display", "")
+        $(".bloco-center-bottom").css("display", "block")
+        $(".bloco-center-top").css("height", "250px")
+        $('.bloco-right-top').css("display", "block")
+        $('.bloco-right-footer').css("display", "block")
+        $(this).addClass("btn_ativo");
+        $("#btn_d").removeClass("btn_ativo")
+        $("#btn_o_ctc").removeClass("btn_ativo")
+        $("#btn_ftm").removeClass("btn_ativo")
+        $("#btn_c").removeClass("btn_ativo")
 
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "despesa/bloco_center_top.php",
-        success: function(result) {
-            return $(".bloco-center-top").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "despesa/bloco_right_top.php",
-        success: function(result) {
-            return $(".bloco-right-top").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "despesa/bloco_right_bottom.php",
-        success: function(result) {
-            return $(".bloco-right-bottom").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "despesa/bloco_right_footer.php",
-        success: function(result) {
-            return $(".bloco-right-footer").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "despesa/bloco_center_bottom.php",
-        success: function(result) {
-            return $(".bloco-center-bottom").html(result);
-        },
-    });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "receita/bloco_center_top.php",
+            success: function(result) {
+                return $(".bloco-center-top").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "receita/bloco_left.php",
+            success: function(result) {
+                return $(".bloco-left").html(result);
+            },
+        });
 
-});
-/*receita */
-$("#btn_r").click(function(e) {
-    $('.bloco-principal .dados').fadeIn(500)
-    $('.bloco-principal .dados').slideDown(100)
-    $('.bloco-principal .dados').css("display", "")
-    $(".bloco-center-bottom").css("display","block")
-    $(".bloco-center-top").css("height","250px")
-    $('.bloco-right-top').css("display", "block")
-    $('.bloco-right-footer').css("display", "block")
-    $(this).addClass("btn_ativo");
-    $("#btn_d").removeClass("btn_ativo")
-    $("#btn_o_ctc").removeClass("btn_ativo")
-    $("#btn_ftm").removeClass("btn_ativo")
-    $("#btn_c").removeClass("btn_ativo")
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "receita/bloco_right_bottom.php",
+            success: function(result) {
+                return $(".bloco-right-bottom").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "receita/bloco_center_bottom.php",
+            success: function(result) {
+                return $(".bloco-center-bottom").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "receita/bloco_right_top.php",
+            success: function(result) {
+                return $(".bloco-right-top").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "receita/bloco_right_footer.php",
+            success: function(result) {
+                return $(".bloco-right-footer").html(result);
+            },
+        });
 
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "receita/bloco_center_top.php",
-        success: function(result) {
-            return $(".bloco-center-top").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "receita/bloco_left.php",
-        success: function(result) {
-            return $(".bloco-left").html(result);
-        },
-    });
-
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "receita/bloco_right_bottom.php",
-        success: function(result) {
-            return $(".bloco-right-bottom").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "receita/bloco_center_bottom.php",
-        success: function(result) {
-            return $(".bloco-center-bottom").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "receita/bloco_right_top.php",
-        success: function(result) {
-            return $(".bloco-right-top").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "receita/bloco_right_footer.php",
-        success: function(result) {
-            return $(".bloco-right-footer").html(result);
-        },
-    });
-   
-})
+    })
 
 
-$("#btn_c").click(function(e) {
-    e.preventDefault();
+    $("#btn_c").click(function(e) {
+        e.preventDefault();
 
-    $('.bloco-principal .dados').fadeIn(500)
-    $('.bloco-principal .dados').slideDown(100)
-    $('.bloco-principal .dados').css("display", "")
-    $(".bloco-center-top").css("height","250px")
-    $('.bloco-right-top').css("display", "none")
-    $('.bloco-right-bottom').css("display", "block")
-    $('.bloco-right-footer').css("display", "none")
-    $(this).addClass("btn_ativo");
-    $("#btn_r").removeClass("btn_ativo")
-    $("#btn_d").removeClass("btn_ativo")
-    $("#btn_o_ctc").removeClass("btn_ativo")
-    $("#btn_ftm").removeClass("btn_ativo")
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "comparativo/bloco_center_top.php",
-        success: function(result) {
-            return $(".bloco-center-top").html(result);
-        },
-    });
-    $(".bloco-center-top").css("height","490px")
+        $('.bloco-principal .dados').fadeIn(500)
+        $('.bloco-principal .dados').slideDown(100)
+        $('.bloco-principal .dados').css("display", "")
+        $(".bloco-center-top").css("height", "250px")
+        $('.bloco-right-top').css("display", "none")
+        $('.bloco-right-bottom').css("display", "block")
+        $('.bloco-right-footer').css("display", "none")
+        $(this).addClass("btn_ativo");
+        $("#btn_r").removeClass("btn_ativo")
+        $("#btn_d").removeClass("btn_ativo")
+        $("#btn_o_ctc").removeClass("btn_ativo")
+        $("#btn_ftm").removeClass("btn_ativo")
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "comparativo/bloco_center_top.php",
+            success: function(result) {
+                return $(".bloco-center-top").html(result);
+            },
+        });
+        $(".bloco-center-top").css("height", "490px")
 
 
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "comparativo/bloco_left.php",
-        success: function(result) {
-            return $(".bloco-left").html(result);
-        },
-    });
-    
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "comparativo/bloco_right_bottom.php",
-        success: function(result) {
-            return $(".bloco-right-bottom").html(result);
-        },
-    });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "comparativo/bloco_left.php",
+            success: function(result) {
+                return $(".bloco-left").html(result);
+            },
+        });
 
-    $(".bloco-center-bottom").css("display","none")
-})
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "comparativo/bloco_right_bottom.php",
+            success: function(result) {
+                return $(".bloco-right-bottom").html(result);
+            },
+        });
+
+        $(".bloco-center-bottom").css("display", "none")
+    })
 
 
 
-$("#btn_o_ctc").click(function(e) {
-    e.preventDefault();
-
-  
-
-    $('.bloco-principal .dados').fadeIn(500)
-    $('.bloco-principal .dados').slideDown(100)
-    $('.bloco-principal .dados').css("display", "")
-    $(".bloco-center-bottom").css("display","block")
-    $(".bloco-center-top").css("height","250px")
-    $('.bloco-right-bottom').css("display", "block")
-    $('.bloco-right-footer').css("display", "block")
-    $(".bloco-right-top").css("display","none")
-    
-    $(this).addClass("btn_ativo");
-    $("#btn_r").removeClass("btn_ativo")
-    $("#btn_d").removeClass("btn_ativo")
-    $("#btn_c").removeClass("btn_ativo")
-    $("#btn_ftm").removeClass("btn_ativo")
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "operacional_cotacao/bloco_left.php",
-        success: function(result) {
-            return $(".bloco-left").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "operacional_cotacao/bloco_center_bottom.php",
-        success: function(result) {
-            return $(".bloco-center-bottom").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "operacional_cotacao/bloco_center_top.php",
-        success: function(result) {
-            return $(".bloco-center-top").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "operacional_cotacao/bloco_right_bottom.php",
-        success: function(result) {
-            return $(".bloco-right-bottom").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "operacional_cotacao/bloco_right_footer.php",
-        success: function(result) {
-            return $(".bloco-right-footer").html(result);
-        },
-    });
-})
+    $("#btn_o_ctc").click(function(e) {
+        e.preventDefault();
 
 
-$("#btn_ftm").click(function(e) {
-    e.preventDefault();
 
-    $('.bloco-principal .dados').fadeIn(500)
-    $('.bloco-principal .dados').slideDown(100)
-    $('.bloco-principal .dados').css("display", "")
- 
-    $(".bloco-center-bottom").css("display","none")
-    $(".bloco-center-top").css("height","250px")
-    $('.bloco-right-bottom').css("display", "none")
-    $(".bloco-right-top").css("display","none")
-    $('.bloco-right-footer').css("display", "block")
+        $('.bloco-principal .dados').fadeIn(500)
+        $('.bloco-principal .dados').slideDown(100)
+        $('.bloco-principal .dados').css("display", "")
+        $(".bloco-center-bottom").css("display", "block")
+        $(".bloco-center-top").css("height", "250px")
+        $('.bloco-right-bottom').css("display", "block")
+        $('.bloco-right-footer').css("display", "block")
+        $(".bloco-right-top").css("display", "none")
 
-    $(this).addClass("btn_ativo");
-    $("#btn_r").removeClass("btn_ativo")
-    $("#btn_d").removeClass("btn_ativo")
-    $("#btn_o_ctc").removeClass("btn_ativo")
-    $("#btn_c").removeClass("btn_ativo")
+        $(this).addClass("btn_ativo");
+        $("#btn_r").removeClass("btn_ativo")
+        $("#btn_d").removeClass("btn_ativo")
+        $("#btn_c").removeClass("btn_ativo")
+        $("#btn_ftm").removeClass("btn_ativo")
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "operacional_cotacao/bloco_left.php",
+            success: function(result) {
+                return $(".bloco-left").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "operacional_cotacao/bloco_center_bottom.php",
+            success: function(result) {
+                return $(".bloco-center-bottom").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "operacional_cotacao/bloco_center_top.php",
+            success: function(result) {
+                return $(".bloco-center-top").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "operacional_cotacao/bloco_right_bottom.php",
+            success: function(result) {
+                return $(".bloco-right-bottom").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "operacional_cotacao/bloco_right_footer.php",
+            success: function(result) {
+                return $(".bloco-right-footer").html(result);
+            },
+        });
+    })
 
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "faturamento/bloco_left.php",
-        success: function(result) {
-            return $(".bloco-left").html(result);
-        },
-    });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "faturamento/bloco_center_top.php",
-        success: function(result) {
-            return $(".bloco-center-top").html(result);
-        },
-    });
-    $(".bloco-center-top").css("height","490px")
-    // $.ajax({
-    //     type: 'GET',
-    //     data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-    //         .value,
-    //     url: "faturamento/bloco_center_bottom.php",
-    //     success: function(result) {
-    //         return $(".bloco-center-bottom").html(result);
-    //     },
-    // });
-    $.ajax({
-        type: 'GET',
-        data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
-            .value,
-        url: "faturamento/bloco_right_top.php",
-        success: function(result) {
-            return $(".bloco-right-footer").html(result);
-        },
-    });
-})
 
+    $("#btn_ftm").click(function(e) {
+        e.preventDefault();
 
+        $('.bloco-principal .dados').fadeIn(500)
+        $('.bloco-principal .dados').slideDown(100)
+        $('.bloco-principal .dados').css("display", "")
+
+        $(".bloco-center-bottom").css("display", "none")
+        $(".bloco-center-top").css("height", "250px")
+        $('.bloco-right-bottom').css("display", "none")
+        $(".bloco-right-top").css("display", "none")
+        $('.bloco-right-footer').css("display", "block")
+
+        $(this).addClass("btn_ativo");
+        $("#btn_r").removeClass("btn_ativo")
+        $("#btn_d").removeClass("btn_ativo")
+        $("#btn_o_ctc").removeClass("btn_ativo")
+        $("#btn_c").removeClass("btn_ativo")
+
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "faturamento/bloco_left.php",
+            success: function(result) {
+                return $(".bloco-left").html(result);
+            },
+        });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "faturamento/bloco_center_top.php",
+            success: function(result) {
+                return $(".bloco-center-top").html(result);
+            },
+        });
+        $(".bloco-center-top").css("height", "490px")
+        // $.ajax({
+        //     type: 'GET',
+        //     data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+        //         .value,
+        //     url: "faturamento/bloco_center_bottom.php",
+        //     success: function(result) {
+        //         return $(".bloco-center-bottom").html(result);
+        //     },
+        // });
+        $.ajax({
+            type: 'GET',
+            data: "filtroano=" + ano.value + "&filtromesini=" + mes_ini.value + "&filtromesfim=" + mes_fim
+                .value,
+            url: "faturamento/bloco_right_top.php",
+            success: function(result) {
+                return $(".bloco-right-footer").html(result);
+            },
+        });
+    })
 </script>
 
 
 
 <?php
-    // Fechar conexao
-    mysqli_close($conecta);
+// Fechar conexao
+mysqli_close($conecta);
 ?>

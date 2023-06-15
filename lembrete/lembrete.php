@@ -1,23 +1,23 @@
-<?php 
+<?php
 
 include("../conexao/sessao.php");
-require_once("../conexao/conexao.php"); 
-include ("../_incluir/funcoes.php");
+require_once("../conexao/conexao.php");
+include("../_incluir/funcoes.php");
 
 //consultar lancamento
 $select = "SELECT receita_despesaID, nome from receita_despesa";
-$lista_receita_despesa = mysqli_query($conecta,$select);
-if(!$lista_receita_despesa){
+$lista_receita_despesa = mysqli_query($conecta, $select);
+if (!$lista_receita_despesa) {
     die("Falaha no banco de dados || falha de conexão");
 }
 
 //pegar o nivel do usuario
-if($_SESSION["user_portal"]){
-    $user= $_SESSION["user_portal"];
+if ($_SESSION["user_portal"]) {
+    $user = $_SESSION["user_portal"];
     $saudacao = "SELECT usuarios.usuario,usuarios.nivel,usuarios.nome, tb_nivel_usuario.descricao FROM usuarios inner join tb_nivel_usuario on usuarios.nivel = tb_nivel_usuario.nivel_usuarioID where usuarioID = {$user}";
-    $saudacao_login = mysqli_query($conecta,$saudacao);
-    if (!$saudacao_login){
-        die ("Falha no banco de dados");
+    $saudacao_login = mysqli_query($conecta, $saudacao);
+    if (!$saudacao_login) {
+        die("Falha no banco de dados");
     }
     $saudacao_login = mysqli_fetch_assoc($saudacao_login);
     $nome = $saudacao_login['usuario'];
@@ -28,22 +28,22 @@ if($_SESSION["user_portal"]){
 
 $data = date('d');
 //$data =  $data + 30;
-if($data <= 23){
-$data = $data + 7 ;
-}else{
+if ($data <= 23) {
+    $data = $data + 7;
+} else {
     $data  = date('31');
 }
 
-$pesquisaDataf = date('Y-m-'.$data);
+$pesquisaDataf = date('Y-m-' . $data);
 $ano_anterior = date('Y');
 $ano_anterior = $ano_anterior - 1;
-$pesquisaData = date($ano_anterior.'-01-01');
+$pesquisaData = date($ano_anterior . '-01-01');
 
 
 //select contas a receber
-$select = "SELECT  clientes.nome_fantasia,DATEDIFF(CURRENT_DATE(),lancamento_financeiro.data_a_pagar) as atraso,lancamento_financeiro.data_do_pagamento, forma_pagamento.nome,lancamento_financeiro.descricao,grupo_lancamento.nome  as grupo, lancamento_financeiro.lancamentoFinanceiroID, tb_subgrupo_receita_despesa.subgrupo, tb_subgrupo_receita_despesa.subgrupo, lancamento_financeiro.data_movimento,  lancamento_financeiro.documento,lancamento_financeiro.lancamentoFinanceiroID,  lancamento_financeiro.data_a_pagar, lancamento_financeiro.status,lancamento_financeiro.valor,lancamento_financeiro.documento,  lancamento_financeiro.receita_despesa from  clientes  inner join lancamento_financeiro on lancamento_financeiro.clienteID = clientes.clienteID inner join tb_subgrupo_receita_despesa on lancamento_financeiro.grupoID = tb_subgrupo_receita_despesa.subGrupoID inner join forma_pagamento on lancamento_financeiro.forma_pagamentoID = forma_pagamento.formapagamentoID inner join grupo_lancamento on  tb_subgrupo_receita_despesa.grupo = grupo_lancamento.grupo_lancamentoID " ;
+$select = "SELECT  clientes.nome_fantasia,DATEDIFF(CURRENT_DATE(),lancamento_financeiro.data_a_pagar) as atraso,lancamento_financeiro.data_do_pagamento, forma_pagamento.nome,lancamento_financeiro.descricao,grupo_lancamento.nome  as grupo, lancamento_financeiro.lancamentoFinanceiroID, tb_subgrupo_receita_despesa.subgrupo, tb_subgrupo_receita_despesa.subgrupo, lancamento_financeiro.data_movimento,  lancamento_financeiro.documento,lancamento_financeiro.lancamentoFinanceiroID,  lancamento_financeiro.data_a_pagar, lancamento_financeiro.status,lancamento_financeiro.valor,lancamento_financeiro.documento,  lancamento_financeiro.receita_despesa from  clientes  inner join lancamento_financeiro on lancamento_financeiro.clienteID = clientes.clienteID inner join tb_subgrupo_receita_despesa on lancamento_financeiro.grupoID = tb_subgrupo_receita_despesa.subGrupoID inner join forma_pagamento on lancamento_financeiro.forma_pagamentoID = forma_pagamento.formapagamentoID inner join grupo_lancamento on  tb_subgrupo_receita_despesa.grupo = grupo_lancamento.grupo_lancamentoID ";
 $select  .= " WHERE data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and  lancamento_financeiro.status = 'A Receber' order by data_a_pagar ";
-$lista_pesquisa = mysqli_query($conecta,$select);
+$lista_pesquisa = mysqli_query($conecta, $select);
 
 //select contas a pagar
 $select = "SELECT  clientes.nome_fantasia,DATEDIFF(CURRENT_DATE(),lancamento_financeiro.data_a_pagar) as atraso,lancamento_financeiro.data_do_pagamento, 
@@ -54,18 +54,18 @@ clientes  inner join lancamento_financeiro on lancamento_financeiro.clienteID = 
 lancamento_financeiro.grupoID = tb_subgrupo_receita_despesa.subGrupoID inner join forma_pagamento on lancamento_financeiro.forma_pagamentoID = 
 forma_pagamento.formapagamentoID inner join grupo_lancamento on  
 tb_subgrupo_receita_despesa.grupo = grupo_lancamento.grupo_lancamentoID  WHERE 
-data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and  lancamento_financeiro.status = 'A Pagar' order by data_a_pagar " ;
-$lista_pesquisa_pagar = mysqli_query($conecta,$select);
+data_a_pagar BETWEEN '$pesquisaData' and '$pesquisaDataf' and  lancamento_financeiro.status = 'A Pagar' order by data_a_pagar ";
+$lista_pesquisa_pagar = mysqli_query($conecta, $select);
 
 
 //select tabela pedido de compra
 $select = "SELECT clientes.nome_fantasia,data_fechamento,pedido_compra.data_movimento, pedido_compra.data_movimento,pedido_compra.valor_total_compra,
 pedido_compra.status_recebimento,  pedido_compra.codigo_pedido, pedido_compra.numero_pedido_compra, pedido_compra.pedidoID, 
 pedido_compra.data_chegada, pedido_compra.entrega_realizada, pedido_compra.entrega_prevista, pedido_compra.valor_total, 
- pedido_compra.desconto_geral, pedido_compra.valor_total_margem from  clientes inner join pedido_compra on pedido_compra.clienteID = clientes.clienteID " ;
+ pedido_compra.desconto_geral, pedido_compra.valor_total_margem from  clientes inner join pedido_compra on pedido_compra.clienteID = clientes.clienteID ";
 $select  .= " WHERE data_fechamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and  entrega_realizada <> '0000-00-00' and status_recebimento = 0 ORDER BY  pedido_compra.data_fechamento asc ";
-$lista_pesquisa_recebemento = mysqli_query($conecta,$select);
-if(!$lista_pesquisa_recebemento){
+$lista_pesquisa_recebemento = mysqli_query($conecta, $select);
+if (!$lista_pesquisa_recebemento) {
     die("Falaha no banco de dados || pedido_compra");
 }
 
@@ -74,10 +74,18 @@ if(!$lista_pesquisa_recebemento){
 $select = "SELECT clientes.nome_fantasia,data_fechamento,pedido_compra.data_movimento, pedido_compra.data_movimento,pedido_compra.valor_total_compra,
 pedido_compra.status_recebimento,  pedido_compra.codigo_pedido, pedido_compra.numero_pedido_compra, pedido_compra.pedidoID, 
 pedido_compra.data_chegada, pedido_compra.entrega_realizada, pedido_compra.entrega_prevista, pedido_compra.valor_total, 
- pedido_compra.desconto_geral, pedido_compra.valor_total_margem from  clientes inner join pedido_compra on pedido_compra.clienteID = clientes.clienteID " ;
+ pedido_compra.desconto_geral, pedido_compra.valor_total_margem from  clientes inner join pedido_compra on pedido_compra.clienteID = clientes.clienteID ";
 $select  .= " WHERE data_fechamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and  entrega_realizada = '0000-00-00' and entrega_prevista <> '0000-00-00' ORDER BY pedido_compra.entrega_prevista asc ";
-$lista_pesquisa_entrega = mysqli_query($conecta,$select);
-if(!$lista_pesquisa_entrega){
+$lista_pesquisa_entrega = mysqli_query($conecta, $select);
+if (!$lista_pesquisa_entrega) {
+    die("Falaha no banco de dados || pedido_compra");
+}
+
+$select = "SELECT clt.nome_fantasia, cont.cl_id,cont.cl_data_lancamento,cont.cl_data_limite,cont.cl_descricao,cont.cl_status,
+ cmp.comprador from tb_contato cont inner join comprador as cmp on cmp.id_comprador = cont.cl_comprador_id inner join clientes as clt on clt.clienteID = cont.cl_empresa_id
+where cont.cl_data_lancamento between '$pesquisaData' and '$pesquisaDataf' and cl_status ='2' ";
+$lista_contatos = mysqli_query($conecta, $select);
+if (!$lista_contatos) {
     die("Falaha no banco de dados || pedido_compra");
 }
 
@@ -108,25 +116,28 @@ if(!$lista_pesquisa_entrega){
 
     <main>
 
-        <?php 
-         //administracao
-    if($nivel == 2){
-    include("nivel/adminstracao.php");
-    }
-    
-    //administrador
-    if($nivel == 5){
-    include("nivel/administrador.php");
-    }
-    //logistica
-    if($nivel == 3){
-        include("nivel/logistica.php");
-    }
-    //financeiro
-    if($nivel == 4){
-        include("nivel/financeiro.php");
-    }
-    ?>
+        <?php
+
+        //contatos a fazer
+        include("nivel/contato.php");
+        //administracao
+        if ($nivel == 2) {
+            include("nivel/adminstracao.php");
+        }
+
+        //administrador
+        if ($nivel == 5) {
+            include("nivel/administrador.php");
+        }
+        //logistica
+        if ($nivel == 3) {
+            include("nivel/logistica.php");
+        }
+        //financeiro
+        if ($nivel == 4) {
+            include("nivel/financeiro.php");
+        }
+        ?>
 
     </main>
 
@@ -140,6 +151,6 @@ if(!$lista_pesquisa_entrega){
 </html>
 
 <?php
-    // Fechar conexao
-    mysqli_close($conecta);
+// Fechar conexao
+mysqli_close($conecta);
 ?>

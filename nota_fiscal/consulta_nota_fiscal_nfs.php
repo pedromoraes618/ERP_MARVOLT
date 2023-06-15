@@ -222,7 +222,7 @@ if (isset($_GET["campoPesquisaData"])){
                             </p>
                         </td>
 
-                        <td style="width:120px;">
+                        <td >
                             <font size="2"> <?php echo formatardataB($dataEmissao)?></font>
                         </td>
 
@@ -231,10 +231,10 @@ if (isset($_GET["campoPesquisaData"])){
                         <td style="width:350px;">
                             <font size="2"><?php echo utf8_encode($razaoSocial)?></font>
                         </td>
-                        <td style="width:100px;">
+                        <td >
                             <font size="2"> <?php echo real_format($valorTotal)?></font>
                         </td>
-                        <td style="width:180px;">
+                        <td >
                             <font size="2"> <?php echo utf8_encode($autenticacao)?>
                             </font>
                         </td>

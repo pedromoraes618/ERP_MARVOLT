@@ -5,7 +5,7 @@ include("../conexao/conexao.php");
 
 if(isset($_GET["pesquisa"])){
     $pesquisa = $_GET["pesquisa"];
-    $select = " SELECT * from tb_patrimonio where descricao LIKE '%{$pesquisa}%' ";
+    $select = " SELECT * from tb_patrimonio where descricao LIKE '%{$pesquisa}%' order by descricao asc ";
     $resultado = mysqli_query($conecta, $select);
     if(!$resultado){
     die("Falha na consulta ao banco de dados || tb_patrimonio");

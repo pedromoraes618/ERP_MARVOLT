@@ -70,6 +70,13 @@ $lista_clientes = mysqli_query($conecta,$select);
 if(!$lista_clientes){
     die("Falaha no banco de dados || select clientes");
 }
+//consultar conta_financeira
+$select = "SELECT * from tb_conta_financeira";
+$consulta_conta_financeira = mysqli_query($conecta, $select);
+if (!$consulta_conta_financeira) {
+    die("Falha no banco de dados || select ");
+}
+
 
 
 if(isset($_POST['salvar'])){
@@ -81,6 +88,8 @@ if(isset($_POST['salvar'])){
     $dataApagar = utf8_decode($_POST["txtaPagar"]);
     $documento = utf8_decode($_POST["txtNumeroDocumento"]);
     $valor = utf8_decode($_POST["valorDocumento"]);
+    $conta_financeira = $_POST['campoContaFinanceira'];
+
     $mensagem = utf8_decode("Duplicata $documento referente a nota fiscal de serviço de entrada $nNfe");
     $salvar = $_POST['salvar'];
     
@@ -112,7 +121,16 @@ alertify.alert("Favor informar a forma de pagamento da duplicata");
 </script>
 <?php
 
-                }else{
+                } elseif ($conta_financeira == "0") {
+
+                    ?>
+        
+                        <script>
+                            alertify.alert("Favor informe a conta financeira");
+                        </script>
+        <?php
+        
+                    }else{
                     	
                                 //não deixa duplicar o post
             if( $_SERVER['REQUEST_METHOD']=='POST' )
@@ -131,9 +149,9 @@ alertify.alert("Favor informar a forma de pagamento da duplicata");
                     $div1 = explode("/",$_POST['txtaPagar']);
                     $dataApagar = $div1[2]."-".$div1[1]."-".$div1[0]; 
                     $inserir = "INSERT INTO lancamento_financeiro ";
-                    $inserir .= "( data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,numeroNotaFiscal,id_referencia,modalidade )";
+                    $inserir .= "( data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,numeroNotaFiscal,id_referencia,modalidade,cl_conta_financeira_id )";
                     $inserir .= " VALUES ";
-                    $inserir .= "( '$hoje','$dataApagar','Despesa','A Pagar','$formaPagamento','$cliente','$mensagem','$documento','17','$valor','$nNfe','$id_referencia','NFS_ENTRADA' )";
+                    $inserir .= "( '$hoje','$dataApagar','Despesa','A Pagar','$formaPagamento','$cliente','$mensagem','$documento','17','$valor','$nNfe','$id_referencia','NFS_ENTRADA','$conta_financeira' )";
 
                     //verificando se está havendo conexão com o banco de dados
                     $operacao_inserir = mysqli_query($conecta, $inserir);
@@ -237,7 +255,7 @@ if(isset($_POST['salvar'])or (isset($_GET['codigo']))){
 
 
                                     <label for="txtFormaPagamento"><b>Forma do pagamento:</b></label>
-                                    <select style="width: 205px;" id="txtFormaPagamento" name="txtFormaPagamento">
+                                    <select style="width: 205px;margin-right:20px" id="txtFormaPagamento" name="txtFormaPagamento">
                                         <option value="0">Selecione</option>
                                         <?php 
                                      if($_POST){
@@ -285,6 +303,46 @@ if(isset($_POST['salvar'])or (isset($_GET['codigo']))){
                                                         ?>
 
                                     </select>
+                                    <label for="campoContaFinanceira"> <b>Conta fin:</b></label>
+                                    <select style="width:170px" id="campoContaFinanceira" name="campoContaFinanceira">
+                                        <option value="0">Selecione</option>
+                                        <?php
+                                        while ($linha  = mysqli_fetch_assoc($consulta_conta_financeira)) {
+                                            $conta_financeira_principal = utf8_encode($linha["cl_id"]);
+                                            if (!isset($conta_financeira)) {
+
+                                        ?>
+                                                <option <?php if ($conta_financeira_principal == "4") {
+                                                            echo "selected";
+                                                        } ?> value="<?php echo utf8_encode($linha["cl_id"]); ?>">
+                                                    <?php echo utf8_encode($linha["cl_banco"]); ?>
+                                                </option>
+                                                <?php
+
+
+                                            } else {
+
+                                                if ($conta_financeira == $conta_financeira_principal) {
+                                                ?> <option value="<?php echo utf8_encode($linha["cl_id"]); ?>" selected>
+                                                        <?php echo utf8_encode($linha["cl_banco"]); ?>
+                                                    </option>
+
+                                                <?php
+                                                } else {
+
+                                                ?>
+                                                    <option value="<?php echo utf8_encode($linha["cl_id"]); ?>">
+                                                        <?php echo utf8_encode($linha["cl_banco"]); ?>
+                                                    </option>
+                                        <?php
+
+                                                }
+                                            }
+                                        }
+
+                                        ?>
+                                    </select>
+
 
 
                                 </td>

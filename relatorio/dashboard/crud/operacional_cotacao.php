@@ -162,6 +162,12 @@ while($linha = mysqli_fetch_assoc($consulta_desconto_orcado)){
 $media_desconto_orcado = $soma_desconto_orcado / $cont; 
 
 
+/*total pedido de compra*/
+$select = "SELECT sum(valor_total) as total FROM `pedido_compra` WHERE data_fechamento between '$ano-$mes_ini-01' and '$ano-$mes_fim-31'";
+$consulta_valor_pedido= mysqli_query($conecta,$select);
+$linha = mysqli_fetch_assoc($consulta_valor_pedido);
+$valor_total_pedido = $linha['total'];
+
 
 if(isset($_GET['cliente_id'])){
 
@@ -197,7 +203,85 @@ function consultar_count_cotacao_ganha_parcial_cliente($i,$ano,$clienteID){
     return $total_cotacao_ganha_parcial_count;
 }
 
+/*coletar a media entre data_de_envio e data de fechamento cotacao*/
+$select = "SELECT DATEDIFF(data_fechamento,data_envio) as datapfechamento from cotacao WHERE DATA_FECHAMENTO !='0000-00-00' AND DATA_ENVIO !='0000-00-00' and data_envio between '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and clienteID='$clienteID'";
+$consulta_data_para_fechamento= mysqli_query($conecta,$select);
+while($linha = mysqli_fetch_assoc($consulta_data_para_fechamento)){
+    $cont = $cont + 1;
+    $diferencia_para_fechamento = $linha['datapfechamento'];
+    $soma_diferencia = $diferencia_para_fechamento + $soma_diferencia;
 }
+$dias_para_fechamento = $soma_diferencia / $cont; 
+
+
+/*Media  dias para compra do produto*/
+$select = "SELECT DATEDIFF(data_compra,data_fechamento) as datapcompra from pedido_compra WHERE data_fechamento !='0000-00-00' AND 
+data_compra !='0000-00-00' and data_fechamento between '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and clienteID='$clienteID'";
+$consulta_data_para_compra = mysqli_query($conecta,$select);
+while($linha = mysqli_fetch_assoc($consulta_data_para_compra)){
+    $cont = $cont + 1;
+    $diferencia_para_compra = $linha['datapcompra'];
+    $soma_diferencia_compra = $diferencia_para_compra + $soma_diferencia_compra;
+}
+$dias_para_compra = $soma_diferencia_compra / $cont; 
+
+
+/*Media  dias para compra do produto*/
+$select = "SELECT DATEDIFF(data_chegada,data_compra) as datapchegada from pedido_compra WHERE data_compra !='0000-00-00' AND 
+data_chegada !='0000-00-00' and data_fechamento between '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and clienteID='$clienteID'";
+$consulta_data_para_chegada_produto = mysqli_query($conecta,$select);
+while($linha = mysqli_fetch_assoc($consulta_data_para_chegada_produto)){
+    $cont = $cont + 1;
+    $diferencia_para_chegada = $linha['datapchegada'];
+    $soma_diferencia_chegada_produto= $diferencia_para_chegada + $soma_diferencia_chegada_produto;
+}
+
+
+$media_para_chegada_produto = $soma_diferencia_chegada_produto / $cont; 
+
+
+/*Media  dias para compra do produto*/
+$select = "SELECT DATEDIFF(entrega_realizada, data_chegada) as dataentrega from pedido_compra WHERE data_chegada !='0000-00-00' AND 
+entrega_realizada !='0000-00-00' and data_fechamento between '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and clienteID='$clienteID'";
+$consulta_data_para_entrega_pedido = mysqli_query($conecta,$select);
+while($linha = mysqli_fetch_assoc($consulta_data_para_entrega_pedido)){
+    $cont = $cont + 1;
+    $diferencia_para_entrega = $linha['dataentrega'];
+    $soma_diferencia_entrega_pedido= $diferencia_para_entrega + $soma_diferencia_entrega_pedido;
+}
+
+
+$media_para_entrega_pedido = $soma_diferencia_entrega_pedido / $cont; 
+
+
+/*Média desconto em cotacao*/
+$select = "SELECT  (valorTotal - valorTotalComDesconto) as difdesconto from cotacao where data_fechamento between '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and clienteID='$clienteID'";
+$consulta_desconto_orcado= mysqli_query($conecta,$select);
+while($linha = mysqli_fetch_assoc($consulta_desconto_orcado)){
+    $cont = $cont + 1;
+    $diferencia_desconto_orcado = $linha['difdesconto'];
+    $soma_desconto_orcado = $diferencia_desconto_orcado + $soma_desconto_orcado;
+}
+
+$media_desconto_orcado = $soma_desconto_orcado / $cont; 
+
+
+/*soma das categorias pedido de compra*/
+$select = "SELECT sum(pditem.preco_venda_unitario*pditem.quantidade) as somavenda, ctgp.nome_categoria as categoria from pedido_compra as pdc inner join tb_pedido_item as pditem on pditem.pedidoID = pdc.codigo_pedido  
+inner join categoria_produto as ctgp on ctgp.categoriaID = pditem.categoria_produto where pdc.data_fechamento between '$ano-$mes_ini-01' and '$ano-$mes_fim-31' and pdc.clienteID = '$clienteID' group by pditem.categoria_produto;";
+$consulta_dados_categoria_pd = mysqli_query($conecta,$select);
+$consulta_dados_cor_categoria_pd = mysqli_query($conecta,$select);
+$consulta_dados_descricao_categoria_pd = mysqli_query($conecta,$select);
+
+
+
+/*total pedido de compra*/
+$select = "SELECT sum(valor_total) as total FROM `pedido_compra` WHERE data_fechamento between '$ano-$mes_ini-01' and '$ano-$mes_fim-31'  and clienteID='$clienteID'";
+$consulta_valor_pedido_cliente= mysqli_query($conecta,$select);
+$linha = mysqli_fetch_assoc($consulta_valor_pedido_cliente);
+$valor_total_pedido_cliente = $linha['total'];
+}
+
 
 
 }

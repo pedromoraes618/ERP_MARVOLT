@@ -4,7 +4,7 @@ include "../../../_incluir/funcoes.php";
 ?>
 <div class="relatorio">
     <div class="title">
-        <h4>Demonstração financeira detalhada</h4>
+        <h4>Demonstração financeira</h4>
     </div>
     <nav>
         <ul>
@@ -36,7 +36,7 @@ include "../../../_incluir/funcoes.php";
                 </div>
                 <div class="info-2">
 
-                    <p style="margin:0 auto;" title="lucratividade referente ao valor de venda e compra">
+                    <p style="margin:0 auto;" title="Margem">
                         <?php echo real_percent($lucratividade);?></p>
 
                 </div>

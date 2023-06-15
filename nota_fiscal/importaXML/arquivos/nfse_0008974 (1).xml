@@ -1,0 +1,109 @@
+<nfse xmlns="http://www.ctaconsult.com/nfse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <codigoMunicipio>921</codigoMunicipio>
+  <dtEmissao>2023-05-09T08:21:24</dtEmissao>
+  <numeroNota>0008974</numeroNota>
+  <codigoVerificacao>B07961885328149A07C26CADDAC26CED</codigoVerificacao>
+  <prestador>
+    <tipoPessoa>2</tipoPessoa>
+    <cnpj>06303549000131</cnpj>
+    <inscricaoMunicipal>10855004</inscricaoMunicipal>
+    <razaoSocial>INSTITUTO EUVALDO LODI NUCLEO REGIONAL DO MARANHAO</razaoSocial>
+    <endereco>
+      <logradouro>AV JERONIMO DE ALBUQUERQUE MARANHAO 0</logradouro>
+      <bairro>COHAMA</bairro>
+      <cep>65060642</cep>
+      <codigoMunipio>921</codigoMunipio>
+      <descricaoMunicipio>SAO LUIS</descricaoMunicipio>
+      <codigoEstado>MA</codigoEstado>
+      <descricaoEstado>MA</descricaoEstado>
+    </endereco>
+    <email>ielma@fiema.elo.com.br</email>
+    <telefoneDdd>98</telefoneDdd>
+    <telefoneNumero>2121838</telefoneNumero>
+  </prestador>
+  <tomador>
+    <tipoPessoa>2</tipoPessoa>
+    <cnpj>34226833000197</cnpj>
+    <razaoSocial>FONSECA E MORAES LTDA</razaoSocial>
+    <endereco>
+      <logradouro>ESTRADA DE RIBAMAR, , LOJA 4,</logradouro>
+      <bairro>UBATUBA LARANJAL</bairro>
+      <cep>65130000</cep>
+      <codigoMunipio>889</codigoMunipio>
+      <descricaoMunicipio>SAO JOSE DE RIBAMAR</descricaoMunicipio>
+      <codigoEstado>MA</codigoEstado>
+      <descricaoEstado>MA</descricaoEstado>
+    </endereco>
+  </tomador>
+  <atividadeExecutada>
+    <codigoServico>1703</codigoServico>
+    <descricaoServico>PLANEJAMENTO, COORDENACAO, PROGRAMACAO OU ORGANIZACAO TECNICA, FINANCEIRA OU ADMINISTRATIVA.</descricaoServico>
+    <codigoAtividade>702040000</codigoAtividade>
+    <descricaoAtividade>ATIVIDADES DE CONSULTORIA EM GESTAO EMPRESARIAL, EXCETO CONSULTORIA TECNICA ESPECIFICA</descricaoAtividade>
+    <localPrestacao>
+      <codigoEstado>MA</codigoEstado>
+      <descricaoEstado>MA</descricaoEstado>
+      <codigoMunipio>889</codigoMunipio>
+      <descricaoMunicipio>SAO JOSE DE RIBAMAR</descricaoMunicipio>
+    </localPrestacao>
+    <tipoTributacao>IMUNE</tipoTributacao>
+    <tipoRecolhimento>ISENTO DE RECOLHIMENTO</tipoRecolhimento>
+    <aliquota>0.00</aliquota>
+  </atividadeExecutada>
+  <detalhamentoNota>
+    <descricaoNota>REFERENTE À PARCELA 1/8 PROCEM - ÁREA GESTÃO DA QUALIDADE. ID 4-002802</descricaoNota>
+    <itensServico>
+      <item nItem="1">
+        <tributavel>TRIBUTÁVEL</tributavel>
+        <descricao>REFERENTE À PARCELA 1/8 PROCEM - ÁREA GESTÃO DA QUALIDADE.</descricao>
+        <quantidade>1.0000</quantidade>
+        <valorUnitario>1083.71</valorUnitario>
+        <valorTotal>1083.71</valorTotal>
+      </item>
+    </itensServico>
+    <totais>
+      <valotTotalNota>1083.71</valotTotalNota>
+      <valorTotalServico>1083.71</valorTotalServico>
+      <valorTotalDeducao>0.00</valorTotalDeducao>
+      <valorTotalISS>0.00</valorTotalISS>
+      <valorReducaoBC>0.00</valorReducaoBC>
+    </totais>
+    <impostosFederais>
+      <imposto nItem="1">
+        <codigoImposto>1</codigoImposto>
+        <descricaoImposto>PIS</descricaoImposto>
+        <tipo>1</tipo>
+        <aliquota>0.0000</aliquota>
+        <valorImposto>0.00</valorImposto>
+      </imposto>
+      <imposto nItem="2">
+        <codigoImposto>2</codigoImposto>
+        <descricaoImposto>COFINS</descricaoImposto>
+        <tipo>2</tipo>
+        <aliquota>0.0000</aliquota>
+        <valorImposto>0.00</valorImposto>
+      </imposto>
+      <imposto nItem="3">
+        <codigoImposto>3</codigoImposto>
+        <descricaoImposto>INSS</descricaoImposto>
+        <tipo>3</tipo>
+        <aliquota>0.0000</aliquota>
+        <valorImposto>0.00</valorImposto>
+      </imposto>
+      <imposto nItem="4">
+        <codigoImposto>4</codigoImposto>
+        <descricaoImposto>IR</descricaoImposto>
+        <tipo>4</tipo>
+        <aliquota>0.0000</aliquota>
+        <valorImposto>0.00</valorImposto>
+      </imposto>
+      <imposto nItem="5">
+        <codigoImposto>5</codigoImposto>
+        <descricaoImposto>CSLL</descricaoImposto>
+        <tipo>5</tipo>
+        <aliquota>0.0000</aliquota>
+        <valorImposto>0.00</valorImposto>
+      </imposto>
+    </impostosFederais>
+  </detalhamentoNota>
+</nfse>

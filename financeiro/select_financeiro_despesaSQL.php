@@ -1,5 +1,5 @@
 <?php 
-echo ",";
+echo "´´";
 //consultar forma de pagamento
 $select = "SELECT formapagamentoID, nome, statuspagamento from forma_pagamento";
 $lista_formapagamemto = mysqli_query($conecta,$select);
@@ -46,4 +46,12 @@ $select = "SELECT statuscompraID, nome from status_compra";
 $lista_statuscompra = mysqli_query($conecta,$select);
 if(!$lista_statuscompra){
     die("Falaha no banco de dados || select statuscompra");
+}
+
+
+//consultar conta_financeira
+$select = "SELECT * from tb_conta_financeira";
+$consulta_conta_financeira = mysqli_query($conecta,$select);
+if(!$consulta_conta_financeira){
+    die("Falha no banco de dados || select ");
 }

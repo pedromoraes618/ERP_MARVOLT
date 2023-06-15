@@ -551,3 +551,13 @@ width: 30px;
 .operacional .caixa_ilustra p {
     font-size: 1.2em;
 }
+
+.produtos_cotacao{
+    display: none;
+}
+
+.tabela_pesquisa #linha_pesquisa:hover .produtos_cotacao {
+    display: block;
+    background-color: #4d4d4d;
+}
+

@@ -217,8 +217,8 @@ die("Falaha no banco de dados  Linha 96 ");
                         if($meucategoria==$categoria_principal){
                             
                         ?>
-                                    <option value="<?php echo utf8_encode($linha_categoria["categoriaID"]);?>" selected>
-                                        <?php echo utf8_encode($linha_categoria["nome_categoria"]);?>
+                                    <option value="<?php echo ($linha_categoria["categoriaID"]);?>" selected>
+                                        <?php echo ($linha_categoria["nome_categoria"]);?>
                                     </option>
 
 
@@ -226,8 +226,8 @@ die("Falaha no banco de dados  Linha 96 ");
                                     <?php
      }else{
      ?>
-                                    <option value="<?php echo utf8_encode($linha_categoria["categoriaID"]);?>">
-                                        <?php echo utf8_encode($linha_categoria["nome_categoria"]);?>
+                                    <option value="<?php echo ($linha_categoria["categoriaID"]);?>">
+                                        <?php echo ($linha_categoria["nome_categoria"]);?>
                                     </option>
                                     <?php
      }}

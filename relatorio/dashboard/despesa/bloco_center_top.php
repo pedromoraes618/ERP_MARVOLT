@@ -5,7 +5,7 @@ include "../../../_incluir/funcoes.php";
 ?>
 <div class="relatorio_center_top">
     <div class="title">
-        <h4>Top 5 Despesas</h4>
+        <h4>Despesas por Grupo</h4>
     </div>
     <nav>
         <ul>

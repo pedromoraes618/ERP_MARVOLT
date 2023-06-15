@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nfeProc xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
+	<NFe xmlns="http://www.portalfiscal.inf.br/nfe">
+		<infNFe Id="NFe4223058442973700018s4550010039544741237456434" versao="4.00">
+			<ide>
+				<cUF>42</cUF>
+				<cNF>23745643</cNF>
+				<natOp>Venda produção do estabelecimento</natOp>
+				<mod>55</mod>
+				<serie>1</serie>
+				<nNF>3954474</nNF>
+				<dhEmi>2023-05-23T14:26:38-03:00</dhEmi>
+				<dhSaiEnt>2023-05-23T14:26:38-03:00</dhSaiEnt>
+				<tpNF>1</tpNF>
+				<idDest>2</idDest>
+				<cMunFG>4208906</cMunFG>
+				<tpImp>1</tpImp>
+				<tpEmis>1</tpEmis>
+				<cDV>4</cDV>
+				<tpAmb>1</tpAmb>
+				<finNFe>1</finNFe>
+				<indFinal>0</indFinal>
+				<indPres>0</indPres>
+				<procEmi>0</procEmi>
+				<verProc>3.116.1.1</verProc>
+			</ide>
+			<emit>
+				<CNPJ>84429737000114</CNPJ>
+				<xNome>Malwee Malhas Ltda</xNome>
+				<xFant>Malwee Matriz</xFant>
+				<enderEmit>
+					<xLgr>Rua Bertha Weege</xLgr>
+					<nro>200</nro>
+					<xBairro>Barra do Rio Cerro</xBairro>
+					<cMun>4208906</cMun>
+					<xMun>Jaraguá do Sul</xMun>
+					<UF>SC</UF>
+					<CEP>89260900</CEP>
+					<cPais>1058</cPais>
+					<xPais>Brasil</xPais>
+					<fone>4721077200</fone>
+				</enderEmit>
+				<IE>250264722</IE>
+				<IM>3174</IM>
+				<CNAE>1412601</CNAE>
+				<CRT>3</CRT>
+			</emit>
+			<dest>
+				<CNPJ>10303105000173</CNPJ>
+				<xNome>COMERCIAL TABAJARAS TECIDOS LTDA(0001020570)</xNome>
+				<enderDest>
+					<xLgr>AV. BRASIL</xLgr>
+					<nro>193</nro>
+					<xBairro>CENTRO</xBairro>
+					<cMun>2105401</cMun>
+					<xMun>ITAPECURU MIRIM</xMun>
+					<UF>MA</UF>
+					<CEP>65485000</CEP>
+					<cPais>1058</cPais>
+					<xPais>Brasil</xPais>
+					<fone>9834631303</fone>
+				</enderDest>
+				<indIEDest>1</indIEDest>
+				<IE>120923289</IE>
+				<email>comercial.tabajaras@ig.com.br</email>
+			</dest>
+			<det nItem="1">
+				<prod>
+					<cProd>1000115244</cProd>
+					<cEAN>SEM GTIN</cEAN>
+					<xProd>MALWEE ADULTO VERAO 1a QUALIDADE</xProd>
+					<NCM>61091000</NCM>
+					<CEST>2805900</CEST>
+					<CFOP>6101</CFOP>
+					<uCom>CX</uCom>
+					<qCom>1.0000</qCom>
+					<vUnCom>2470.0000000000</vUnCom>
+					<vProd>2470.00</vProd>
+					<cEANTrib>SEM GTIN</cEANTrib>
+					<uTrib>KI</uTrib>
+					<qTrib>1.0000</qTrib>
+					<vUnTrib>2470.0000000000</vUnTrib>
+					<indTot>1</indTot>
+				</prod>
+				<imposto>
+					<ICMS>
+						<ICMS00>
+							<orig>0</orig>
+							<CST>00</CST>
+							<modBC>3</modBC>
+							<vBC>2470.00</vBC>
+							<pICMS>7.0000</pICMS>
+							<vICMS>172.90</vICMS>
+						</ICMS00>
+					</ICMS>
+					<IPI>
+						<cEnq>999</cEnq>
+						<IPINT>
+							<CST>51</CST>
+						</IPINT>
+					</IPI>
+					<PIS>
+						<PISAliq>
+							<CST>01</CST>
+							<vBC>2470.00</vBC>
+							<pPIS>1.6500</pPIS>
+							<vPIS>40.76</vPIS>
+						</PISAliq>
+					</PIS>
+					<COFINS>
+						<COFINSAliq>
+							<CST>01</CST>
+							<vBC>2470.00</vBC>
+							<pCOFINS>7.60</pCOFINS>
+							<vCOFINS>187.72</vCOFINS>
+						</COFINSAliq>
+					</COFINS>
+				</imposto>
+				<infAdProd>IPI ALIQUOTA 0% (ZERO) - TIPI DECRETO 7660/11.</infAdProd>
+			</det>
+			<total>
+				<ICMSTot>
+					<vBC>2470.00</vBC>
+					<vICMS>172.90</vICMS>
+					<vICMSDeson>0.00</vICMSDeson>
+					<vFCP>0.00</vFCP>
+					<vBCST>0.00</vBCST>
+					<vST>0.00</vST>
+					<vFCPST>0.00</vFCPST>
+					<vFCPSTRet>0.00</vFCPSTRet>
+					<vProd>2470.00</vProd>
+					<vFrete>0.00</vFrete>
+					<vSeg>0.00</vSeg>
+					<vDesc>0.00</vDesc>
+					<vII>0.00</vII>
+					<vIPI>0.00</vIPI>
+					<vIPIDevol>0.00</vIPIDevol>
+					<vPIS>40.76</vPIS>
+					<vCOFINS>187.72</vCOFINS>
+					<vOutro>0.00</vOutro>
+					<vNF>2470.00</vNF>
+				</ICMSTot>
+			</total>
+			<transp>
+				<modFrete>0</modFrete>
+				<transporta>
+					<CNPJ>95591723005188</CNPJ>
+					<xNome>TNT MERCURIO CARGAS E ENC.EXPRESSAS</xNome>
+					<IE>251767795</IE>
+					<xEnder>RUA RINALDO BOGO 1200</xEnder>
+					<xMun>JARAGUA DO SUL</xMun>
+					<UF>SC</UF>
+				</transporta>
+				<vol>
+					<qVol>1</qVol>
+					<esp>Volume</esp>
+					<marca>MALWEE</marca>
+					<nVol>0800001640</nVol>
+					<pesoL>19.000</pesoL>
+					<pesoB>20.310</pesoB>
+				</vol>
+			</transp>
+			<cobr>
+				<fat>
+					<nFat>0092734070</nFat>
+					<vOrig>2470.00</vOrig>
+					<vDesc>0.00</vDesc>
+					<vLiq>2470.00</vLiq>
+				</fat>
+				<dup>
+					<nDup>001</nDup>
+					<dVenc>2023-06-20</dVenc>
+					<vDup>494.00</vDup>
+				</dup>
+				<dup>
+					<nDup>002</nDup>
+					<dVenc>2023-07-18</dVenc>
+					<vDup>494.00</vDup>
+				</dup>
+				<dup>
+					<nDup>003</nDup>
+					<dVenc>2023-08-15</dVenc>
+					<vDup>494.00</vDup>
+				</dup>
+				<dup>
+					<nDup>004</nDup>
+					<dVenc>2023-09-12</dVenc>
+					<vDup>494.00</vDup>
+				</dup>
+				<dup>
+					<nDup>005</nDup>
+					<dVenc>2023-10-10</dVenc>
+					<vDup>494.00</vDup>
+				</dup>
+			</cobr>
+			<pag>
+				<detPag>
+					<indPag>1</indPag>
+					<tPag>15</tPag>
+					<vPag>2470.00</vPag>
+				</detPag>
+			</pag>
+			<infAdic>
+				<infCpl>Ordem de Venda: 0002011817,IPI ALIQUOTA 0% (ZERO) - TIPI DECRETO 7660/11.,Filiada ao SERASA e a Boa Vista Serviços,Cobrança Via_Banco:ITAÚ UNIBANCO S.A. - Boleto Anexo DANFE.,Qtd de Peças da Remessa:1,Nr. Embarque:001,Marcas - MALWEE,WEE,ZIG ZIG ZAA,MALWEE LIBERTA,,</infCpl>
+			</infAdic>
+			<infRespTec>
+				<CNPJ>00910509000171</CNPJ>
+				<xContato>Douglas de Souza Pereira</xContato>
+				<email>douglas.pereira@thomsonreuters.com</email>
+				<fone>1147009050</fone>
+			</infRespTec>
+		</infNFe>
+		<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+			<SignedInfo>
+				<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+				<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+				<Reference URI="#NFe42230584429737000114550010039544741237456434">
+					<Transforms>
+						<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+						<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+					</Transforms>
+					<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+					<DigestValue>exuVUUkfnLSzaqsoppKXDzcTgWQ=</DigestValue>
+				</Reference>
+			</SignedInfo>
+			<SignatureValue>FZ8xcQCKSdDJWMH9YjYgn8/fD6285KscLPv/Kkz6R7fkQsrHmIdwj4buO3KPHlGpApleAlsr24OjywnFGU3y/CHrfOBnez+LVjDdUnvfQ8muR5rbP8EhtxY+Rg78B7u/pXROUZgVD31tCnyX1w3vFAlpFqa2WLlOnoG17hvAyfbFbqmMlnTTUhPGcIHb69Ak9ax5EbWU4zt+7+lkpXCgbx9o+v725KOGd+95CPVYLvSfzJtUoXmfj7sMu7W5wmC+IRawRqX1WaAlynySwjriVzGUaMZcuBjyd0a8hi1onWR46eSxCNmjqb7kMLpcFa8//lvVdYMQ6ZxPwU2QF0kD0Q==</SignatureValue>
+			<KeyInfo>
+				<X509Data>
+					<X509Certificate>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</X509Certificate>
+				</X509Data>
+			</KeyInfo>
+		</Signature>
+	</NFe>
+	<protNFe xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" versao="4.00">
+		<infProt>
+			<tpAmb>1</tpAmb>
+			<verAplic>SVRS202304261131</verAplic>
+			<chNFe>42230584429737000114550010039544741237456434</chNFe>
+			<dhRecbto>2023-05-23T14:27:20-03:00</dhRecbto>
+			<nProt>342230113583816</nProt>
+			<digVal>exuVUUkfnLSzaqsoppKXDzcTgWQ=</digVal>
+			<cStat>100</cStat>
+			<xMotivo>Autorizado o uso da NF-e</xMotivo>
+		</infProt>
+	</protNFe>
+</nfeProc>

@@ -1,0 +1,6 @@
+{
+    "require": {
+        "asgrim/ofxparser": "^1.2",
+        "dompdf/dompdf": "^2.0"
+    }
+}

@@ -55,6 +55,14 @@ if(!$lista_grupoLancamento){
 
 
 
+//consultar conta_financeira
+$select = "SELECT * from tb_conta_financeira";
+$consulta_conta_financeira = mysqli_query($conecta,$select);
+if(!$consulta_conta_financeira){
+    die("Falha no banco de dados || select ");
+}
+
+
 //remover todos os lancamentos
 if(isset($_POST['btnremover'])){
     $numeroRecorrente = utf8_decode($_POST["numeroRecorrente"]);
@@ -81,7 +89,7 @@ if(isset($_POST['salvar'])){
     $valor = utf8_decode($_POST["valorDocumento"]);
     $nParcela = utf8_decode($_POST["numeroParcela"]);
     $subGrupo = utf8_decode($_POST["subGrupo"]);
-
+    $conta_financeira = $_POST['campoContaFinanceira'];
 
 
     //não deixa duplicar o post
@@ -96,6 +104,7 @@ if( $_SERVER['REQUEST_METHOD']=='POST' )
         $valor = "";
         $subGrupo = "0";
         $formaPagamento = "0";
+        $conta_financeira = 0;
     }
     else
     {
@@ -145,6 +154,15 @@ alertify.alert("Favor preencher o campo forma do pagamento");
 alertify.alert("Favor preencher o campo Vlr Total");
 </script>
 <?php   
+                }elseif($conta_financeira=="0"){
+      
+                    ?>
+                
+                <script>
+                alertify.alert("Favor informe a conta financeira");
+                </script>
+                <?php
+                
                 }
                 else{
                     $cont = 0;
@@ -172,9 +190,9 @@ alertify.alert("Favor preencher o campo Vlr Total");
                             //somar o valor das parcelas
                          //  $soma_valor_parc += number_format($valor_ultima_par,2,'.','');
                          $inserir = "INSERT INTO lancamento_financeiro ";
-                         $inserir .= "(data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,numeroRecorrente)";
+                         $inserir .= "(data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,numeroRecorrente,cl_conta_financeira_id)";
                          $inserir .= " VALUES ";
-                         $inserir .= "('$hoje','$data_parcela','Despesa','A Pagar','$formaPagamento','$cliente','$menagem','$documento/$cont','$subGrupo','$valor_ultima_par','$numeroRecorrente' )";
+                         $inserir .= "('$hoje','$data_parcela','Despesa','A Pagar','$formaPagamento','$cliente','$menagem','$documento/$cont','$subGrupo','$valor_ultima_par','$numeroRecorrente','$conta_financeira' )";
          
                          //verificando se está havendo conexão com o banco de dados
                          $operacao_inserir = mysqli_query($conecta, $inserir);
@@ -189,9 +207,9 @@ alertify.alert("Favor preencher o campo Vlr Total");
                         $soma_valor_parc += number_format($valor_par,2,'.','');
 
                         $inserir = "INSERT INTO lancamento_financeiro ";
-                        $inserir .= "(data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,numeroRecorrente)";
+                        $inserir .= "(data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,descricao,documento,grupoID,valor,numeroRecorrente,cl_conta_financeira_id)";
                         $inserir .= " VALUES ";
-                        $inserir .= "('$hoje','$data_parcela','Despesa','A Pagar','$formaPagamento','$cliente','$menagem','$documento/$cont','$subGrupo','$valor_par','$numeroRecorrente' )";
+                        $inserir .= "('$hoje','$data_parcela','Despesa','A Pagar','$formaPagamento','$cliente','$menagem','$documento/$cont','$subGrupo','$valor_par','$numeroRecorrente','$conta_financeira'  )";
                           //verificando se está havendo conexão com o banco de dados
                           $operacao_inserir = mysqli_query($conecta, $inserir);
                           if(!$operacao_inserir){
@@ -205,9 +223,6 @@ alertify.alert("Favor preencher o campo Vlr Total");
 
                   
 
-        
-            
-                
 
         
                 }
@@ -224,7 +239,7 @@ alertify.alert("Favor preencher o campo Vlr Total");
 if($_POST){
     $numeroRecorrente = utf8_decode($_POST["numeroRecorrente"]);
     $select = "SELECT  clientes.nome_fantasia, 
-    forma_pagamento.nome,lancamento_financeiro.descricao,grupo_lancamento.nome  as grupo,
+    forma_pagamento.nome,ctfn.cl_banco as banco,lancamento_financeiro.descricao,grupo_lancamento.nome  as grupo,
      lancamento_financeiro.lancamentoFinanceiroID, tb_subgrupo_receita_despesa.subgrupo,
       tb_subgrupo_receita_despesa.subgrupo, lancamento_financeiro.data_movimento, 
        lancamento_financeiro.documento,lancamento_financeiro.lancamentoFinanceiroID,lancamento_financeiro.numeroRecorrente,
@@ -234,7 +249,7 @@ if($_POST){
            on lancamento_financeiro.clienteID = clientes.clienteID inner join tb_subgrupo_receita_despesa 
            on lancamento_financeiro.grupoID = tb_subgrupo_receita_despesa.subGrupoID inner join forma_pagamento
             on lancamento_financeiro.forma_pagamentoID = forma_pagamento.formapagamentoID inner join grupo_lancamento
-             on  tb_subgrupo_receita_despesa.grupo = grupo_lancamento.grupo_lancamentoID  WHERE numeroRecorrente = '$numeroRecorrente' order by data_a_pagar ";
+             on  tb_subgrupo_receita_despesa.grupo = grupo_lancamento.grupo_lancamentoID  inner join tb_conta_financeira as ctfn on ctfn.cl_id =lancamento_financeiro.cl_conta_financeira_id WHERE numeroRecorrente = '$numeroRecorrente' order by data_a_pagar ";
              $lista_pesquisa_lancamento = mysqli_query($conecta,$select);
             if(!$lista_pesquisa_lancamento){
                 die("Falha no banco de dados");
@@ -382,15 +397,15 @@ $recorrenteID = rand(100,50000);
 
                             <label for="numeroParcela" style="width:148px;"> <b>Nº parcela</b></label>
 
-                            <label for="txtaPagar" style="width:148px;"> <b>Dia. 1º pagamento </b></label>
+                            <label for="txtaPagar" style="width:148px;"> <b>Dia. 1º pgt </b></label>
 
                             <label for="valorDocumento" style="width:148px;"> <b>Vlr Total</b></label>
 
-                            <label for="valorDocumento" style="width:320px;"> <b>SubGrupo</b></label>
+                            <label for="valorDocumento" style="width:150px;"> <b>SubGrupo</b></label>
 
-                            <label for="txtFormaPagamento" style="width:160x;"><b>Forma do pagamento:</b></label>
+                            <label for="txtFormaPagamento" style="width:240px;" ><b>Forma do pagamento:</b></label>
 
-
+                            <label for="txtFormaPagamento" ><b>Conta Finaneceira</b></label>
 
                         </td>
                     </tr>
@@ -420,7 +435,7 @@ $recorrenteID = rand(100,50000);
                                 }
                                     ?>">
 
-                            <select style="margin-right:20px; width:300px" id="subGrupo" name="subGrupo">
+                            <select style="margin-right:20px; width:150px" id="subGrupo" name="subGrupo">
                                 <option value="0">Selecione</option>
                                 <?php 
                            
@@ -511,6 +526,46 @@ $recorrenteID = rand(100,50000);
                                          ?>
 
                             </select>
+                            <select style="width:170px" id="campoContaFinanceira" name="campoContaFinanceira">
+                                        <option value="0">Selecione</option>
+                                        <?php 
+                            while($linha  = mysqli_fetch_assoc($consulta_conta_financeira)){
+                                $conta_financeira_principal = utf8_encode($linha["cl_id"]);
+                               if(!isset($conta_financeira)){
+                               
+                               ?>
+                                        <option <?php if($conta_financeira_principal =="4"){echo "selected"; } ?> value="<?php echo utf8_encode($linha["cl_id"]);?>">
+                                            <?php echo utf8_encode($linha["cl_banco"]);?>
+                                        </option>
+                                        <?php
+                               
+   
+                               }else{
+   
+                                if($conta_financeira==$conta_financeira_principal){
+                                ?> <option value="<?php echo utf8_encode($linha["cl_id"]);?>" selected>
+                                            <?php echo utf8_encode($linha["cl_banco"]);?>
+                                        </option>
+
+                                        <?php
+                                         }else{
+                                
+                               ?>
+                                        <option value="<?php echo utf8_encode($linha["cl_id"]);?>">
+                                            <?php echo utf8_encode($linha["cl_banco"]);?>
+                                        </option>
+                                        <?php
+   
+                                        }
+                                        
+                                    }
+                                
+                                                            
+                                }
+                                                        
+                                                        ?>
+                                    </select>
+
                             <input type="submit" id="salvar" name="salvar" class="btn btn-success" value="Adicionar">
                             <input id="remover" type="submit" name="btnremover" value="Remover" class="btn btn-danger"
                                 onClick="return confirm('Deseja remover esses lançamentos?');"></input>
@@ -536,9 +591,12 @@ $recorrenteID = rand(100,50000);
                                 <p>SubGrupo</p>
                             </td>
                             <td>
+                                <p>Conta financeira</p>
+                            </td>
+                            <td>
                                 <p>Status</p>
                             </td>
-                            <td align="center">
+                            <td >
                                 <p>Valor</p>
                             </td>
                             <td>
@@ -567,7 +625,7 @@ while($linha = mysqli_fetch_assoc($lista_pesquisa_lancamento)){
     $subGrupo = utf8_encode($linha['subgrupo']);
     
     $recorrenteID = $linha['numeroRecorrente'];
-
+    $banco = $linha['banco'];
 
 ?>
                         <tr id="linha_pesquisa">
@@ -596,6 +654,12 @@ while($linha = mysqli_fetch_assoc($lista_pesquisa_lancamento)){
 
                             </td>
 
+                        
+                            <td style="width: 150px;">
+
+                                <font size="2"><?php echo $banco;?> </font>
+
+                            </td>
                             <td style="width: 150px;">
 
                                 <font size="2"><?php echo $statusB;?> </font>
@@ -647,7 +711,11 @@ while($linha = mysqli_fetch_assoc($lista_pesquisa_lancamento)){
                             </td>
                             <td>
 
+</td>
+                            <td>
+
                             </td>
+             
                             <td>
                                 <font size="2"><?php echo real_format($totalPedido);?> </font>
                             </td>

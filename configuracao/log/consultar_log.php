@@ -28,10 +28,11 @@ if($_GET){
 
      $select="SELECT log.cl_data_modificacao,user.usuario as usuario,log.cl_descricao as descricao
       from tb_log as log inner join usuarios as user on user.usuarioID = log.cl_usuario where 
-      log.cl_data_modificacao between '$pesquisaData' and '$pesquisaDataf' and log.cl_descricao  LIKE '%{$pesquisa}%' ";
+      log.cl_data_modificacao between '$pesquisaData' and '$pesquisaDataf' and log.cl_descricao  LIKE '%{$pesquisa}%'  ";
       if($usuario!="1"){
         $select .="and log.cl_usuario = '$usuario'";
       }
+ 
       $consultar_log = mysqli_query($conecta, $select);
     
 }

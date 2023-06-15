@@ -28,8 +28,6 @@ $mes_doze = (date('m')+1);
 //despesas dos ultimos 12 meses
 $select =" SELECT sum(valor) as valor_despesa from lancamento_financeiro ";
 $select .= "where  status = 'Pago' and data_do_pagamento BETWEEN '$ano-01-01' and '$ano-$mes-$dia'"; 
-
-
 $consulta_despesa = mysqli_query($conecta,$select);
 $linha = mysqli_fetch_assoc($consulta_despesa);
 $valor_despesa = $linha['valor_despesa'];
@@ -38,12 +36,16 @@ $valor_despesa = $linha['valor_despesa'];
 //receita dos ultimos 12 meses
 $select =" SELECT sum(valor) as valor_receita from lancamento_financeiro ";
 $select .= "where status = 'Recebido' and data_do_pagamento BETWEEN '$ano-01-01' and '$ano-$mes-$dia'";
-
-
 $consulta_receita = mysqli_query($conecta,$select);
 $linha = mysqli_fetch_assoc($consulta_receita);
 $valor_receita = $linha['valor_receita'];
 
+
+//saldo inicial
+$select =" SELECT * from tb_caixa where cl_ano = '$ano_anterior' and cl_mes = '12' and cl_banco='CAIXA'";
+$consulta_saldo_inicial = mysqli_query($conecta,$select);
+$linha = mysqli_fetch_assoc($consulta_saldo_inicial);
+$saldo_inicial = $linha['cl_valor_fechamento'];
 
 //estoque 
 $select ="SELECT sum(cl_total) as valor_total FROM `tb_produto_estoque`";
@@ -59,9 +61,9 @@ $consulta_despesa = mysqli_query($conecta,$select);
 $linha = mysqli_fetch_assoc($consulta_despesa);
 $receita_total = $linha['receita_total'];
 
-$saldo_caixa = $valor_receita - $valor_despesa;
-$saldo = $valor_receita - $valor_despesa;
-$lucratividade = ($saldo / $receita_total) *100;
+$saldo_caixa = $saldo_inicial + $valor_receita - $valor_despesa;
+//$saldo = $valor_receita - $valor_despesa;
+$lucratividade = ($saldo_caixa / $receita_total) *100;
 
 
 
@@ -76,6 +78,20 @@ $lucratividade = ($saldo / $receita_total) *100;
                 <h3>Dashboard - Anual</h3>
             </div>
             <div class="group-card">
+            <div id="card" class="bloco-5">
+                    <div class="info">
+                        <div class="info-1">
+                            <p>Saldo Inicial</p>
+                        </div>
+                        <div class="info-2">
+                            <p><?php echo real_format($saldo_inicial); ?></p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        <img src="images/receita.png">
+                    </div>
+                </div>
+
                 <div id="card" class="bloco-2">
                     <div class="info">
                         <div class="info-1">
@@ -127,7 +143,7 @@ $lucratividade = ($saldo / $receita_total) *100;
                             <p>Estoque</p>
                         </div>
                         <div class="info-2">
-                            <p><?php echo real_format($valor_estoque); ?></p>
+                            <p><?php // real_format($valor_estoque); ?></p>
                         </div>
                     </div>
                     <div class="icon">

@@ -12,51 +12,52 @@
 
 <?php
 require_once("../../conexao/conexao.php");
-
 include("../../conexao/sessao.php");
 
 $hoje = date('Y-d-m');
 echo ".";
 
+$Select = "SELECT * from tb_conta_financeira ";
+$consultar_contas_fi = mysqli_query($conecta, $Select);
 
-if(isset($_POST['enviar'])){
+if (isset($_POST['enviar'])) {
     $descricao = utf8_decode($_POST['txtFormaPagamento']);
     $banco = utf8_decode($_POST['txtBanco']);
 
 
-    if($descricao == "" ){
-        ?>
-<script>
-alertify.alert("Forma de pagamento não informada");
-</script>
-<?php
-    }elseif(!isset($_POST['status'])){
-        ?>
-<script>
-alertify.alert("Favor informar o status");
-</script>
-<?php
-    }else{
-    $status =utf8_decode($_POST['status']);
-    //inserindo as informações no banco de dados
-    $inserir = "INSERT INTO forma_pagamento ";
-    $inserir .= "(nome,banco,statuspagamento)";
-    $inserir .= " VALUES ";
-    $inserir .= "('$descricao','$banco','$status' )";
+    if ($descricao == "") {
+?>
+        <script>
+            alertify.alert("Forma de pagamento não informada");
+        </script>
+    <?php
+    } elseif (!isset($_POST['status'])) {
+    ?>
+        <script>
+            alertify.alert("Favor informar o status");
+        </script>
+        <?php
+    } else {
+        $status = utf8_decode($_POST['status']);
+        //inserindo as informações no banco de dados
+        $inserir = "INSERT INTO forma_pagamento ";
+        $inserir .= "(nome,banco,statuspagamento)";
+        $inserir .= " VALUES ";
+        $inserir .= "('$descricao','$banco','$status' )";
 
-    $operacao_inserir = mysqli_query($conecta, $inserir);
-    if(!$operacao_inserir){
-        die("Erro no banco de dados || inserir na tabela forma_pagamento ");
-        }else{
-            ?>
-<script>
-alertify.success("Forma de pagamento lançado com sucesso");
-</script>
+        $operacao_inserir = mysqli_query($conecta, $inserir);
+        if (!$operacao_inserir) {
+            die("Erro no banco de dados || inserir na tabela forma_pagamento ");
+        } else {
+            $descricao = "";
+            $banco = 0;
+        ?>
+            <script>
+                alertify.success("Forma de pagamento lançado com sucesso");
+            </script>
 <?php
         }
-
     }
-        
 }
 
 
@@ -101,16 +102,29 @@ alertify.success("Forma de pagamento lançado com sucesso");
                         <tr>
                             <td>
                                 <label for="txtFormaPagamento" style="width:115px;"> <b>Forma de Pagamento:</b></label>
-                                <input type="text" size=50 name="txtFormaPagamento" id="txtFormaPagamento"
-                                    value="<?php if(isset($_POST['enviar'])){ echo utf8_encode($descricao);}?>">
+                                <input type="text" size=50 name="txtFormaPagamento" id="txtFormaPagamento" value="<?php if (isset($_POST['enviar'])) {
+                                                                                                                        echo utf8_encode($descricao);
+                                                                                                                    } ?>">
 
                             </td>
                         </tr>
-                        <tr>
+                        <tr >
                             <td>
                                 <label for="txtBanco" style="width:115px; "> <b>Banco:</b></label>
-                                <input type="text" style="margin-bottom:20px" size=20 name="txtBanco" id="txtBanco"
-                                    value="<?php if(isset($_POST['enviar'])){ echo utf8_encode($banco);}?>">
+                                <select style="width: 150px;margin-bottom: 9px" id="txtBanco" name="txtBanco">
+                                    <option value="0">Selecione</option>
+                                    <?php
+                                    while ($linha = mysqli_fetch_assoc($consultar_contas_fi)) {
+                                        $id = $linha['cl_id'];
+                                        $banco = $linha['cl_banco'];
+
+                                            echo "<option  value='$id'>$banco</option>";
+                                        
+                                    }
+
+                                    ?>
+
+                                </select>
 
                             </td>
                         </tr>
@@ -128,11 +142,9 @@ alertify.success("Forma de pagamento lançado com sucesso");
 
                         <td>
                             <div style="margin-left: 120px;margin-top:10px">
-                                <input type="submit" name=enviar value="Incluir" class="btn btn-info btn-sm"
-                                    onClick="return confirm('Confirmar o cadastro da Forma de pagamento?');"></input>
+                                <input type="submit" name=enviar value="Incluir" class="btn btn-info btn-sm" onClick="return confirm('Confirmar o cadastro da Forma de pagamento?');"></input>
 
-                                <button type="button" onclick="window.opener.location.reload();fechar();"
-                                    class="btn btn-secondary">Voltar</button>
+                                <button type="button" onclick="window.opener.location.reload();fechar();" class="btn btn-secondary">Voltar</button>
                             </div>
 
                         </td>
@@ -140,9 +152,9 @@ alertify.success("Forma de pagamento lançado com sucesso");
                 </table>
     </main>
     <script>
-    function fechar() {
-        window.close();
-    }
+        function fechar() {
+            window.close();
+        }
     </script>
 
 

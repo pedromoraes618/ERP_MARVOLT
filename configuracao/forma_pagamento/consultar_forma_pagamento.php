@@ -5,7 +5,7 @@ include("../../conexao/sessao.php");
 
 
 //consultar subgrupos
-$select = " SELECT * from forma_pagamento ";
+$select = " SELECT fp.formapagamentoID,fp.statuspagamento, fp.nome,ctf.cl_banco as banco from forma_pagamento as fp inner join tb_conta_financeira as ctf on ctf.cl_id = fp.banco ";
 if(isset($_GET["pesquisa"])){
     $pesquisa = $_GET["pesquisa"];
     $select .= " WHERE nome LIKE '%{$pesquisa}%' ";

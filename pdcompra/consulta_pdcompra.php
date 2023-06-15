@@ -32,7 +32,7 @@ if($_GET){
         $select = "SELECT clientes.nome_fantasia,data_fechamento,pedido_compra.data_movimento, pedido_compra.data_movimento,pedido_compra.valor_total_compra,
         pedido_compra.status_recebimento,  pedido_compra.codigo_pedido, pedido_compra.numero_pedido_compra, pedido_compra.pedidoID, 
         pedido_compra.data_chegada, pedido_compra.entrega_realizada, pedido_compra.entrega_prevista, pedido_compra.valor_total, 
-        pedido_compra.desconto_geral, pedido_compra.valor_total_margem from  clientes inner join pedido_compra on pedido_compra.clienteID = clientes.clienteID " ;
+        pedido_compra.desconto_geral, pedido_compra.valor_total_margem from  clientes inner join pedido_compra on pedido_compra.clienteID = clientes.clienteID  " ;
         if($statusEntrega == 1){
             $select  .= " WHERE data_fechamento BETWEEN '$pesquisaData' and '$pesquisaDataf' and clientes.nome_fantasia LIKE '%{$pesquisa}%' and 
             pedido_compra.numero_pedido_compra LIKE '%{$pesquisaNpedido}%' and pedido_compra.entrega_realizada !='0000-00-00'  ORDER BY  pedido_compra.data_fechamento asc ";
@@ -242,21 +242,19 @@ if(isset($_GET["CampoPesquisaData"])){
                     $lucroL = $linha["valor_total_margem"];
                     $valorTotalCompra = $linha["valor_total_compra"]; 
                     $statusRecebimento = $linha["status_recebimento"]; 
-                   
-                   
+                        
+                    $select = "SELECT sum(valor) as valor FROM lancamento_financeiro where numeroPedido = '$nPedidoCompraL' and receita_despesa ='Receita'";
+                    $consulta_valor_financeiro_pedido = mysqli_query($conecta,$select);
+                    $linha_2 = mysqli_fetch_assoc($consulta_valor_financeiro_pedido);
+                    $valor_financeiro_pedido = $linha_2['valor'];
+                        
+
                     ?>
 
                     <tr id="linha_pesquisa">
 
                         <td style="width:100px;">
-                            <font size="2"> <?php if($data_fechamento=="0000-00-00") {
-                               echo ("");
-
-                                  }elseif($data_fechamento=="1970-01-01"){
-
-                                    echo ("");
-
-                                  }else{echo formatardataB($data_fechamento); } ?></font>
+                            <font size="2"> <?php echo formatardataB2($data_fechamento);  ?></font>
                         </td>
                         <td style="width:90px;">
                             <p>
@@ -271,40 +269,29 @@ if(isset($_GET["CampoPesquisaData"])){
                             </p>
                         </td>
 
-                        <td style="width:90px;">
+                        <td >
                             <font size="2"> <?php echo real_format($valorTotalCompra)?> </font>
                         </td>
 
-                        <td style="width:80px;">
+                        <td >
                             <font size="2"> <?php echo ($desconto) . ' %'?> </font>
                         </td>
 
-                        <td style="width:100px;">
+                        <td>
                             <font size="2"> <?php echo real_format($valorTotal)?> </font>
                         </td>
 
-                        <td style="width:80px;">
+                        <td >
                             <font size="2"> <?php echo porcent_format($lucroL)?> </font>
                         </td>
 
-                        <td style="width:100px;">
-                            <font size="2"> <?php if($data_chegada=="0000-00-00") {
-                               echo ("");
-
-                                  }elseif($data_chegada=="1970-01-01"){
-
-                                    echo ("");
-
-                                  }elseif($data_chegada==""){
-
-                                    echo ("");
-
-                                  }else{echo formatardataB($data_chegada); } ?></font>
+                        <td >
+                            <font size="2"> <?php echo formatardataB2($data_chegada);  ?></font>
                         </td>
 
 
 
-                        <td style="width:120px;">
+                        <td >
                             <font size="2"> <?php  
                             if($entregaPrevista=="0000-00-00"){
                                 echo ("");
@@ -318,7 +305,7 @@ if(isset($_GET["CampoPesquisaData"])){
 
                         </td>
 
-                        <td style="width:130px;">
+                        <td >
                             <font size="2">
                                 <?php if(($entregaRealizada=="0000-00-00")){
                                  echo ("");
@@ -338,7 +325,7 @@ if(isset($_GET["CampoPesquisaData"])){
                         </td>
 
 
-                        <td style="width:120px;">
+                        <td >
                             <font size="2"> <?php if($entregaPrevista!=0000-00-00 and $entregaPrevista < $entregaRealizada){
                                 ?><p style="color: red;"> Entrega fora do prazo</p><?php
                                 } elseif($entregaRealizada !=0000-00-00 and $entregaPrevista > $entregaRealizada ){
@@ -355,10 +342,14 @@ if(isset($_GET["CampoPesquisaData"])){
                             <a style="cursor:pointer "
                                 onclick="window.open('recebimento.php?codigo=<?php echo $pedidoIDL?>&codigoPedido=<?php echo $codigo_pedido?>&nPedido=<?php echo $nPedidoCompraL?>', 
 'recebimento', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1500, HEIGHT=900');">
-                                <?php if($statusRecebimento==0){
+                                <?php if(($valor_financeiro_pedido =="" or $nPedidoCompraL=="")){
                                     ?>
                                 <i style="font-size:22px; color:darkgoldenrod" class="fa-solid fa-calendar"
                                     title="A receber"></i>
+                                <?php
+                               }elseif($valor_financeiro_pedido < $valorTotal){
+                                ?>
+                        <i class="fa-solid fa-circle-half-stroke" style="font-size:22px; color:black" title="Recebimento Parcial"></i>
                                 <?php
                                }else{
                                    ?>

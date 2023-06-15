@@ -167,7 +167,7 @@ if (isset($_GET["campoPesquisaDataf"])) {
                 <tbody>
                     <tr id="cabecalho_pesquisa_consulta">
 
-                        <td align="center">
+                        <td >
                             <p>Nº NFE</p>
                         </td>
 
@@ -187,7 +187,7 @@ if (isset($_GET["campoPesquisaDataf"])) {
                             <p>Autenticação</p>
                         </td>
 
-                        <td align="center">
+                        <td >
                             <p>Provisionamento</p>
                         </td>
                         <td>
@@ -213,33 +213,33 @@ if (isset($_GET["campoPesquisaDataf"])) {
                     <tr id="linha_pesquisa">
 
 
-                        <td align="center" style="width:100px;">
+                        <td >
                             <p>
                                 <font size="3"><?php echo  $numeroNF; ?>
                                 </font>
                             </p>
                         </td>
 
-                        <td style="width:120px;">
+                        <td>
                             <font size="2"> <?php echo formatardataB($dataEmissao) ?></font>
                         </td>
 
 
 
-                        <td style="width:350px;">
+                        <td style="width:400px;">
                             <font size="2"><?php echo utf8_encode($razaoSocial) ?></font>
                         </td>
-                        <td style="width:100px;">
+                        <td >
                             <font size="2"> <?php echo real_format($valorTotal) ?></font>
                         </td>
-                        <td style="width:180px;">
+                        <td >
                             <font size="2"> <?php echo utf8_encode($autenticacao) ?>
                             </font>
                         </td>
 
 
                         <?php
-                                $select = " SELECT sum(valor) as soma_valor_nota from lancamento_financeiro  WHERE numeroNotaFiscal = '$numeroNF' and id_referencia = '$id_referencia'";
+                                $select = "SELECT sum(valor) as soma_valor_nota from lancamento_financeiro  WHERE numeroNotaFiscal = '$numeroNF' and id_referencia = '$id_referencia'";
                                 $opSelect = mysqli_query($conecta, $select);
                                 if (!$opSelect) {
                                     die("Falha na consulta ao banco de dados");
@@ -249,7 +249,7 @@ if (isset($_GET["campoPesquisaDataf"])) {
                                 }
 
                                 ?>
-                        <td align="center">
+                        <td >
                             <a style="cursor:pointer;"
                                 onclick="window.open('provisionamento_nfs_entrada.php?codigo=<?php echo $numeroNF; ?>&referencia=<?php echo $id_referencia; ?>', 
 'editar_nota_fiscal', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1600, HEIGHT=900');">
@@ -306,7 +306,7 @@ if (isset($_GET["campoPesquisaDataf"])) {
                         ?>
 
                     <tr id="cabecalho_pesquisa_consulta">
-                        <td align="center">
+                        <td>
                             <p>Total</p>
                         </td>
                         <td>

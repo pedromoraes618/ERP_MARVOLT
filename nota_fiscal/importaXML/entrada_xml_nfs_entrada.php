@@ -81,7 +81,7 @@ $hoje = date('Y-m-d');
                 // imprime os atributos do objeto criado
 
                 if (empty($xml->ListaNfse->ComplNfse->Nfse->InfNfse->CodigoVerificacao)) {
-                    echo "<h4>Arquivo sem dados de autoriza��o!</h4>";
+                    echo "<h4>Arquivo sem dados de autorizacaoo!</h4>";
                     exit;
                 }
 

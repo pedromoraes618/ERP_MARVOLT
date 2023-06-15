@@ -38,6 +38,8 @@ if(isset($_GET["codigo"])){
    //update na tabela pedido de compra na coluna entrega_realizada
    if(isset($_POST['salvar'])){
     $entregaRealizada = utf8_decode($_POST["txtEntregaRealizada"]);
+    $data_chegada = utf8_decode($_POST["txtdataChegada"]);
+    $numero_nf = utf8_decode($_POST["txtNumeroNf"]);
     $observacao = utf8_decode($_POST["observacao"]);
     
     if($totalDeProdutos!=$produtoChegou){
@@ -59,7 +61,11 @@ alertify.alert("Não é possivel incluir a data de entrega, alguns produtos est�
         $div1 = explode("/",$_POST['txtEntregaRealizada']);
         $entregaRealizada = $div1[2]."-".$div1[1]."-".$div1[0];  
         }
-        $alterar = "UPDATE pedido_compra set entrega_realizada = '{$entregaRealizada}', observacao = '{$observacao}' where codigo_pedido = '$codigo_pedido' ";
+        if($data_chegada !=""){
+            $div1 = explode("/",$_POST['txtdataChegada']);
+            $data_chegada = $div1[2]."-".$div1[1]."-".$div1[0];  
+            }
+        $alterar = "UPDATE pedido_compra set entrega_realizada = '{$entregaRealizada}',data_chegada ='$data_chegada',numero_nf='$numero_nf', observacao = '{$observacao}' where codigo_pedido = '$codigo_pedido' ";
         $lista_pedido_de_compra = mysqli_query($conecta,$alterar);
         if(!$lista_pedido_de_compra){
         die("Falha no banco de dados || select pedido_compra");
@@ -526,6 +532,32 @@ if($descontoGeralB > 0 ){
                     echo formatardataB($entregaPrevistaB);}?>
             </p>
             <td>
+                <label for="txtNumeroNf"><b>Número Nfe:</b></label>
+
+                <input type="text" size=12 id="txtNumeroNf" name="txtNumeroNf" value="<?php 
+
+if(!$numeroNfeB==""){
+   echo $numeroNfeB;
+};
+?>">
+
+            </td>
+            <td>
+                <label for="txtdataChegada"><b>Data chegada:</b></label>
+
+                <input type="text" size=12 id="txtdataChegada" name="txtdataChegada"
+                    OnKeyUp="mascaraData(this);" onkeypress="return onlynumber();" maxlength="10" autocomplete="off"
+                    value="<?php 
+
+if($dataChegadaB=="1970-01-01"){
+    print_r("");
+}elseif($dataChegadaB=="0000-00-00"){
+    print_r ("");
+}else{
+    echo formatardataB($dataChegadaB);}?>">
+
+            </td>
+            <td>
                 <label for="txtEntregaRealizada"><b>Entrega Realizada:</b></label>
 
                 <input type="text" size=12 id="txtEntregaRealizada" name="txtEntregaRealizada"
@@ -540,6 +572,7 @@ if($entregaRealizadaB=="1970-01-01"){
     echo formatardataB($entregaRealizadaB);}?>">
 
             </td>
+        
 
             <td align=left> <input type="submit" id="salvar" name="salvar" class="btn btn-success" value="salvar">
             </td>

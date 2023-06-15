@@ -133,6 +133,10 @@ $hoje = date('Y-m-d');
 	$xMotivo = $xml->protNFe->infProt->xMotivo;	
 	$nProt = $xml->protNFe->infProt->nProt;
 	
+
+	if(verficar_duplicidade_nfe($conecta,"tb_nfe_entrada",$nNF)){
+		$nNF = "0$nNF";
+	}
 	
 ?>
         <table width="100%" border="0" cellpadding="1" cellspacing="1">
@@ -391,16 +395,23 @@ $hoje = date('Y-m-d');
 								  
 	  
 								  }else{
-									   	//verificar o paramentro codigo 2
+									   	//verificar o paramentro codigo 3
 									$select = " SELECT * from tb_parametros where parametroID = '3' ";
 									$consulta_parametro_2 = mysqli_query($conecta,$select);
 									$linha = mysqli_fetch_assoc($consulta_parametro_2);
 									$valor_p_3 = $linha['valor'];
-									 
+
+										//verificar o paramentro codigo 6 conta financeira
+									$select = " SELECT * from tb_parametros where parametroID = '6' ";
+									$consulta_parametro_6 = mysqli_query($conecta,$select);
+									$linha = mysqli_fetch_assoc($consulta_parametro_6);
+									$valor_p_6 = $linha['valor'];
+														
+									
 			  $inserir = "INSERT INTO lancamento_financeiro ";
-			  $inserir .= "( data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,grupoID,descricao,valor,numeroNotaFiscal,documento,modalidade )";
+			  $inserir .= "( data_movimento,data_a_pagar,receita_despesa,status,forma_pagamentoID,clienteID,grupoID,descricao,valor,numeroNotaFiscal,documento,modalidade,cl_conta_financeira_id )";
 			  $inserir .= " VALUES ";
-			  $inserir .= "( '$hoje','$vencimento','Despesa','A Pagar','5','$clienteID','$valor_p_3','Duplicata $titulo referente a nota fiscal de entrada $nNF','$vlr_parcela','$nNF','$nNF/$titulo','NFE_ENTRADA' )";
+			  $inserir .= "( '$hoje','$vencimento','Despesa','A Pagar','5','$clienteID','$valor_p_3','Duplicata $titulo referente a nota fiscal de entrada $nNF','$vlr_parcela','$nNF','$nNF/$titulo','NFE_ENTRADA','$valor_p_6' )";
 			  $operacao_inserir_iten = mysqli_query($conecta, $inserir);
 			  if(!$operacao_inserir_iten){
 				  die("Erro no banco de dados tabela lancamento_financeiro");
@@ -677,9 +688,9 @@ $hoje = date('Y-m-d');
 								
 							   
 		$inserirIten = "INSERT INTO tb_nfe_entrada_item ";
-		$inserirIten .= "( numero_nf,codigo,descricao,ncm,cfop,und,quantidade,valor_unitario,valor_produto,bc_icms,valor_icms,valor_ipi,icms,ipi )";
+		$inserirIten .= "( numero_nf,codigo,descricao,ncm,cfop,und,quantidade,valor_unitario,valor_produto,bc_icms,valor_icms,valor_ipi,icms,ipi,numero_protocolo )";
 		$inserirIten .= " VALUES ";
-		$inserirIten .= "( '$nNF','$codigo','$xProd','$NCM','$CFOP','$uCom','$qCom','$vUnCom', '$vProd','$bc_icms','$vlr_icms','$vlr_ipi','$pICMS','$perc_ipi' )";
+		$inserirIten .= "( '$nNF','$codigo','$xProd','$NCM','$CFOP','$uCom','$qCom','$vUnCom', '$vProd','$bc_icms','$vlr_icms','$vlr_ipi','$pICMS','$perc_ipi','$nProt' )";
 		
 		$operacao_inserir_iten = mysqli_query($conecta, $inserirIten);
 		if(!$operacao_inserir_iten){
@@ -761,7 +772,7 @@ $hoje = date('Y-m-d');
         alertify.success("Nota fiscal importada com sucesso!");
         </script>
         <?php 
-			        //inserindo as informações no banco de dados
+			        //registrando as informações no log
 	$mensagem = "Usuario importou via xml a nota de compra nº $nNF";
 	$inserir = "INSERT INTO tb_log ";
 	$inserir .= "(cl_data_modificacao,cl_usuario,cl_descricao)";

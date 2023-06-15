@@ -11,23 +11,30 @@ $hoje = date('Y-m-d');
 $select = "SELECT estadoID, nome from estados";
 $lista_estados = mysqli_query($conecta,$select);
 if(!$lista_estados){
-    die("Falaha no banco de dados  Linha 19 cadastro_cliente");
+    die("Falaha no banco de dados ");
 }
 
 //consultar cliente/forncedor/transportador
 $selectcft = "SELECT clienteftID, nome from forclietrans";
 $lista_cft = mysqli_query($conecta, $selectcft);
 if(!$lista_cft){
-die("Falaha no banco de dados  Linha 26clienteftid");
+die("Falha no banco de dados ");
 }
 
 //consultar GRUPO_CLIENTE
 $select = "SELECT * from tb_grupo_cliente order by cl_descricao asc";
 $consultar_grupo_cliente = mysqli_query($conecta, $select);
 if(!$consultar_grupo_cliente){
-die("Falaha no banco de dados");
+die("Falha no banco de dados");
 }
 
+
+//consultar ramo cliente
+$select = "SELECT categoriaID, nome_categoria from categoria_produto";
+$lista_categoria = mysqli_query($conecta, $select);
+if (!$lista_categoria) {
+    die("Falaha no banco de dados  Linha 89");
+}
 
 //variaveis 
 if(isset($_POST["enviar"])){
@@ -49,6 +56,7 @@ if(isset($_POST["enviar"])){
   $conta_agencia = utf8_decode($_POST["conta_agencia"]);
   $cep = $_POST["cep"];
   $codigo_cidade = $_POST["ibge"];
+  $ramo = $_POST['ramo'];
   
 
 
@@ -97,6 +105,13 @@ alertify.alert("Cidade não encontrada, Favor clique no botão consultar Cep");
 </script>
 <?php
   
+      } elseif($ramo=="0"){
+        ?>
+<script>
+alertify.alert("Favor informe o campo Ramo");
+</script>
+<?php
+  
       }else{
 
       
@@ -137,9 +152,9 @@ alertify.alert("Cnpj do cliente já cadastrado no sistema");
 
 //inserindo as informações no banco de dados
   $inserir = "INSERT INTO clientes ";
-  $inserir .= "(razaosocial,endereco,cidade,estadoID,telefone,email,informacao_bancaria,conta_agencia,pix,observacao,cpfcnpj,inscricao_estadual,clienteftID,nome_fantasia,bairro,cep,data_cadastro,codigo_cidade,grupo_cliente)";
+  $inserir .= "(razaosocial,endereco,cidade,estadoID,telefone,email,informacao_bancaria,conta_agencia,pix,observacao,cpfcnpj,inscricao_estadual,clienteftID,nome_fantasia,bairro,cep,data_cadastro,codigo_cidade,grupo_cliente,ramo)";
   $inserir .= " VALUES ";
-  $inserir .= "('$razao_social','$endereco','$cidade',' $estados',' $telefone','$email','$informacao_bancaria','$conta_agencia','$pix','$observacao','$cpfcfnp3','$inscricao_estadual','$clienteft','$nome_fantasia','$bairro','$cep2','$hoje','$codigo_cidade','$grupo_cliente')";
+  $inserir .= "('$razao_social','$endereco','$cidade',' $estados',' $telefone','$email','$informacao_bancaria','$conta_agencia','$pix','$observacao','$cpfcfnp3','$inscricao_estadual','$clienteft','$nome_fantasia','$bairro','$cep2','$hoje','$codigo_cidade','$grupo_cliente','$ramo')";
 
 
   $razao_social = "";
@@ -294,7 +309,48 @@ alertify.success("Cliente cadastrado com sucesso");
                                     <label for="email" style="width:120px;"> <b>Email:</b></label>
                                     <input type="email" size=30 id="email" name="email"
                                         value="<?php if(isset($_POST['enviar'])){ echo utf8_encode($email);}?>">
-                                </td>
+                                
+                                
+                                        <label for="estados"><b>Ramo:</b></label>
+                                    <select style="width: 165px;" name="ramo" id="ramo">
+                                        <option value="0">Selecione</option>
+                                  
+<?php while($linha = mysqli_fetch_assoc($lista_categoria)){
+    $ramo_principal = ($linha["categoriaID"]);
+      if(!isset($estados)){
+  
+  ?>
+           <option value="<?php echo ($linha["categoriaID"]);?>">
+               <?php echo ($linha["nome_categoria"]);?>
+           </option>
+           <?php
+  
+  }else{
+
+   if($ramo==$ramo_principal){
+   ?> <option value="<?php echo ($linha["categoriaID"]);?>" selected>
+               <?php echo ($linha["nome_categoria"]);?>
+           </option>
+
+           <?php
+            }else{
+   
+  ?>
+           <option value="<?php echo ($linha["categoriaID"]);?>">
+               <?php echo ($linha["nome_categoria"]);?>
+           </option>
+           <?php
+
+}
+
+}
+
+
+}
+?>
+
+                                    </select>
+                                    </td>
                             </tr>
                             <tr>
                                 <td>

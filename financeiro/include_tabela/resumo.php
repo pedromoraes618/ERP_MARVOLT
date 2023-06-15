@@ -97,16 +97,10 @@
 
             </td>
             <td>
-                <p><?php echo real_format($saldo_inicial + $somaReceita-$somaDespesa); ?></p>
+                <p><?php echo real_format($saldo_inicial + $somaReceita - $somaDespesa); ?></p>
             </td>
 
         </tr>
 
-        <?php
-                             
-                        
-                    
-        
-            ?>
     </tbody>
 </table>

@@ -277,20 +277,21 @@ alertify.success("Pedido de compra lançado com sucesso");
 
 //DUPLICAR A COTACAO
 //auto incremento do numero do orçamento
+//auto incremento do numero do orçamento
 if($_POST){
-$selectCotacaoMax = "SELECT MAX(valor) as maximo FROM tb_parametros where descricao = 'Numero Atual Orcamento' ";
-$lista_cotacao_max= mysqli_query($conecta, $selectCotacaoMax);
-if(!$lista_cotacao_max){
-die("Falaha no banco de dados");
-}else{
+    $selectCotacaoMax = "SELECT valor FROM tb_parametros where parametroID = 1 ";
+    $lista_cotacao_max= mysqli_query($conecta, $selectCotacaoMax);
+    if(!$lista_cotacao_max){
+    die("Falaha no banco de dados");
+    }else{
     $linha = mysqli_fetch_assoc($lista_cotacao_max);
-    $numeroOrcamentoMax = $linha['maximo'];
-    $result = substr($numeroOrcamentoMax,0,3);
-    $soma = $result + 1;
+    $numeroOrcamentoMax = $linha['valor'];
+    $soma_parametro_cotacao = $numeroOrcamentoMax + 1;
     $data = date('Y');
-    $paramentroNumeroOrcamento = $soma.$data;
-}
-}
+    $paramentroNumeroOrcamento = $soma_parametro_cotacao.$data;
+    }
+    }
+    
 
 $new_codCotacao = rand(1,1000000000);
 //duplicar cotacao
@@ -383,6 +384,16 @@ alertify.success("Cotação duplicada com sucesso <?php echo $paramentroNumeroOr
 </script>
 <?php
 
+//insert no tb produto cotacao
+    $inserir = "INSERT INTO produto_cotacao ";
+    $inserir .= "(cotacaoID,numero_orcamento, descricao,quantidade,preco_compra,preco_venda,margem,unidade,status,img,ordem_item,prazo,categoria_produto,codigo_avulso)";
+    $inserir .= " ( SELECT '$new_codCotacao','$paramentroNumeroOrcamento',descricao,quantidade,preco_compra,preco_venda,margem,unidade,status,img,ordem_item,prazo,categoria_produto,codigo_avulso FROM produto_cotacao WHERE cotacaoID = '$codCotacao' )";
+    $operacao_inserir = mysqli_query($conecta, $inserir);
+    if(!$operacao_inserir){
+
+    die("Erro no banco de dados || adicionar o produto na cotacao duplicada");
+
+    }
      //adicionar ao log
     $mensagem = "Usuario duplicou a cotação Nº $numeroOrcamento";
     $inserir = "INSERT INTO tb_log ";
@@ -393,18 +404,9 @@ alertify.success("Cotação duplicada com sucesso <?php echo $paramentroNumeroOr
     
 
     }
-//insert no tb produto cotacao
-    $inserir = "INSERT INTO produto_cotacao ";
-    $inserir .= "(cotacaoID,numero_orcamento, descricao,quantidade,preco_compra,preco_venda,margem,unidade,status,img,ordem_item,prazo,categoria_produto)";
-    $inserir .= " ( SELECT '$new_codCotacao','$paramentroNumeroOrcamento',descricao,quantidade,preco_compra,preco_venda,margem,unidade,status,img,ordem_item,prazo,categoria_produto FROM produto_cotacao WHERE cotacaoID = '$codCotacao' )";
-    $operacao_inserir = mysqli_query($conecta, $inserir);
-    if(!$operacao_inserir){
 
-    die("Erro no banco de dados || adicionar o produto na cotacao duplicada");
-
-    }
     //atualizar o numero da cotacao
-$inserir_parametro = "UPDATE tb_parametros set valor = '{$paramentroNumeroOrcamento}' where descricao = 'Numero Atual Orcamento' ";
+$inserir_parametro = "UPDATE tb_parametros set valor = '$soma_parametro_cotacao' where descricao = 'Numero Atual Orcamento' ";
 $operacao_inserir_parametro = mysqli_query($conecta, $inserir_parametro);
 if(!$operacao_inserir_parametro){
     die("Erro no banco de dados inserir tb_parametro");
@@ -1449,9 +1451,6 @@ $pedido_id = $linha['pedidoID'];
                                 onblur="calculavalormargem()" autocomplete="off" onkeypress="return onlynumber();"
                                 value="<?php if((isset($_POST['adicionar'])) or (isset($_POST['servico']))){ echo utf8_encode($prazo);}?>">
                         </td>
-
-
-
                     </div>
                 </tr>
 
@@ -1477,7 +1476,7 @@ $pedido_id = $linha['pedidoID'];
                                 onclick="window.open('obscotacao.php?cotacaoCod=<?php echo $codCotacaoB;?>', 'popuppageSelecionarProduto',
                                                     'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1500, HEIGHT=500');">
 
-                                <button type="button" style="margin-right:120px ;" onclick="calculavalordesconto()"
+                                <button type="button" style="margin-right:120px; width:fit-content" onclick="calculavalordesconto()"
                                     name="fecharPesquisa" class="btn btn-warning" value="Observação">Observação</button>
 
                             </a>
@@ -1588,17 +1587,19 @@ while($linha = mysqli_fetch_assoc($lista_Produto_cotacao)){
     $margem = $linha['margem'];
     $unidade = $linha['unidade'];
     $status = $linha['status'];
-
-   
+    $codigo_avulso = $linha['codigo_avulso'];
+    if($codigo_avulso !=""){
+        $codigo_avulso =" - ".$codigo_avulso;
+    }
     
 
    
 ?>
                 <tr id="linha_pesquisa">
 
-                    <td style="width: 70px; ">
+                    <td style="max-width: 100px; min-width:70px; ">
                         <p style="margin-left: 15px; margin-top:10px;">
-                            <font size="3"><?php echo $linhas = $linhas +1;?></font>
+                            <font size="3"><?php echo ($linhas = $linhas +1) . $codigo_avulso ;?></font>
                         </p>
                     </td>
 

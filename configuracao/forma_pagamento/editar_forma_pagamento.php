@@ -18,58 +18,58 @@ include("../../conexao/sessao.php");
 $hoje = date('Y-d-m');
 echo ".";
 
-if(isset($_GET['codigo'])){
+if (isset($_GET['codigo'])) {
     $codigoID = ($_GET['codigo']);
 }
 
 
+$Select = "SELECT * from tb_conta_financeira ";
+$consultar_contas_fi = mysqli_query($conecta, $Select);
 
-if(isset($_POST['enviar'])){
+if (isset($_POST['enviar'])) {
     $descricao = utf8_decode($_POST['txtFormaPagamento']);
     $banco = utf8_decode($_POST['txtBanco']);
 
 
-    if($descricao == "" ){
+    if ($descricao == "") {
+?>
+        <script>
+            alertify.alert("Forma de pagamento não informada");
+        </script>
+    <?php
+    } elseif (!isset($_POST['status'])) {
+    ?>
+        <script>
+            alertify.alert("Favor informar o status");
+        </script>
+        <?php
+    } else {
+        $status = utf8_decode($_POST['status']);
+        //inserindo as informações no banco de dados
+        $update = "UPDATE forma_pagamento set nome = '{$descricao}', banco = '{$banco}', statuspagamento = '{$status}'  where formapagamentoID = '{$codigoID}'  ";
+        $operacao_update = mysqli_query($conecta, $update);
+        if (!$operacao_update) {
+            die("Erro no banco de dados || update na tabela forma_pagamento ");
+        } else {
         ?>
-<script>
-alertify.alert("Forma de pagamento não informada");
-</script>
-<?php
-    }elseif(!isset($_POST['status'])){
-        ?>
-<script>
-alertify.alert("Favor informar o status");
-</script>
-<?php
-    }else{
-    $status =utf8_decode($_POST['status']);
-    //inserindo as informações no banco de dados
-    $update = "UPDATE forma_pagamento set nome = '{$descricao}', banco = '{$banco}', statuspagamento = '{$status}'  where formapagamentoID = '{$codigoID}'  ";
-    $operacao_update = mysqli_query($conecta,$update);
-    if(!$operacao_update){
-        die("Erro no banco de dados || update na tabela forma_pagamento ");
-        }else{
-            ?>
-<script>
-alertify.success("Dados alterado com sucesso");
-</script>
+            <script>
+                alertify.success("Dados alterado com sucesso");
+            </script>
 <?php
         }
-
     }
-        
 }
 
 
 $select = "SELECT * FROM forma_pagamento where formapagamentoID = '$codigoID'";
 $operacao_select = mysqli_query($conecta, $select);
-if($operacao_select){
+if ($operacao_select) {
     $linha = mysqli_fetch_assoc($operacao_select);
     $fomaPagamentoID = $linha['formapagamentoID'];
     $formaPagamentoB = utf8_encode($linha['nome']);
     $bancoB = utf8_encode($linha['banco']);
     $statusB = $linha['statuspagamento'];
-}else{
+} else {
     die("Erro no banco de dados");
 }
 
@@ -105,36 +105,49 @@ if($operacao_select){
                         <tr>
                             <td>
                                 <label for="txtCodigo" style="width:115px;"> <b>Código:</b></label>
-                                <input readonly type="text" size=10 id="txtCodigo" name="txtCodigo"
-                                    value="<?php echo $codigoID;?>">
+                                <input readonly type="text" size=10 id="txtCodigo" name="txtCodigo" value="<?php echo $codigoID; ?>">
                             </td>
                         </tr>
 
                         <tr>
                             <td>
                                 <label for="txtFormaPagamento" style="width:115px;"> <b>Forma de Pagamento:</b></label>
-                                <input type="text" size=50 name="txtFormaPagamento" id="txtFormaPagamento"
-                                    value="<?php echo $formaPagamentoB;?>">
+                                <input type="text" size=50 name="txtFormaPagamento" id="txtFormaPagamento" value="<?php echo $formaPagamentoB; ?>">
 
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <label for="txtBanco" style="width:115px; "> <b>Banco:</b></label>
-                                <input type="text" style="margin-bottom:20px" size=20 name="txtBanco" id="txtBanco"
-                                    value="<?php echo $bancoB;?>">
+                                <select style="width: 150px;margin-bottom: 9px" id="txtBanco" name="txtBanco">
+                                    <option value="0">Selecione</option>
+                                    <?php
+                                    while ($linha = mysqli_fetch_assoc($consultar_contas_fi)) {
+                                        $id = $linha['cl_id'];
+                                        $banco = $linha['cl_banco'];
+
+                                        if (($bancoB == $id)) {
+                                            echo "<option selected value='$id'>$banco</option>";
+                                        } else {
+                                            echo "<option value='$id'>$banco</option>";
+                                        }
+                                    }
+
+                                    ?>
+
+                                </select>
 
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <label for="txtStatus" style="width:115px;"> <b>Status:</b></label>
-                                <input type="radio" name="status" value="A RECEBER" <?php if($statusB == "A RECEBER"){
-                                ?> checked <?php
-                                } ?>> A Receber
-                                <input type="radio" name="status" value="RECEBIDO" <?php if($statusB == "RECEBIDO"){
-                                ?> checked <?php
-                                } ?>> Recebido
+                                <input type="radio" name="status" value="A RECEBER" <?php if ($statusB == "A RECEBER") {
+                                                                                    ?> checked <?php
+                                                                                    } ?>> A Receber
+                                <input type="radio" name="status" value="RECEBIDO" <?php if ($statusB == "RECEBIDO") {
+                                                                                    ?> checked <?php
+                                                                                    } ?>> Recebido
 
 
                             </td>
@@ -146,8 +159,7 @@ if($operacao_select){
                             <div style="margin-left: 120px;margin-top:10px">
                                 <input type="submit" name=enviar value="Alterar" class="btn btn-info btn-sm"></input>
 
-                                <button type="button" onclick="window.opener.location.reload();fechar();"
-                                    class="btn btn-secondary">Voltar</button>
+                                <button type="button" onclick="window.opener.location.reload();fechar();" class="btn btn-secondary">Voltar</button>
                             </div>
 
                         </td>
@@ -155,9 +167,9 @@ if($operacao_select){
                 </table>
     </main>
     <script>
-    function fechar() {
-        window.close();
-    }
+        function fechar() {
+            window.close();
+        }
     </script>
 
 

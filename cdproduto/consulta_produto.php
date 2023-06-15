@@ -149,7 +149,7 @@ if(isset($_GET["produto"])){
                         </td>
 
                         <td style="width: 100px;">
-                            <font size="2"> <?php echo utf8_encode($linha["categoria_nome"])?></font>
+                            <font size="2"> <?php echo ($linha["categoria_nome"])?></font>
                         </td>
 
                         <td style="width: 100px;">

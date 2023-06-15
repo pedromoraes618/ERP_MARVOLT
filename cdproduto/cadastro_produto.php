@@ -171,25 +171,25 @@ alertify.success("Produto cadastrado com sucesso");
                                     if(!isset($categoria)){
                                     
                                     ?>
-                                    <option value="<?php echo utf8_encode($linha_categoria["categoriaID"]);?>">
-                                        <?php echo utf8_encode($linha_categoria["nome_categoria"]);?>
+                                    <option value="<?php echo ($linha_categoria["categoriaID"]);?>">
+                                        <?php echo ($linha_categoria["nome_categoria"]);?>
                                     </option>
                                     <?php
    
                                     }else{
 
                                         if($categoria==$categoriaPrincipal){
-                                        ?> <option value="<?php echo utf8_encode($linha_categoria["categoriaID"]);?>"
+                                        ?> <option value="<?php echo ($linha_categoria["categoriaID"]);?>"
                                         selected>
-                                        <?php echo utf8_encode($linha_categoria["nome_categoria"]);?>
+                                        <?php echo ($linha_categoria["nome_categoria"]);?>
                                     </option>
 
                                     <?php
                                             }else{
                                     
                                 ?>
-                                    <option value="<?php echo utf8_encode($linha_categoria["categoriaID"]);?>">
-                                        <?php echo utf8_encode($linha_categoria["nome_categoria"]);?>
+                                    <option value="<?php echo ($linha_categoria["categoriaID"]);?>">
+                                        <?php echo ($linha_categoria["nome_categoria"]);?>
                                     </option>
                                     <?php
 
