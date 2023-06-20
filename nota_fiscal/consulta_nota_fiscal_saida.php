@@ -15,7 +15,7 @@ if (isset($_GET["campoPesquisa"]) && ["campoPesquisaData"] && ["campoPesquisaDat
     $pesquisa = $_GET["campoPesquisa"];
     $pesquisaNnfe = $_GET["CampoPesquisNnfe"];
 
-    $select = " SELECT nfe_saidaID,numero_nf,razao_social,finalidade_id,clt.nome_fantasia as nome_fantasia,clt.cpfcnpj as cnpj,
+    $select = " SELECT codigo_nf, nfe_saidaID,numero_nf,razao_social,finalidade_id,clt.nome_fantasia as nome_fantasia,clt.cpfcnpj as cnpj,
     cnpj_cpf,prot_autorizacao,data_entrada,data_emissao,valor_total_nota,valor_total_produtos,valor_desconto from tb_nfe_saida as nfes inner join 
     clientes as clt on clt.clienteID = nfes.cliente_id
      WHERE data_entrada BETWEEN '$pesquisaData' and '$pesquisaDataf' and  numero_nf  LIKE '%{$pesquisaNnfe}%' and  
@@ -175,19 +175,25 @@ if (isset($_GET["campoPesquisaData"])) {
                         $valorProduto = $linha["valor_total_produtos"];
                         $valorDesconto = $linha["valor_desconto"];
                         $status = $linha['finalidade_id'];
+                        $codigo_nf = $linha['codigo_nf'];
 
                         if ($status == "1" and $protocolo == "") {
                             $status = "Em digitação";
+                            //serie da nota fiscal - finalidade 1 - serie 0, demais finalidade serie 1
+                            $update = "UPDATE tb_nfe_saida set serie = '0' WHERE nfe_saidaID = '$nfeID' ";
+                            $operacao_update_serie = mysqli_query($conecta, $update);
                         } elseif ($status == "1" and $protocolo !== "") {
+                            // $update = "UPDATE tb_nfe_saida set serie = '0' WHERE nfe_saidaID = '$nfeID' ";
+                            // $operacao_update_serie = mysqli_query($conecta, $update);
                             $status = "Autorizada";
                         } elseif ($status == "2") {
-                            $status = "Cancelado";
-                        } elseif ($status == "3") {
-                            $status = "Devolução";
-                        } elseif ($status == "4") {
-                            $status = "Ajuste";
-                        } elseif ($status == "5") {
                             $status = "Complementar";
+                        } elseif ($status == "3") {
+                            $status = "Ajuste";
+                        } elseif ($status == "4") {
+                            $status = "Devolução";
+                        } elseif ($status == "5") {
+                            $status = "Cancelado";
                         }
 
                         $valor_total_nota = $valorNota + $valor_total_nota;
@@ -207,6 +213,9 @@ if (isset($_GET["campoPesquisaData"])) {
 
                         // $update = "UPDATE tb_nfe_saida set data_entrada = '$dt_emissao' WHERE nfe_saidaID = '$nfeID' ";
                         // $operacao_update_dt_emissao = mysqli_query($conecta,$update);
+
+  
+
 
 
                 ?>
@@ -255,7 +264,7 @@ if (isset($_GET["campoPesquisaData"])) {
 
 
                             <td>
-                                <a onclick="window.open('nfe_saida/nfe_tela.php?numero_nf=<?php echo $numeroNF; ?>', 
+                                <a onclick="window.open('nfe_saida/nfe_tela.php?numero_nf=<?php echo $numeroNF; ?>&codigo_nf=<?php echo $codigo_nf; ?>&id=<?php echo $nfeID; ?>', 
 'editar_nota_fiscal', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1700, HEIGHT=1000');">
                                     <button type="button" name="Editar">Editar</button>
                                 </a>
@@ -326,7 +335,7 @@ if (isset($_GET["campoPesquisaData"])) {
                 }
         ?>
 
-     
+
         </table>
 
 

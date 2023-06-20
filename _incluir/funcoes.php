@@ -2,6 +2,7 @@
 
 $mes = date('m');
 
+
 function real_format($valor)
 {
   $valor  = number_format($valor, 2, ",", ".");
@@ -327,7 +328,7 @@ function verficar_duplicidade_nfe($conecta, $tabela, $valor)
 
 
 
-function insert_nfe_item($conecta, $codigo_pedido, $cst, $desconto, $cfop, $numero_nf, $cst_pis, $cst_cofins)
+function insert_nfe_item($conecta, $codigo_pedido, $cst, $desconto, $cfop, $numero_nf, $cst_pis, $cst_cofins,$codigo_nfe)
 {
   $select = "SELECT * FROM tb_pedido_item where pedidoID = '$codigo_pedido'";
   $consulta_item_pedido = mysqli_query($conecta, $select);
@@ -349,9 +350,9 @@ function insert_nfe_item($conecta, $codigo_pedido, $cst, $desconto, $cfop, $nume
     `valor_unitario`, `valor_produto`, `bc_icms`, `valor_icms`, `aliq_icms`, 
     `base_icms_sub`, `icms_sub`, `aliq_ipi`, `valor_ipi`, `ipi_devolvido`, 
     `base pis`, `valor_pis`, `cst_pis`, `base_cofins`, `valor_cofins`, `cst_cofins`,
-     `base_iss`, `valor_iss`, `origem`, `desconto`,`cst`) VALUES ('$item','$numero_nf', '$codigo', '$produto',
+     `base_iss`, `valor_iss`, `origem`, `desconto`,`cst`,`codigo_nf`) VALUES ('$item','$numero_nf', '$codigo', '$produto',
       '$cfop', '$unidade', '$quantidade', '$preco_venda', '$valor_total_prod', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '$cst_pis',
-       '0', '0', '$cst_cofins', '0', '0', '0', '$desc_rat','$cst')";
+       '0', '0', '$cst_cofins', '0', '0', '0', '$desc_rat','$cst','$codigo_nfe')";
     $operacao_insert = mysqli_query($conecta, $insert);
   }
 }
@@ -366,4 +367,67 @@ function atulizar_vl_parametro($conecta, $valor_filtro, $valor)
   } else {
     return false;
   }
+}
+
+function atualizar_numero_nf_pedido($conecta, $codigo_pedido, $valor)
+{
+
+  $select = "SELECT * FROM pedido_compra where codigo_pedido = '$codigo_pedido'";
+  $consultar_pedido = mysqli_query($conecta, $select);
+  $linha = mysqli_fetch_assoc($consultar_pedido);
+  $numero_nf = $linha['numero_nf'];
+
+  if ($numero_nf == "") {
+    $update = "UPDATE pedido_compra set numero_nf = '$valor' where codigo_pedido = '$codigo_pedido'";
+    $operacao_update = mysqli_query($conecta, $update);
+    if ($operacao_update) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+function formatCNPJCPF2($cnpjcpf)
+{
+  $cnpjcpf = preg_replace("/[^0-9]/", "", $cnpjcpf); // Remove tudo que não é número
+  if (strlen($cnpjcpf) == "14") { //formatar para cnpj
+    $cnpjcpf = str_pad($cnpjcpf, 14, '0', STR_PAD_LEFT); // Completa com zeros à esquerda até 14 dígitos
+
+    $cnpjFormatado = substr($cnpjcpf, 0, 2) . '.'; // Adiciona o primeiro ponto
+    $cnpjFormatado .= substr($cnpjcpf, 2, 3) . '.'; // Adiciona o segundo ponto
+    $cnpjFormatado .= substr($cnpjcpf, 5, 3) . '/'; // Adiciona a barra
+    $cnpjFormatado .= substr($cnpjcpf, 8, 4) . '-'; // Adiciona o hífen
+    $cnpjFormatado .= substr($cnpjcpf, 12); // Adiciona os últimos 2 dígitos
+
+    return $cnpjFormatado;
+  } elseif (strlen($cnpjcpf) == "11") { //formatar para cpf
+    $cnpjcpf = preg_replace("/[^0-9]/", "", $cnpjcpf); // Remove tudo que não é número
+    $cnpjcpf = str_pad($cnpjcpf, 11, '0', STR_PAD_LEFT); // Completa com zeros à esquerda até 11 dígitos
+
+    $cpfFormatado = substr($cnpjcpf, 0, 3) . '.'; // Adiciona o primeiro ponto
+    $cpfFormatado .= substr($cnpjcpf, 3, 3) . '.'; // Adiciona o segundo ponto
+    $cpfFormatado .= substr($cnpjcpf, 6, 3) . '-'; // Adiciona o hífen
+    $cpfFormatado .= substr($cnpjcpf, 9); // Adiciona os últimos 2 dígitos
+
+    return $cpfFormatado;
+  } else {
+    return $cnpjcpf;
+  }
+}
+
+function verificar_total_valores_nf($conecta, $tabela, $filtro, $valor_filtro)
+{
+  $valor_total = 0;
+  $select = "SELECT * from $tabela where $filtro = '$valor_filtro'";
+  $consultar_valor = mysqli_query($conecta, $select);
+  while ($linha = mysqli_fetch_assoc($consultar_valor)) {
+    $preco_venda_unitario = $linha['valor_unitario'];
+    $quantidade = $linha['quantidade'];
+    $valor_venda = $preco_venda_unitario * $quantidade;
+
+    $valor_total = $valor_venda + $valor_total;
+  }
+
+  return $valor_total;
 }
