@@ -31,6 +31,8 @@ include "../crud/gerenciar_nfe.php";
                 $ncm = ($linha['ncm']);
                 $cfop = ($linha['cfop']);
                 $cst = ($linha['cst_icms']);
+                $numero_nf = ($linha['numero_nf']);
+                $codigo_nf = ($linha['codigo_nf']);
 
                 $total_prod = $valor_produto + $total_prod;
 
@@ -56,7 +58,7 @@ include "../crud/gerenciar_nfe.php";
                     <td><?php echo $ncm ?></td>
                     <td><?php echo $cfop ?></td>
                     <td><?php echo $cst ?></td>
-                    <td><button type="button" id_prod=<?php echo $nfe_iten_saidaID; ?>  class="btn btn-sm btn-info editar_prod">Editar </button></td>
+                    <td><button type="button" numero_nf=<?php echo $numero_nf ?> codigo_nf=<?php echo $codigo_nf ?> id_prod=<?php echo $nfe_iten_saidaID; ?>  class="btn btn-sm btn-info editar_prod">Editar </button></td>
                 </tr>
 
             <?php } ?>

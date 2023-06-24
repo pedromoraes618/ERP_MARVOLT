@@ -34,7 +34,8 @@ if (isset($_POST['gerar_nfe'])) {
 
 
             $insert = "INSERT INTO `marvolt`.`tb_nfe_saida` ( `data_entrada`, `numero_nf`, `serie`, `cliente_id`,  `tipo_frete`,  `valor_desconto`, 
-            `valor_total_produtos`, `valor_total_nota`, `finalidade_id`, `forma_pagamento_id`,`cfop`,`codigo_nf`,`observacao`,`numero_pedido`) VALUES ('$hoje', '$nfe_prox', '1',
+            `valor_total_produtos`, `valor_total_nota`, `finalidade_id`, `forma_pagamento_id`,`cfop`,`codigo_nf`,`observacao`,
+            `numero_pedido`) VALUES ('$hoje', '$nfe_prox', '1',
             '$cliente_id', '1', '$desconto','$valor_total_produtos','$valor_total_nota','1','$forma_pagamento_id','$cfop','$codigo_nf','$mesagem_adicional','$numero_pedido')";
             $operacao_insert = mysqli_query($conecta, $insert);
             if ($operacao_insert) {

@@ -6,6 +6,16 @@ if (isset($_GET['id_produto_nf'])) {
 } else {
     $id_produto = "";
 }
+if (isset($_GET['codigo_nf'])) {
+    $codigo_nf = $_GET['codigo_nf'];
+} else {
+    $codigo_nf = "";
+}
+if (isset($_GET['numero_nf'])) {
+    $numero_nf = $_GET['numero_nf'];
+} else {
+    $numero_nf = "";
+}
 ?>
 
 <div class="modal fade" id="modal_produto" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -16,18 +26,18 @@ if (isset($_GET['id_produto_nf'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-
-
             <div class="modal-body">
                 <div class="col-md">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end ">
                         <button type="button" class="btn btn-sm btn-success" id="salvar_prod">Salvar</button>
                         <button type="button" class="btn btn-sm btn-danger" id="remover_prod">Remover</button>
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-sm btn-secondary"  onclick="window.history.back();" data-bs-dismiss="modal">Fechar</button>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <input type="hidden" id="id_produto" value="<?php echo $id_produto; ?>">
+                    <input type="hidden" id="codigo_nf" value="<?php echo $codigo_nf; ?>">
+                    <input type="hidden" id="numero_nf" value="<?php echo $numero_nf; ?>">
                     <div class="col-md-2 mb-2">
                         <label for="item_prod" class="form-label">Item</label>
                         <input type="text" disabled class="form-control" id="item_prod" name="item_prod" value="">
@@ -35,32 +45,32 @@ if (isset($_GET['id_produto_nf'])) {
                 </div>
                 <div class="row mb-2">
                     <div class="col-md mb-2">
-                        <label for="descricao_prod" class="form-label">Descrição</label>
+                        <label for="descricao_prod" class="form-label">Descrição *</label>
                         <input type="text" class="form-control" id="descricao_prod" name="descricao_prod" value="">
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-2 mb-2">
-                        <label for="und" class="form-label">Und</label>
+                        <label for="und" class="form-label">Und *</label>
                         <input type="text" class="form-control" id="und_prod" name="und_prod" value="">
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="qtd" class="form-label">Qtd</label>
+                        <label for="qtd" class="form-label">Qtd *</label>
                         <input type="text" class="form-control" onchange="calculaValorTotalProduto()" id="qtd_prod" name="qtd_prod" value="">
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="vlr_unitario_prd" class="form-label">Vlr unitario</label>
+                        <label for="vlr_unitario_prd" class="form-label">Vlr unitario *</label>
                         <input type="text" class="form-control" onchange="calculaValorTotalProduto()" id="vlr_unitario_prd" name="vlr_unitario_prd" value="">
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="vlr_total_prd" class="form-label">Vlr total</label>
+                        <label for="vlr_total_prd" class="form-label">Vlr total *</label>
                         <input type="text" class="form-control" disabled id="vlr_total_prd" name="vlr_total_prd" value="">
                     </div>
                 </div>
                 <hr>
                 <div class="row mb-2">
                     <div class="col-md mb-2">
-                        <label for="cfop_prod" class="form-label">Natureza de operação </label>
+                        <label for="cfop_prod" class="form-label">Natureza de operação * </label>
                         <select name="cfop_prod" class="form-control" id="cfop_prod">
                             <option value="0">Selecione..</option>
                             <?php
@@ -74,7 +84,7 @@ if (isset($_GET['id_produto_nf'])) {
                         </select>
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="ncm_prod" class="form-label">Ncm</label>
+                        <label for="ncm_prod" class="form-label">Ncm *</label>
                         <input type="text" list="datalistOptionsNcm_prod" class="form-control" id="ncm_prod" name="ncm_prod" value="">
                         <datalist id="datalistOptionsNcm_prod">
                             <?php while ($linha = mysqli_fetch_assoc($consulta_ncm)) {
@@ -98,7 +108,7 @@ if (isset($_GET['id_produto_nf'])) {
                         </datalist>
                     </div>
                     <div class="col-md-1 mb-2">
-                        <label for="cst_prod" class="form-label">Cst</label>
+                        <label for="cst_prod" class="form-label">Cst *</label>
                         <input type="text" list="datalistOptionsCst_prod" class="form-control" id="cst_prod" name="cst_prod" value="">
                         <datalist id="datalistOptionsCst_prod">
                             <?php while ($linha  = mysqli_fetch_assoc($consulta_icms)) {
@@ -117,7 +127,7 @@ if (isset($_GET['id_produto_nf'])) {
                         <input type="text" class="form-control" id="base_icms_prod" name="base_icms_prod" value="">
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="aliq_icms_prod" class="form-label">% Icms</label>
+                        <label for="aliq_icms_prod" class="form-label">% Icms *</label>
                         <input type="text" class="form-control" id="aliq_icms_prod" name="aliq_icms_prod" value="">
                     </div>
                     <div class="col-md-2 mb-2">
@@ -164,7 +174,7 @@ if (isset($_GET['id_produto_nf'])) {
                     </div>
 
                     <div class="col-md mb-2">
-                        <label for="cst_pis_prod" class="form-label">Cst Pis</label>
+                        <label for="cst_pis_prod" class="form-label">Cst Pis *</label>
                         <input type="text" class="form-control" list="datalistOptionsCst_pis_prod" id="cst_pis_prod" name="cst_pis_prod" value="">
                         <datalist id="datalistOptionsCst_pis_prod">
                             <?php while ($linha  = mysqli_fetch_assoc($consulta_cst_pis)) {
@@ -187,7 +197,7 @@ if (isset($_GET['id_produto_nf'])) {
                     </div>
 
                     <div class="col-md mb-2">
-                        <label for="cst_cofins_prod" class="form-label">Cst cofins</label>
+                        <label for="cst_cofins_prod" class="form-label">Cst cofins *</label>
                         <input type="text" class="form-control" list="datalistOptionsCst_cofins_prod" id="cst_cofins_prod" name="cst_cofins_prod" value="">
                         <datalist id="datalistOptionsCst_cofins_prod">
                             <?php while ($linha  = mysqli_fetch_assoc($consulta_cst_cofins)) {
@@ -207,6 +217,10 @@ if (isset($_GET['id_produto_nf'])) {
                     <div class="col-md mb-2">
                         <label for="iss_prod" class="form-label">Iss</label>
                         <input type="text" class="form-control" id="iss_prod" name="iss_prod" value="">
+                    </div>
+                    <div class="col-md mb-2">
+                        <label for="gtin_prod" class="form-label">GTIN *</label>
+                        <input type="text" class="form-control" id="gtin_prod" name="gtin_prod" value="">
                     </div>
 
                 </div>

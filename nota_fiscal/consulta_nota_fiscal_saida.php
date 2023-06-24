@@ -271,9 +271,9 @@ if (isset($_GET["campoPesquisaData"])) {
                             </td>
 
                             <td>
-                                <a onclick="window.open('editar_nota_fiscal_saida.php?codigo=<?php echo $numeroNF; ?>', 
+                                <a onclick="window.open('nfe_saida/fiscal.php?numero_nf=<?php echo $numeroNF; ?>&codigo_nf=<?php echo $codigo_nf; ?>&id=<?php echo $nfeID; ?>', 
 'operacao_Fiscal', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1600, HEIGHT=900');">
-                                    <button style="background-color:black;color:white" type="button" name="Editar">Operações</button>
+                                    <button style="background-color:black;color:white" type="button" name="Editar">Fiscal</button>
                                 </a>
                             </td>
                         </tr>

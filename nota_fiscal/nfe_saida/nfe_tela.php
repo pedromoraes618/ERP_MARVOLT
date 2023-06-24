@@ -51,7 +51,7 @@ if ((isset($_GET['numero_nf'])) and (isset($_GET['codigo_nf'])) and isset($_GET[
 
                 <div class="col-md mb-4">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end ">
-                        <button type="submit" id="concluir_venda" onclick="calcula_v_liquido()" class="btn btn-sm btn-success">Salvar</button>
+                        <button type="submit" id="salvar_nf" onclick="calcula_v_liquido()" class="btn btn-sm btn-success">Salvar</button>
                         <button type="button" id="modal_observacao" class="btn btn-sm btn-dark">Informação adicionais</button>
                         <button type="button" class="btn btn-sm btn-secondary" onclick="window.opener.location.reload(); window.close();" data-bs-dismiss="modal">Fechar</button>
                     </div>

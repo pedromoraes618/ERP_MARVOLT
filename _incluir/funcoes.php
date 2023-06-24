@@ -328,7 +328,7 @@ function verficar_duplicidade_nfe($conecta, $tabela, $valor)
 
 
 
-function insert_nfe_item($conecta, $codigo_pedido, $cst, $desconto, $cfop, $numero_nf, $cst_pis, $cst_cofins,$codigo_nfe)
+function insert_nfe_item($conecta, $codigo_pedido, $cst, $desconto, $cfop, $numero_nf, $cst_pis, $cst_cofins, $codigo_nfe)
 {
   $select = "SELECT * FROM tb_pedido_item where pedidoID = '$codigo_pedido'";
   $consulta_item_pedido = mysqli_query($conecta, $select);
@@ -349,8 +349,8 @@ function insert_nfe_item($conecta, $codigo_pedido, $cst, $desconto, $cfop, $nume
     $insert = "INSERT INTO `marvolt`.`tb_nfe_saida_item` (`item`,`numero_nf`, `codigo`, `descricao`, `cfop`, `und`, `quantidade`, 
     `valor_unitario`, `valor_produto`, `bc_icms`, `valor_icms`, `aliq_icms`, 
     `base_icms_sub`, `icms_sub`, `aliq_ipi`, `valor_ipi`, `ipi_devolvido`, 
-    `base pis`, `valor_pis`, `cst_pis`, `base_cofins`, `valor_cofins`, `cst_cofins`,
-     `base_iss`, `valor_iss`, `origem`, `desconto`,`cst`,`codigo_nf`) VALUES ('$item','$numero_nf', '$codigo', '$produto',
+    `base_pis`, `valor_pis`, `cst_pis`, `base_cofins`, `valor_cofins`, `cst_cofins`,
+     `base_iss`, `valor_iss`, `origem`, `desconto`,`cst_icms`,`codigo_nf`) VALUES ('$item','$numero_nf', '$codigo', '$produto',
       '$cfop', '$unidade', '$quantidade', '$preco_venda', '$valor_total_prod', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '$cst_pis',
        '0', '0', '$cst_cofins', '0', '0', '0', '$desc_rat','$cst','$codigo_nfe')";
     $operacao_insert = mysqli_query($conecta, $insert);
@@ -430,4 +430,94 @@ function verificar_total_valores_nf($conecta, $tabela, $filtro, $valor_filtro)
   }
 
   return $valor_total;
+}
+
+function recalcular_nf($conecta, $codigo_nf)
+{
+  $select = "SELECT * FROM tb_nfe_saida_item where codigo_nf = '$codigo_nf'";
+  $consulta_item_nf = mysqli_query($conecta, $select);
+  $soma_total_produto = 0;
+  while ($linha = mysqli_fetch_assoc($consulta_item_nf)) {
+    $valor_total = $linha['valor_produto'];
+    $soma_total_produto = $valor_total + $soma_total_produto;
+  }
+
+  $select = "SELECT * FROM tb_nfe_saida where codigo_nf = '$codigo_nf'";
+  $consulta_nf_saida = mysqli_query($conecta, $select);
+  $linha = mysqli_fetch_assoc($consulta_nf_saida);
+  $outras_despesas = $linha['outras_despesas'];
+  $vlr_desconto = $linha['valor_desconto'];
+
+  $vlr_total_nota = $outras_despesas + $soma_total_produto - $vlr_desconto;
+
+  $update = "UPDATE `marvolt`.`tb_nfe_saida` SET `valor_total_nota` = '$vlr_total_nota',`valor_total_produtos` = '$soma_total_produto'
+  WHERE `tb_nfe_saida`.`codigo_nf` = '$codigo_nf' ";
+  $operacao_update = mysqli_query($conecta, $update);
+  if ($operacao_update) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function desconto_rat($conecta, $codigo_nf, $desconto)
+{
+  $select = "SELECT * FROM tb_nfe_saida_item where codigo_nf = '$codigo_nf'";
+  $consulta_item_nf = mysqli_query($conecta, $select);
+  $qtd_item = mysqli_num_rows($consulta_item_nf);
+
+  $desc_rat = $desconto / $qtd_item;
+  while ($linha = mysqli_fetch_assoc($consulta_item_nf)) {
+    $update = "UPDATE `marvolt`.`tb_nfe_saida_item` SET `desconto` = '$desc_rat' WHERE `tb_nfe_saida_item`.`codigo_nf` = '$codigo_nf' ";
+    $operacao_update = mysqli_query($conecta, $update);
+    if ($operacao_update) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+function update_info_nf($conecta, $id, $dt_emissao, $dt_saida, $ch_acesso, $pr_autorizacao, $pdf_dir, $xml_dir)
+{
+  $select = "SELECT * FROM tb_nfe_saida where nfe_saidaID = '$id'";
+  $consulta_nf = mysqli_query($conecta, $select);
+  $linha = mysqli_fetch_assoc($consulta_nf);
+  $data_emissao = $linha['data_emissao'];
+  $data_saida = $linha['data_saida'];
+  $chave_acesso = $linha['chave_acesso'];
+  $prot_autorizacao = $linha['prot_autorizacao'];
+  $caminho_pdf_nf = $linha['caminho_pdf_nf'];
+  $caminho_xml_nf = $linha['caminho_xml_nf'];
+
+  // if ($data_emissao == "") {
+  //   $update .= " SET `data_emissao` = '$dt_emissao' ";
+  // }
+  // if ($data_saida == "") {
+  //   $update .= ", `data_saida` = '$dt_saida' ";
+  // }
+  // if ($chave_acesso == "") {
+  //   $update .= ", `chave_acesso` = '$ch_acesso' ";
+  // }
+  // if ($prot_autorizacao == "") {
+  //   $update .= " , `prot_autorizacao` = '$pr_autorizacao' ";
+  // }
+
+  // if ($caminho_pdf_nf == "") {
+  //   $update .= " , `caminho_pdf_nf` = '$pdf_dir' ";
+  // }
+  // if ($caminho_xml_nf == "") {
+  //   $update .= " ,`caminho_xml_nf` = '$xml_dir' ";
+  // }
+
+  //  $update .= " WHERE `tb_nfe_saida`.`nfe_saidaID` = '$id' ";
+  $update = "UPDATE `marvolt`.`tb_nfe_saida` SET `data_emissao` = '$dt_emissao', `data_saida` = '$dt_saida',
+  `chave_acesso` = '$ch_acesso',`prot_autorizacao` = '$pr_autorizacao', `caminho_pdf_nf` = '$pdf_dir', `caminho_xml_nf` = '$xml_dir' 
+   WHERE `tb_nfe_saida`.`nfe_saidaID` = '$id'"; //verrificar se está vazio se sim realizar o update da coluna
+  $operacao_update = mysqli_query($conecta, $update);
+  if ($operacao_update) {
+    return true;
+  } else {
+    return false;
+  }
 }
