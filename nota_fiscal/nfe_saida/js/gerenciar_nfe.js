@@ -164,6 +164,11 @@ function show(id, numero_nf, codigo_nf) {
             $("#vfrete").val($dados.valores['vfrete'])
             $("#numero_pedido").val($dados.valores['npedido'])
 
+
+            $("#seguro").val($dados.valores['valor_seguro'])
+            $("#numero_nf_ref").val($dados.valores['numero_nf_ref'])
+            $("#chave_acesso_ref").val($dados.valores['chave_acesso_ref'])
+
         }
 
         tabela_prod(codigo_nf, numero_nf);
@@ -190,11 +195,14 @@ function tabela_prod(codigo_nf, numero_nf) {
 
 
 function calcularTotal() {
+ 
     var outrasDespesas = parseFloat($("#outras_despesas").val()) || 0;
     var totalProdutos = parseFloat($("#vlr_total_produtos").val()) || 0;
     var desconto = parseFloat($("#desconto_nota").val()) || 0;
+    var vfrete = parseFloat($("#vfrete").val()) || 0;
+    var seguro = parseFloat($("#seguro").val()) || 0;
 
-    var valorTotal = outrasDespesas + totalProdutos - desconto;
+    var valorTotal = seguro + vfrete + outrasDespesas + totalProdutos - desconto;
 
     $("#vlr_total_nota").val(valorTotal.toFixed(2));
 }

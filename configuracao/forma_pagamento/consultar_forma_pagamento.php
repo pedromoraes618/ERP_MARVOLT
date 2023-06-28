@@ -8,7 +8,7 @@ include("../../conexao/sessao.php");
 $select = " SELECT fp.formapagamentoID,fp.statuspagamento, fp.nome,ctf.cl_banco as banco from forma_pagamento as fp inner join tb_conta_financeira as ctf on ctf.cl_id = fp.banco ";
 if(isset($_GET["pesquisa"])){
     $pesquisa = $_GET["pesquisa"];
-    $select .= " WHERE nome LIKE '%{$pesquisa}%' ";
+    $select .= " WHERE nome LIKE '%{$pesquisa}%' order by formapagamentoID ";
 }
 
 $resultado = mysqli_query($conecta, $select);

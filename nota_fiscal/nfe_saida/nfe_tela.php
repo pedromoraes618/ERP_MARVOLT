@@ -122,16 +122,17 @@ if ((isset($_GET['numero_nf'])) and (isset($_GET['codigo_nf'])) and isset($_GET[
                     <div class="col-md-3 mb-2">
                         <label for="frete" class="form-label">Frete</label>
                         <select name="frete" class="form-control" id="frete">
-                            <option value="0">Selecione..</option>
+                            <option value="SN">Selecione..</option>
                             <?php
                             while ($linha = mysqli_fetch_assoc($consulta_frete)) {
                                 $id = $linha['freteID'];
                                 $descricao = utf8_encode($linha['descricao']);
+                                $numero_nf = ($linha['numero_nf']);
 
-                                echo "<option value='$id'>$descricao </option>";
+                                echo "<option value='$numero_nf'>$descricao </option>";
                             }
                             ?>
-                        </select>
+                        </select>   
                     </div>
                     <div class="col-md mb-2">
                         <label for="chave_acesso" class="form-label">Chave de acesso</label>
@@ -195,14 +196,33 @@ if ((isset($_GET['numero_nf'])) and (isset($_GET['codigo_nf'])) and isset($_GET[
                         <label for="vfrete" class="form-label">Frete</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control" name="vfrete" id="vfrete" value="">
+                            <input type="text" class="form-control" onchange="calcularTotal()" name="vfrete" id="vfrete" value="">
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md  mb-2">
+                            <label for="chave_acess_ref" class="form-label">Chave acesso ref</label>
+                            <input type="text" class="form-control" id="chave_acesso_ref" name="chave_acesso_ref">
+                        </div>
+                        <div class="col-md-2  mb-2">
+                            <label for="chave_acess_ref" class="form-label">Número Nf ref</label>
+                            <input type="text" class="form-control" id="numero_nf_ref" name="numero_nf_ref">
+                        </div>
+                    </div>
+                    
+
                 </div>
 
 
                 <div class="row border-success">
 
+                <div class="col-md-2  mb-2">
+                        <label for="outras_despesas" class="form-label">Seguro</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">R$</span>
+                            <input type="text" class="form-control" onchange="calcularTotal()" name="seguro" id="seguro" value="">
+                        </div>
+                    </div>
                     <div class="col-md-2  mb-2">
                         <label for="outras_despesas" class="form-label">Outras despesas</label>
                         <div class="input-group mb-3">

@@ -13,8 +13,9 @@ if (id != "") {
 
 $("#enviar_nf").click(function () {
 
-    if (id != "") {//update
-        if ($("#chave_acesso").val() == "" && $("#nprotocolo").val() == "") {//verificar se a nota já foi autorizada
+    if (id != "") {//verificar se existe a nota
+
+    
             Swal.fire({
                 title: 'Tem certeza?',
                 text: "Deseja enviar essa Nfe?",
@@ -27,18 +28,17 @@ $("#enviar_nf").click(function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     modal_enviar(id)
-
                 }
             })
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Verifique!',
-                text: "A nota já foi autorizada, Clique no botão consultar nfe",
-                timer: 7500,
+        
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Verifique!',
+            text: "Nfe não encontrada, Favor verifique",
+            timer: 7500,
 
-            })
-        }
+        })
     }
 })
 
@@ -49,6 +49,36 @@ $("#consultar_pdf_nf").click(function () {
 
 $("#consultar_xml_nf").click(function () {
     consultar_xml_nf(id)
+})
+
+$("#cancelar_nf").click(function () {
+
+    if (id != "") {//verificar se existe a nota
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Deseja cancelar essa Nfe?",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Não',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                modal_cancelar(id)
+            }
+        })
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Verifique!',
+            text: "Nfe não encontrada, Favor verifique",
+            timer: 7500,
+
+        })
+    }
+
+
 })
 
 
@@ -67,12 +97,25 @@ function modal_enviar(id) {
 }
 
 
+function modal_cancelar(id) {
+    $.ajax({
+        type: 'GET',
+        data: "formulario_nota_fiscal=true&acao=cancelar_nf&id_nf=" + id,
+        url: "include/consultar_nf/modal_consulta_nf.php",
+        success: function (result) {
+            return $(".modal_externo").html(result) + $("#modal_consulta_nf").modal('show')
+
+        },
+    });
+
+}
+
 
 function consultar_pdf_nf(id) {//consultar nfe
-  //  alert("iokj")
+    //  alert("iokj")
     $.ajax({
         type: "POST",
-        data: "formulario_nota_fiscal=true&nfe=true&acao=consultar_nf&id_nf=" + id,
+        data: "formulario_nota_fiscal=true&nfe=true&acao=consultar_nf_pdf&id_nf=" + id,
         url: "crud/gerenciar_nfe.php",
         async: false
     }).then(sucesso, falha);
@@ -80,8 +123,17 @@ function consultar_pdf_nf(id) {//consultar nfe
     function sucesso(data) {
         $dados = $.parseJSON(data)["dados"];
         if ($dados.sucesso == true) {
-    
+
             window.open($dados.opem_danfe_nf);
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Verifique!',
+                text: $dados.title,
+                timer: 7500,
+
+            })
 
         }
     }
@@ -93,27 +145,35 @@ function consultar_pdf_nf(id) {//consultar nfe
 }
 function consultar_xml_nf(id) {//consultar nfe
     //  alert("iokj")
-      $.ajax({
-          type: "POST",
-          data: "formulario_nota_fiscal=true&nfe=true&acao=consultar_nf&id_nf=" + id,
-          url: "crud/gerenciar_nfe.php",
-          async: false
-      }).then(sucesso, falha);
-  
-      function sucesso(data) {
-          $dados = $.parseJSON(data)["dados"];
-          if ($dados.sucesso == true) {
-      
-              window.open($dados.opem_xml);
-          }
-      }
-  
-      function falha() {
-          console.log("erro");
-      }
-  
-  }
-  
+    $.ajax({
+        type: "POST",
+        data: "formulario_nota_fiscal=true&nfe=true&acao=consultar_nf_xml&id_nf=" + id,
+        url: "crud/gerenciar_nfe.php",
+        async: false
+    }).then(sucesso, falha);
+
+    function sucesso(data) {
+        $dados = $.parseJSON(data)["dados"];
+        if ($dados.sucesso == true) {
+
+            window.open($dados.opem_xml);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Verifique!',
+                text: $dados.title,
+                timer: 7500,
+
+            })
+        }
+    }
+
+    function falha() {
+        console.log("erro");
+    }
+
+}
+
 
 //mostrar as informações no formulario show
 function showResumo(id) {

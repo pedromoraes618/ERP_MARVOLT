@@ -278,7 +278,7 @@ function verficar_paramentro($conecta, $tabela, $filtro, $valor)
 
 function verificar_valores($conecta, $tabela, $filtro, $valor_filtro, $valor_resultado)
 {
-  $select = "SELECT * from $tabela where $filtro = $valor_filtro";
+  $select = "SELECT * from $tabela where $filtro = '$valor_filtro'";
   $consultar_valor = mysqli_query($conecta, $select);
   $linha = mysqli_fetch_assoc($consultar_valor);
   $valor = $linha["$valor_resultado"];
@@ -337,7 +337,7 @@ function insert_nfe_item($conecta, $codigo_pedido, $cst, $desconto, $cfop, $nume
   $item = 0;
   while ($linha = mysqli_fetch_assoc($consulta_item_pedido)) {
     $codigo = $linha['cod_produto'];
-    $produto = $linha['produto'];
+    $produto = ($linha['produto']);
     $unidade = $linha['unidade'];
     $quantidade = $linha['quantidade'];
     $preco_venda = $linha['preco_venda_unitario'];
@@ -514,6 +514,31 @@ function update_info_nf($conecta, $id, $dt_emissao, $dt_saida, $ch_acesso, $pr_a
   $update = "UPDATE `marvolt`.`tb_nfe_saida` SET `data_emissao` = '$dt_emissao', `data_saida` = '$dt_saida',
   `chave_acesso` = '$ch_acesso',`prot_autorizacao` = '$pr_autorizacao', `caminho_pdf_nf` = '$pdf_dir', `caminho_xml_nf` = '$xml_dir' 
    WHERE `tb_nfe_saida`.`nfe_saidaID` = '$id'"; //verrificar se está vazio se sim realizar o update da coluna
+  $operacao_update = mysqli_query($conecta, $update);
+  if ($operacao_update) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+function update_chave_acesso($conecta, $id, $chave_acesso) //preencher a chave de acesso
+{
+  $update = "UPDATE `marvolt`.`tb_nfe_saida` SET `chave_acesso` = '$chave_acesso' 
+   WHERE `tb_nfe_saida`.`nfe_saidaID` = '$id'";
+  $operacao_update = mysqli_query($conecta, $update);
+  if ($operacao_update) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function cancelamento_nf($conecta, $id, $caminho_pdf_nf, $caminho_xml_nf)
+{
+  $update = "UPDATE `marvolt`.`tb_nfe_saida` SET `finalidade_id` = '5', `caminho_pdf_nf` = '$caminho_pdf_nf',`caminho_xml_nf` = '$caminho_xml_nf'
+   WHERE `tb_nfe_saida`.`nfe_saidaID` = $id ";
   $operacao_update = mysqli_query($conecta, $update);
   if ($operacao_update) {
     return true;

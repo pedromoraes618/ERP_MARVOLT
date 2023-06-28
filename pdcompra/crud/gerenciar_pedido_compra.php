@@ -24,7 +24,8 @@ if (isset($_POST['gerar_nfe'])) {
             $numero_pedido = verificar_valores($conecta, "pedido_compra", "codigo_pedido", $codigo_pedido, "numero_pedido_compra");
             $valor_total_produtos = verificar_total_valores($conecta, "tb_pedido_item", "pedidoID", $codigo_pedido);
             $cliente_uf = verificar_valores($conecta, "clientes", "clienteID", $cliente_id, "estadoID");
-            $mesagem_adicional = "PEDIDO DE COMPRA Nº $numero_pedido. PAGAMENTO: BOLETO Nº . VENCIMENTO . DADOS BANCARIOS: BANCO ITAÚ S.A AG: 8805 CONTA 99810-4. BANCO BRADESCO- AG:1123 CONTA:0030326-7. PIX ITAÚ- CNPJ 342268330001-97";
+            $mesagem_adicional = ("PEDIDO DE COMPRA Nº $numero_pedido. PAGAMENTO: BOLETO Nº .
+             VENCIMENTO . DADOS BANCARIOS: BANCO ITAÚ S.A AG: 8805 CONTA 99810-4. BANCO BRADESCO- AG:1123 CONTA:0030326-7. PIX ITAÚ- CNPJ 342268330001-97");
 
             if ($cliente_uf == "10") { //estado maranhão 
                 $cfop = $cfop_interno;
@@ -41,12 +42,12 @@ if (isset($_POST['gerar_nfe'])) {
             if ($operacao_insert) {
                 $retornar["dados"] = array("sucesso" => true, "title" => "NFE $nfe_prox gerado com sucesso");
                 if ($crt_nfe == "1") { //simples naccional
-                    insert_nfe_item($conecta, $codigo_pedido, "102", $desconto, $cfop, $nfe_prox, "07", "07",$codigo_nf);
+                    insert_nfe_item($conecta, $codigo_pedido, "102", $desconto, $cfop, $nfe_prox, "07", "07", $codigo_nf);
                     atulizar_vl_parametro($conecta, "9", $nfe_prox);
                     atualizar_numero_nf_pedido($conecta, $codigo_pedido, $nfe_prox);
                     registrar_log($conecta, $hoje, $user_id, "Gerou a NFE $nfe_prox do pedido de compra codigo $codigo_pedido ");
                 } else { //demais crt
-                    insert_nfe_item($conecta, $codigo_pedido, $crt_3, $desconto, $cfop, $nfe_prox, "01", "01",$codigo_nf);
+                    insert_nfe_item($conecta, $codigo_pedido, $crt_3, $desconto, $cfop, $nfe_prox, "01", "01", $codigo_nf);
                     atulizar_vl_parametro($conecta, "9", $nfe_prox);
                     atualizar_numero_nf_pedido($conecta, $codigo_pedido, $nfe_prox);
                     registrar_log($conecta, $hoje, $user_id, "Gerou a NFE $nfe_prox do pedido de compra codigo $codigo_pedido ");

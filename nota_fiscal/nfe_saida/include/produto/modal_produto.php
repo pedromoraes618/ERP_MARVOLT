@@ -211,12 +211,12 @@ if (isset($_GET['numero_nf'])) {
                 </div>
                 <div class="row mb-2">
                     <div class="col-md mb-2">
-                        <label for="base_iss_prod" class="form-label">Base ISS</label>
-                        <input type="text" class="form-control" id="base_iss_prod" name="base_iss_prod" value="">
+                        <!-- <label for="base_iss_prod" class="form-label">Base ISS</label> -->
+                        <input type="hidden" class="form-control" id="base_iss_prod" name="base_iss_prod" value="">
                     </div>
                     <div class="col-md mb-2">
-                        <label for="iss_prod" class="form-label">Iss</label>
-                        <input type="text" class="form-control" id="iss_prod" name="iss_prod" value="">
+                       <!-- <label for="iss_prod" class="form-label">Iss</label> -->
+                        <input type="hidden" class="form-control" id="iss_prod" name="iss_prod" value="">
                     </div>
                     <div class="col-md mb-2">
                         <label for="gtin_prod" class="form-label">GTIN *</label>

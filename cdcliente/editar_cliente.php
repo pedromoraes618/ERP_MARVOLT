@@ -83,24 +83,16 @@ if ($_POST) {
     
             }else {
 
+                $cpfcnpj = preg_replace('/[^0-9]/', '', $cpfcnpj); // remover caracteres especias
+                $cep = preg_replace('/[^0-9]/', '', $cep); // remover caracteres especias
 
-            $div1 = explode(".", $cpfcnpj);
-            $cpfcnpj = $div1[0] . "" . $div1[1] . "" . $div1[2];
-            $div2 = explode("/", $cpfcnpj);
-            $cpfcnpj2 = $div2[0] . "" . $div2[1];
-            $div3 = explode("-", $cpfcnpj2);
-            $cpfcfnp3 = $div3[0] . "" . $div3[1];
-
-
-            $div5 = explode("-", $cep);
-            $cep2 = $div5[0] . "" . $div5[1];
 
 
             //query para alterar o cliente no banco de dados
             $alterar = "UPDATE clientes set razaosocial = '{$razao_social}', endereco = '{$endereco}', cidade = '{$cidade}',  estadoID = '{$estados}', ";
             $alterar .= " telefone = '{$telefone}', email = '{$email}' ,informacao_bancaria = '{$informacao_bancaria}', conta_agencia = '{$conta_agencia}', pix = '{$pix}', ";
-            $alterar .= " clienteftID = '{$clientefortrans}', observacao = '{$observacao}', cpfcnpj = '{$cpfcfnp3}' ,inscricao_estadual = '{$inscricao_estadual}', nome_fantasia = '{$nome_fantasia}', bairro = '{$bairro}',
-   codigo_cidade ='{$codigo_cidade}', cep='{$cep2}',grupo_cliente='{$grupo_cliente}',ramo='$ramo'  WHERE clienteID = {$clienteID} ";
+            $alterar .= " clienteftID = '{$clientefortrans}', observacao = '{$observacao}', cpfcnpj = '{$cpfcnpj}' ,inscricao_estadual = '{$inscricao_estadual}', nome_fantasia = '{$nome_fantasia}', bairro = '{$bairro}',
+   codigo_cidade ='{$codigo_cidade}', cep='{$cep}',grupo_cliente='{$grupo_cliente}',ramo='$ramo'  WHERE clienteID = {$clienteID} ";
 
             $operacao_alterar = mysqli_query($conecta, $alterar);
             if (!$operacao_alterar) {
@@ -271,7 +263,7 @@ if (!$lista_cft) {
                             <tr>
                                 <td>
                                     <label for="cpfcnpj" style="width:120px;"> <b>Cnpj/Cpf:</b></label>
-                                    <input type="text" size=30 name="cpfcnpj" id="cpfcnpj" data-mask="00.000.000/0000-00" value="<?php echo formatCnpjCpf($cpfcnpj) ?>">
+                                    <input type="text" size=30 name="cpfcnpj" id="cpfcnpj"  value="<?php echo formatCnpjCpf($cpfcnpj) ?>">
                                     <submit type="submit" onclick="checkCnpj(cpfcnpj.value)" class="btn btn-secondary">
                                         Buscar cnpj</submit>
                                 </td>
@@ -382,8 +374,8 @@ if (!$lista_cft) {
                                 <div style="margin-left: 120px;margin-top:10px">
                                     <input type="submit" name="btnsalvar" value="Alterar" class="btn btn-info btn-sm"></input>
                                     <button type="button" onclick="window.opener.location.reload();fechar();" class="btn btn-secondary">Voltar</button>
-                                    <input id="remover" type="submit" name="btnremover" value="Remover" class="btn btn-danger" onClick="return confirm('Confirma Remoção do CLienter? Verifique se o cliente tem movimentação');"></input>
-                                    <button type="button" name="brncomprador" value="Comprador" class="btn btn-dark" onClick="abrepopupConsultaComprador();">Comprador</button>
+                                    <input id="remover" type="submit" name="btnremover" value="Remover" class="btn btn-danger" onClick="return confirm('Deseja remover esse cliente');"></input>
+                                    <button type="button" name="brncomprador" value="Comprador" style="width: 140px;" class="btn btn-dark" onClick="abrepopupConsultaComprador();">Comprador</button>
                                 </div>
                             </td>
                         </tr>
@@ -474,8 +466,8 @@ if (!$lista_cft) {
                         <tr>
                             <td>
                                 <label for="cep" style="width:120px;"><b>Cep:</b></label>
-                                <input type="text" size=20 id="cep" data-mask="00000-000" name="cep" value="<?php echo $cep; ?>">
-                                <button type="button" id="consultarCep" style="width:130px;" class="btn btn-secondary">
+                                <input type="text" size=20 id="cep" name="cep" value="<?php echo $cep; ?>">
+                                <button type="button" id="consultarCep" style="width:140px;" class="btn btn-secondary">
                                     Consultar Cep</button>
                             </td>
                         </tr>

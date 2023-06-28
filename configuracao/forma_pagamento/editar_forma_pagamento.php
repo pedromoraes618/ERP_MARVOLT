@@ -29,24 +29,31 @@ $consultar_contas_fi = mysqli_query($conecta, $Select);
 if (isset($_POST['enviar'])) {
     $descricao = utf8_decode($_POST['txtFormaPagamento']);
     $banco = utf8_decode($_POST['txtBanco']);
+    $tipo = ($_POST['tipo']);
 
 
     if ($descricao == "") {
 ?>
         <script>
-            alertify.alert("Forma de pagamento não informada");
+            alertify.alert("Favor informe a descrição");
         </script>
     <?php
     } elseif (!isset($_POST['status'])) {
     ?>
         <script>
-            alertify.alert("Favor informar o status");
+            alertify.alert("Favor informe o status");
+        </script>
+    <?php
+    } elseif ($tipo == "0") {
+    ?>
+        <script>
+            alertify.alert("Favor informe o tipo");
         </script>
         <?php
     } else {
         $status = utf8_decode($_POST['status']);
         //inserindo as informações no banco de dados
-        $update = "UPDATE forma_pagamento set nome = '{$descricao}', banco = '{$banco}', statuspagamento = '{$status}'  where formapagamentoID = '{$codigoID}'  ";
+        $update = "UPDATE forma_pagamento set nome = '{$descricao}', banco = '{$banco}', statuspagamento = '{$status}', tipo='$tipo'  where formapagamentoID = '{$codigoID}'  ";
         $operacao_update = mysqli_query($conecta, $update);
         if (!$operacao_update) {
             die("Erro no banco de dados || update na tabela forma_pagamento ");
@@ -69,6 +76,7 @@ if ($operacao_select) {
     $formaPagamentoB = utf8_encode($linha['nome']);
     $bancoB = utf8_encode($linha['banco']);
     $statusB = $linha['statuspagamento'];
+    $tipo_b = $linha['tipo'];
 } else {
     die("Erro no banco de dados");
 }
@@ -93,7 +101,7 @@ if ($operacao_select) {
 
 <body>
     <div id="titulo">
-        </p>Dados Forma de Pagamento</p>
+        </p>Forma de Pagamento</p>
     </div>
     <main>
         <div style="margin:0 auto; width:700px; float:left ">
@@ -111,7 +119,7 @@ if ($operacao_select) {
 
                         <tr>
                             <td>
-                                <label for="txtFormaPagamento" style="width:115px;"> <b>Forma de Pagamento:</b></label>
+                                <label for="txtFormaPagamento" style="width:115px;"> <b>Descrição;</b></label>
                                 <input type="text" size=50 name="txtFormaPagamento" id="txtFormaPagamento" value="<?php echo $formaPagamentoB; ?>">
 
                             </td>
@@ -144,11 +152,46 @@ if ($operacao_select) {
                                 <label for="txtStatus" style="width:115px;"> <b>Status:</b></label>
                                 <input type="radio" name="status" value="A RECEBER" <?php if ($statusB == "A RECEBER") {
                                                                                     ?> checked <?php
-                                                                                    } ?>> A Receber
+                                                                                            } ?>> A Receber
                                 <input type="radio" name="status" value="RECEBIDO" <?php if ($statusB == "RECEBIDO") {
                                                                                     ?> checked <?php
-                                                                                    } ?>> Recebido
+                                                                                            } ?>> Recebido
 
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="txtBanco" style="width:115px;"> <b>Tipo:</b></label>
+                                <select style="width: 300px;margin-bottom: 11px" id="tipo" name="tipo">
+                                    <option value="0">Selecione</option>
+                                    <option <?php if ($tipo_b == "01") {
+                                                echo 'selected';
+                                            } ?> value="01">Dinheiro</option>
+                                    <option <?php if ($tipo_b == "02") {
+                                                echo 'selected';
+                                            } ?> value="02">Cheque</option>
+                                    <option <?php if ($tipo_b == "03") {
+                                                echo 'selected';
+                                            } ?> value="03">Cartão de Crédito</option>
+                                    <option <?php if ($tipo_b == "04") {
+                                                echo 'selected';
+                                            } ?> value="04">Cartão de Débito</option>
+                                    <option <?php if ($tipo_b == "15") {
+                                                echo 'selected';
+                                            } ?> value="15">Boleto Bancário</option>
+                                    <option <?php if ($tipo_b == "17") {
+                                                echo 'selected';
+                                            } ?> value="17">Pagamento Instantâneo (PIX)</option>
+                                    <option <?php if ($tipo_b == "18") {
+                                                echo 'selected';
+                                            } ?> value="18">Transferência bancária, Carteira Digital</option>
+                                    <option <?php if ($tipo_b == "99") {
+                                                echo 'selected';
+                                            } ?> value="99">Outros</option>
+
+
+                                </select>
 
                             </td>
                         </tr>

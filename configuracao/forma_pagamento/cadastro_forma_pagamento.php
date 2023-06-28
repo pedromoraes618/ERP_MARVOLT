@@ -23,12 +23,13 @@ $consultar_contas_fi = mysqli_query($conecta, $Select);
 if (isset($_POST['enviar'])) {
     $descricao = utf8_decode($_POST['txtFormaPagamento']);
     $banco = utf8_decode($_POST['txtBanco']);
+    $tipo = utf8_decode($_POST['tipo']);
 
 
     if ($descricao == "") {
 ?>
         <script>
-            alertify.alert("Forma de pagamento não informada");
+            alertify.alert("Favor informe a descrição");
         </script>
     <?php
     } elseif (!isset($_POST['status'])) {
@@ -37,13 +38,19 @@ if (isset($_POST['enviar'])) {
             alertify.alert("Favor informar o status");
         </script>
         <?php
-    } else {
-        $status = utf8_decode($_POST['status']);
+    } elseif ($tipo =="0") {
+        ?>
+            <script>
+                alertify.alert("Favor informar o tipo");
+            </script>
+            <?php
+        } else {
+        $status = ($_POST['status']);
         //inserindo as informações no banco de dados
         $inserir = "INSERT INTO forma_pagamento ";
-        $inserir .= "(nome,banco,statuspagamento)";
+        $inserir .= "(nome,banco,statuspagamento,tipo)";
         $inserir .= " VALUES ";
-        $inserir .= "('$descricao','$banco','$status' )";
+        $inserir .= "('$descricao','$banco','$status','$tipo' )";
 
         $operacao_inserir = mysqli_query($conecta, $inserir);
         if (!$operacao_inserir) {
@@ -83,7 +90,7 @@ if (isset($_POST['enviar'])) {
 
 <body>
     <div id="titulo">
-        </p>Cadastro Forma de Pagamento</p>
+        </p>Forma de Pagamento</p>
     </div>
     <main>
         <div style="margin:0 auto; width:700px; float:left ">
@@ -95,23 +102,23 @@ if (isset($_POST['enviar'])) {
                         <tr>
                             <td>
                                 <label for="txtCodigo" style="width:115px;"> <b>Código:</b></label>
-                                <input readonly type="text" size=10 id="txtCodigo" name="txtCodigo" value="">
+                                <input readonly type="text" size=10 id="txtCodigo" name="txtCodigo" disabled value="">
                             </td>
                         </tr>
 
                         <tr>
                             <td>
-                                <label for="txtFormaPagamento" style="width:115px;"> <b>Forma de Pagamento:</b></label>
+                                <label for="txtFormaPagamento" style="width:115px;"> <b>Descrição:</b></label>
                                 <input type="text" size=50 name="txtFormaPagamento" id="txtFormaPagamento" value="<?php if (isset($_POST['enviar'])) {
                                                                                                                         echo utf8_encode($descricao);
                                                                                                                     } ?>">
 
                             </td>
                         </tr>
-                        <tr >
+                        <tr>
                             <td>
                                 <label for="txtBanco" style="width:115px; "> <b>Banco:</b></label>
-                                <select style="width: 150px;margin-bottom: 9px" id="txtBanco" name="txtBanco">
+                                <select style="width: 150px;margin-bottom: 11px" id="txtBanco" name="txtBanco">
                                     <option value="0">Selecione</option>
                                     <?php
                                     while ($linha = mysqli_fetch_assoc($consultar_contas_fi)) {
@@ -124,6 +131,25 @@ if (isset($_POST['enviar'])) {
 
                                     ?>
 
+                                </select>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="txtBanco" style="width:115px;"> <b>Tipo:</b></label>
+                                <select style="width: 300px;margin-bottom: 11px" id="tipo" name="tipo">
+                                    <option value="0">Selecione</option>
+                                    <option value="1">Dinheiro</option>
+                                    <option value="2">Cheque</option>
+                                    <option value="3">Cartão de Crédito</option>
+                                    <option value="4">Cartão de Débito</option>
+                                    <option value="15">Boleto Bancário</option>
+                                    <option value="17">Pagamento Instantâneo (PIX)</option>
+                                    <option value="18">Transferência bancária, Carteira Digital</option>
+                                    <option value="99">Outros</option>
+                                 
+                                
                                 </select>
 
                             </td>

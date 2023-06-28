@@ -122,6 +122,7 @@ if ((isset($_GET['numero_nf'])) and (isset($_GET['codigo_nf']))) {
 //     curl_close($ch);
 //     echo "https://homologacao.focusnfe.com.br/arquivos_development/34226833000197/202306/DANFEs/21230634226833000197550010000000011655237808.pdf";
 // }
+
 ?>
 
 <!DOCTYPE html>
@@ -157,12 +158,17 @@ if ((isset($_GET['numero_nf'])) and (isset($_GET['codigo_nf']))) {
 
         <div class="card">
             <form method="POST" class="form_principal" id="nota_fsical">
-
                 <div class="col-md mb-4">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end ">
                         <button type="button" name="enviar_nf" id="enviar_nf" class="btn btn-sm btn-success">Enviar NF</button>
                         <button type="button" name="consultar_pdf_nf" id="consultar_pdf_nf" class="btn btn-sm btn-info">Consultar Pdf NF</button>
                         <button type="button" name="consultar_xml_nf" id="consultar_xml_nf" class="btn btn-sm btn-info">Consultar Xml NF</button>
+                        <a
+                                onclick="window.open('../anexar_arquivo.php?codigo=<?php echo $numero_nf;?> ', 
+'editar_produto_cotacao', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=1500, HEIGHT=500');">
+                                       <button type="button" name="consultar_xml_nf" id="consultar_xml_nf" class="btn btn-sm btn-info">Anexo</button>
+                            </a>
+              
 
                         <button type="button" id="cancelar_nf" class="btn btn-sm btn-danger">Cancelar NF</button>
 

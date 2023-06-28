@@ -25,7 +25,7 @@ if (isset($_GET['cliente'])) {
 
     //consultar clientes
     $select = "SELECT clt.nome_fantasia,clt.clienteftID,clt.cpfcnpj,clt.cidade,clt.bairro,clt.clienteftID,clt.clienteID,clt.telefone,ramo.nome_categoria FROM clientes as clt inner join categoria_produto as ramo on ramo.categoriaID = clt.ramo ";
-    $select .= " WHERE  clt.nome_fantasia LIKE  '%{$nome_cliente}%'  ";
+    $select .= " WHERE  (clt.nome_fantasia LIKE  '%{$nome_cliente}%' or clt.cpfcnpj LIKE  '%{$nome_cliente}%' ) ";
 
     if ($tipo != "0") {
         $select .= " and  clt.clienteftID = '{$tipo}' ";

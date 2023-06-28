@@ -97,15 +97,7 @@ alertify.alert("Favor preencher o campo Nome fantasia");
 </script>
 <?php
 
-    }
-    elseif($codigo_cidade==""){
-        ?>
-<script>
-alertify.alert("Cidade não encontrada, Favor clique no botão consultar Cep");
-</script>
-<?php
-  
-      } elseif($ramo=="0"){
+    } elseif($ramo=="0"){
         ?>
 <script>
 alertify.alert("Favor informe o campo Ramo");
@@ -115,24 +107,27 @@ alertify.alert("Favor informe o campo Ramo");
       }else{
 
       
-        $div1 = explode(".",$cpfcnpj);
-        $cpfcnpj = $div1[0]."".$div1[1]."".$div1[2];
-        $div2 = explode("/",$cpfcnpj);
-        $cpfcnpj2 = $div2[0]."".$div2[1];
-        $div3 = explode("-",$cpfcnpj2);
-        $cpfcfnp3 = $div3[0]."".$div3[1];
+        // $div1 = explode(".",$cpfcnpj);
+        // $cpfcnpj = $div1[0]."".$div1[1]."".$div1[2];
+        // $div2 = explode("/",$cpfcnpj);
+        // $cpfcnpj2 = $div2[0]."".$div2[1];
+        // $div3 = explode("-",$cpfcnpj2);
+        // $cpfcfnp3 = $div3[0]."".$div3[1];
 
+        $cpfcnpj = preg_replace('/[^0-9]/', '', $cpfcnpj); // remover caracteres especias
 
         // $div4 = explode(".",$cep);
         // $cep = $div4[0]."".$div4[1]."";
-        $div5 = explode("-",$cep);
-        $cep2 = $div5[0]."".$div5[1];
+        // $div5 = explode("-",$cep);
+        // $cep2 = $div5[0]."".$div5[1];
+        $cep = preg_replace('/[^0-9]/', '', $cep); // remover caracteres especias
 
 
 
-      if($cpfcfnp3!=""){
+
+      if($cpfcnpj!=""){
         //verificar se o usuario já está cadastrado
-        $select = " SELECT * from clientes where cpfcnpj = '$cpfcfnp3' ";
+        $select = " SELECT * from clientes where cpfcnpj = '$cpfcnpj' ";
         $consulta = mysqli_query($conecta,$select);
         if(!$consulta){
         die("Falha na consulta ao banco de dados clientes");
@@ -140,7 +135,7 @@ alertify.alert("Favor informe o campo Ramo");
         $row_banco = mysqli_fetch_assoc($consulta);
         $cpfcnpjBanco = $row_banco['cpfcnpj'];
     }
-       if($cpfcfnp3 == $cpfcnpjBanco){
+       if($cpfcnpj == $cpfcnpjBanco){
 
                 ?>
 
@@ -154,7 +149,7 @@ alertify.alert("Cnpj do cliente já cadastrado no sistema");
   $inserir = "INSERT INTO clientes ";
   $inserir .= "(razaosocial,endereco,cidade,estadoID,telefone,email,informacao_bancaria,conta_agencia,pix,observacao,cpfcnpj,inscricao_estadual,clienteftID,nome_fantasia,bairro,cep,data_cadastro,codigo_cidade,grupo_cliente,ramo)";
   $inserir .= " VALUES ";
-  $inserir .= "('$razao_social','$endereco','$cidade',' $estados',' $telefone','$email','$informacao_bancaria','$conta_agencia','$pix','$observacao','$cpfcfnp3','$inscricao_estadual','$clienteft','$nome_fantasia','$bairro','$cep2','$hoje','$codigo_cidade','$grupo_cliente','$ramo')";
+  $inserir .= "('$razao_social','$endereco','$cidade',' $estados',' $telefone','$email','$informacao_bancaria','$conta_agencia','$pix','$observacao','$cpfcnpj','$inscricao_estadual','$clienteft','$nome_fantasia','$bairro','$cep','$hoje','$codigo_cidade','$grupo_cliente','$ramo')";
 
 
   $razao_social = "";
@@ -248,7 +243,7 @@ alertify.success("Cliente cadastrado com sucesso");
                                 <td>
                                     <label for="cpfcnpj" style="width:120px;"> <b>Cnpj</b></label>
                                     <input type="text" size=30 name="cpfcnpj" id="cpfcnpj"
-                                        data-mask="00.000.000/0000-00"
+                                       
                                         value="<?php if(isset($_POST['enviar'])){ echo $cpfcnpj ;}?>">
                                     <button type="button" style="width:120px ;" onclick="checkCnpj(cpfcnpj.value)"
                                         class="btn btn-secondary">
