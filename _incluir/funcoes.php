@@ -546,3 +546,45 @@ function cancelamento_nf($conecta, $id, $caminho_pdf_nf, $caminho_xml_nf)
     return false;
   }
 }
+
+function update_cfop_item($conecta, $codigo_nf, $cfop)
+{
+  $update = "UPDATE `marvolt`.`tb_nfe_saida_item` SET `cfop` = '$cfop'
+   WHERE `tb_nfe_saida_item`.`codigo_nf` = '$codigo_nf' ";
+  $operacao_update = mysqli_query($conecta, $update);
+}
+
+function update_crt_correcao($conecta, $id, $caminho_pdf_crt)
+{
+  $update = "UPDATE `marvolt`.`tb_nfe_saida` SET  `caminho_pdf_crt_correcao` = '$caminho_pdf_crt' WHERE `tb_nfe_saida`.`nfe_saidaID` = $id ";
+  $operacao_update = mysqli_query($conecta, $update);
+  if ($operacao_update) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function insert_crt_correcao($conecta, $numero_nf, $caminho_pdf_crt)
+{
+  $insert = "INSERT INTO `marvolt`.`tb_anexo_nfe_saida` ( `descricao`,
+   `numero_nf`, `diretorio`) VALUES ( 'Carta correção', '$numero_nf', '$caminho_pdf_crt') ";
+  $operacao_insert = mysqli_query($conecta, $insert);
+  if ($operacao_insert) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function update_inutilizacao($conecta,$id,$prot_autorizacao) //preencher a chave de acesso
+{
+  $update = "UPDATE `marvolt`.`tb_nfe_saida` SET `prot_autorizacao` = '$prot_autorizacao' , `finalidade_id`= '6'
+   WHERE `tb_nfe_saida`.`nfe_saidaID` = '$id' ";
+  $operacao_update = mysqli_query($conecta, $update);
+  if ($operacao_update) {
+    return true;
+  } else {
+    return false;
+  }
+}

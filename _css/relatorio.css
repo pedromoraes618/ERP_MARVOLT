@@ -476,12 +476,14 @@ margin-bottom: 10px;
 }
 .bloco-right .relatorio-right-top nav ul li .bloco-dados{
     display: flex;
+    
     align-items:flex-start;
 
 }
 
 .bloco-right .relatorio-right-top  nav ul li .info{
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: center; 
     display:grid;
@@ -489,6 +491,7 @@ margin-bottom: 10px;
     width: 100%;
     height: 25px;
     cursor: pointer;
+    
 
 }
 
@@ -868,8 +871,9 @@ border-top: 1px solid white;
 
 .bloco-right-top .relatorio-right-top .bloco{
     display: flex;
-    flex-wrap: wrap;
+   
     border-top: 1px solid;
+
 }
 
 .bloco-right-top .relatorio-right-top .bloco .info{

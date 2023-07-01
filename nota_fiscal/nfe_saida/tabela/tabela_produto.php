@@ -20,9 +20,10 @@ include "../crud/gerenciar_nfe.php";
         <tbody>
             <?php
             $total_prod = 0;
+            $item = 0;
             while ($linha = mysqli_fetch_assoc($consulta_prod_nf)) {
                 $nfe_iten_saidaID = $linha['nfe_iten_saidaID'];
-                $item = $linha['item'];
+                //                $item = $linha['item'];
                 $descricao = utf8_encode($linha['descricao']);
                 $und = utf8_encode($linha['und']);
                 $quantidade = ($linha['quantidade']);
@@ -35,7 +36,7 @@ include "../crud/gerenciar_nfe.php";
                 $codigo_nf = ($linha['codigo_nf']);
 
                 $total_prod = $valor_produto + $total_prod;
-
+                $item = $item + 1;
                 //     $codigo_produto_b = $linha['cl_codigo'];
                 //     $descricao_b = utf8_encode($linha['descricao']);
                 //     $referencia_b = utf8_encode($linha['cl_referencia']);
@@ -58,7 +59,7 @@ include "../crud/gerenciar_nfe.php";
                     <td><?php echo $ncm ?></td>
                     <td><?php echo $cfop ?></td>
                     <td><?php echo $cst ?></td>
-                    <td><button type="button" numero_nf=<?php echo $numero_nf ?> codigo_nf=<?php echo $codigo_nf ?> id_prod=<?php echo $nfe_iten_saidaID; ?>  class="btn btn-sm btn-info editar_prod">Editar </button></td>
+                    <td><button type="button" numero_nf=<?php echo $numero_nf ?> codigo_nf=<?php echo $codigo_nf ?> id_prod=<?php echo $nfe_iten_saidaID; ?> class="btn btn-sm btn-info editar_prod">Editar </button></td>
                 </tr>
 
             <?php } ?>
@@ -70,6 +71,7 @@ include "../crud/gerenciar_nfe.php";
             <th></th>
             <th></th>
             <th><?php echo real_format($total_prod) ?></th>
+            <th><input type="hidden" id="total_prod" value="<?php echo $total_prod; ?>"></th>
             <th></th>
             <th></th>
             <th></th>

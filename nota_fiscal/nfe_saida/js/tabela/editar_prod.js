@@ -14,5 +14,3 @@ $(".editar_prod").click(function () {
         },
     });
 });
-
-

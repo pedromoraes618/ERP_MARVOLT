@@ -5,7 +5,7 @@ include "../../../_incluir/funcoes.php";
 
 <div class="relatorio_center_top">
     <div class="title">
-        <h4>Faturamento em nota fiscal</h4>
+        <h4>Faturamento em nota fiscal <?php echo consultar_faturamento_nfes("5","2022") ?></h4>
     </div>
     <!-- <div class="bloco-tipo">
         <button id="rb1">R1</button>

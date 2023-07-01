@@ -24,8 +24,8 @@ if (isset($_GET['cliente'])) {
 
 
     //consultar clientes
-    $select = "SELECT clt.nome_fantasia,clt.clienteftID,clt.cpfcnpj,clt.cidade,clt.bairro,clt.clienteftID,clt.clienteID,clt.telefone,ramo.nome_categoria FROM clientes as clt inner join categoria_produto as ramo on ramo.categoriaID = clt.ramo ";
-    $select .= " WHERE  (clt.nome_fantasia LIKE  '%{$nome_cliente}%' or clt.cpfcnpj LIKE  '%{$nome_cliente}%' ) ";
+    $select = "SELECT clt.nome_fantasia,clt.razaosocial,clt.clienteftID,clt.cpfcnpj,clt.cidade,clt.bairro,clt.clienteftID,clt.clienteID,clt.telefone,ramo.nome_categoria FROM clientes as clt inner join categoria_produto as ramo on ramo.categoriaID = clt.ramo ";
+    $select .= " WHERE  (clt.nome_fantasia LIKE '%{$nome_cliente}%' or clt.razaosocial LIKE '%{$nome_cliente}%' or clt.cpfcnpj LIKE  '%{$nome_cliente}%' ) ";
 
     if ($tipo != "0") {
         $select .= " and  clt.clienteftID = '{$tipo}' ";
@@ -215,13 +215,13 @@ if (isset($_GET['cliente'])) {
                         </td>
 
                         <td>
-                          
+
                         </td>
                         <td>
-                         
+
                         </td>
                         <td>
-                          
+
                         </td>
 
                     </tr>
@@ -231,6 +231,7 @@ if (isset($_GET['cliente'])) {
                         while ($linha = mysqli_fetch_assoc($resultado)) {
                             $Idcliente = $linha["clienteID"];
                             $nome_fantasia = utf8_encode($linha["nome_fantasia"]);
+                            $razao_social = utf8_encode($linha["razaosocial"]);
 
 
                             $select = "SELECT data_fechamento from pedido_compra where clienteID = $Idcliente and data_fechamento = 
@@ -256,7 +257,8 @@ if (isset($_GET['cliente'])) {
 
                                 <td style="width:450px;">
                                     <p>
-                                        <font size="2"><?php echo $nome_fantasia ?>
+                                        <font size="2"><?php echo $razao_social . "<br>" . $nome_fantasia; ?>
+
                                         </font>
                                     </p>
                                 </td>

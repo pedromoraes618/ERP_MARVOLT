@@ -169,8 +169,10 @@ if ((isset($_GET['numero_nf'])) and (isset($_GET['codigo_nf']))) {
                                        <button type="button" name="consultar_xml_nf" id="consultar_xml_nf" class="btn btn-sm btn-info">Anexo</button>
                             </a>
               
-
+                            <button type="button" id="inutilizar_nf" class="btn btn-sm btn-warning">Inutilizar Nf</button>
+                            <button type="button" id="ct_correcao" class="btn btn-sm btn-warning">Carta de correção</button>
                         <button type="button" id="cancelar_nf" class="btn btn-sm btn-danger">Cancelar NF</button>
+              
 
                         <button type="button" class="btn btn-sm btn-secondary" onclick="window.opener.location.reload(); window.close();" data-bs-dismiss="modal">Fechar</button>
                     </div>

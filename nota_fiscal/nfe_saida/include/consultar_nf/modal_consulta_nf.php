@@ -18,22 +18,44 @@ if (isset($_GET['acao'])) {
 
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md mb-2">
-                        <input type="text" class="form-control" id="msg_sefaz" placeholder="Mensagem da sefaz">
-                    </div>
+
+                    <?php if ($acao == "carta_correcao") { ?>
+                        <div class="col-md mb-2">
+                            <input type="text" class="form-control" id="msg_sefaz" placeholder="Mensagem correção">
+                        </div>
+                    <?php } elseif ($acao == "inutilizar_nf") {
+                    ?> <div class="col-md-4 mb-2">
+                            <input type="text" class="form-control" id="numero_ini" placeholder="Número inicial">
+                        </div>
+         
+                    <?php
+                    } ?>
+
                 </div>
                 <div class="row">
                     <div class="col-md  mb-2">
-                        <textarea class="form-control" id="status_processamento" placeholder="Digite as informações adicionais" name="" cols="30" rows="10"></textarea>
+                        <textarea class="form-control" readonly id="status_processamento" placeholder="Digite as informações adicionais" name="" cols="30" rows="10"></textarea>
                     </div>
                 </div>
 
             </div>
 
             <div class="modal-footer">
+                <?php if ($acao == "carta_correcao") {
+                ?>
+                    <button type="button" id="enviar_carta_correcao" class="btn btn-success">Enviar</button>
+
+                <?php
+                } elseif ($acao == "inutilizar_nf") {
+                ?>
+                    <button type="button" id="enviar_inutilizacao" class="btn btn-success">Enviar</button>
+
+                <?php
+                } ?>
+
                 <button type="button" class="btn btn-warning" <?php if ($acao == "consultar_nf") {
                                                                     echo "id='reconsultar_nf'";
-                                                                }elseif ($acao == "enviar_nf") {
+                                                                } elseif ($acao == "enviar_nf") {
                                                                     echo "id='reconsultar_nf'";
                                                                 } elseif ($acao == "cancelar_nf") {
                                                                     echo "id='cancelar_nf'";

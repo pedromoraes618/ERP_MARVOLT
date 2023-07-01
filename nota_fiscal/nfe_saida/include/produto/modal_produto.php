@@ -31,16 +31,16 @@ if (isset($_GET['numero_nf'])) {
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end ">
                         <button type="button" class="btn btn-sm btn-success" id="salvar_prod">Salvar</button>
                         <button type="button" class="btn btn-sm btn-danger" id="remover_prod">Remover</button>
-                        <button type="button" class="btn btn-sm btn-secondary"  onclick="window.history.back();" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-sm btn-secondary" id="fechar_modal_prod"  onclick="window.history.back();" data-bs-dismiss="modal">Fechar</button>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <input type="hidden" id="id_produto" value="<?php echo $id_produto; ?>">
-                    <input type="hidden" id="codigo_nf" value="<?php echo $codigo_nf; ?>">
+                    <input type="hidden" id="codtigo_nf" value="<?php echo $codigo_nf; ?>">
                     <input type="hidden" id="numero_nf" value="<?php echo $numero_nf; ?>">
                     <div class="col-md-2 mb-2">
-                        <label for="item_prod" class="form-label">Item</label>
-                        <input type="text" disabled class="form-control" id="item_prod" name="item_prod" value="">
+                        <label for="item_prod" class="form-label">Código</label>
+                        <input type="text" disabled class="form-control" id="codigo_prod" name="codigo_prod" value="">
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -144,8 +144,8 @@ if (isset($_GET['numero_nf'])) {
                         <input type="text" class="form-control" id="icms_sub_prod" name="icms_sub_prod" value="">
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label for="desconto_prod" class="form-label">Desconto rat</label>
-                        <input type="text" class="form-control" id="desconto_prod" name="desconto_prod" value="">
+                        <!-- <label for="desconto_prod" class="form-label">Desconto rat</label> -->
+                        <input type="hidden" class="form-control" id="desconto_prod" name="desconto_prod" value="">
                     </div>
                 </div>
                 <div class="row mb-2">

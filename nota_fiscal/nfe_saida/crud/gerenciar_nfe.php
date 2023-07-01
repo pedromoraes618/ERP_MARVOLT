@@ -68,8 +68,10 @@ if (isset($_POST['formulario_nota_fiscal'])) {
              `forma_pagamento_id` = '$fpagamento', `observacao` = '$observacao' ,`numero_nf_ref` = '$numero_nf_ref',`chave_acesso_ref` = '$chave_acesso_ref' WHERE `tb_nfe_saida`.`nfe_saidaID` = $id_nf and codigo_nf ='$codigo_nf'";
             $operacao_update = mysqli_query($conecta, $update);
             if ($operacao_update) {
-                desconto_rat($conecta, $codigo_nf, $desconto_nota); //rateio do desconto nos produtos
+                update_cfop_item($conecta, $codigo_nf, $cfop); //rateio do desconto nos produtos
                 $retornar["dados"] = array("sucesso" => true, "title" => "Nfe alterada com sucesso");
+            } else {
+                $retornar["dados"] = array("sucesso" => true, "title" => "Erro, Favor comunique o suporte");
             }
         }
     }
@@ -160,6 +162,232 @@ if (isset($_POST['formulario_nota_fiscal'])) {
 
         $retornar["dados"] = array("sucesso" => true, "valores" => $informacao);
     }
+    if ($acao == "showProduto") {
+        $id_produto = $_POST['id_produto'];
+        $select  = "SELECT * FROM tb_nfe_saida_item where nfe_iten_saidaID= $id_produto ";
+        $consulta_item_nf = mysqli_query($conecta, $select);
+        $linha = mysqli_fetch_assoc($consulta_item_nf);
+        $item = $linha['item'];
+        $descricao = utf8_encode($linha['descricao']);
+        $und = utf8_encode($linha['und']);
+        $quantidade = ($linha['quantidade']);
+        $valor_unitario = ($linha['valor_unitario']);
+        $valor_produto = ($linha['valor_produto']);
+        $ncm = ($linha['ncm']);
+        $cest = ($linha['cest']);
+        $cfop = ($linha['cfop']);
+        $cst = ($linha['cst_icms']);
+        $bc_icms = ($linha['bc_icms']);
+        $aliq_icms = ($linha['aliq_icms']);
+        $valor_icms = ($linha['valor_icms']);
+        $base_icms_sub = ($linha['base_icms_sub']);
+        $icms_sub = ($linha['icms_sub']);
+        $desconto = ($linha['desconto']);
+        $aliq_ipi = ($linha['aliq_ipi']);
+        $valor_ipi = ($linha['valor_ipi']);
+        $ipi_devolvido = ($linha['ipi_devolvido']);
+        $base_pis = ($linha['base_pis']);
+        $valor_pis = ($linha['valor_pis']);
+        $cst_pis = ($linha['cst_pis']);
+        $base_cofins = ($linha['base_cofins']);
+        $valor_cofins = ($linha['valor_cofins']);
+        $cst_cofins = ($linha['cst_cofins']);
+        $base_iss = ($linha['base_iss']);
+        $valor_iss = ($linha['valor_iss']);
+        $gtin = $linha['gtin'];
+
+
+        $informacao = array(
+            "codigo" => $id_produto,
+            "descricao" => $descricao,
+            "und" => $und,
+            "quantidade" => $quantidade,
+            "valor_unitario" => $valor_unitario,
+            "valor_produto" => $valor_produto,
+            "cfop" => $cfop,
+            "ncm" => $ncm,
+            "cest" => $cest,
+            "cst" => $cst,
+            "bc_icms" => $bc_icms,
+            "aliq_icms" => $aliq_icms,
+            "valor_icms" => $valor_icms,
+            "base_icms_sub" => $base_icms_sub,
+            "icms_sub" => $icms_sub,
+            "desconto" => $desconto,
+            "aliq_ipi" => $aliq_ipi,
+            "valor_ipi" => $valor_ipi,
+            "ipi_devolvido" => $ipi_devolvido,
+            "base_pis" => $base_pis,
+            "valor_pis" => $valor_pis,
+            "cst_pis" => $cst_pis,
+            "base_cofins" => $base_cofins,
+            "valor_cofins" => $valor_cofins,
+            "cst_cofins" => $cst_cofins,
+            "base_iss" => $base_iss,
+            "valor_iss" => $valor_iss,
+            "gtin" => $gtin,
+
+        );
+
+
+
+        $retornar["dados"] = array("sucesso" => true, "valores" => $informacao);
+    }
+    if ($acao == "updateProduto") {
+        $itensJSON = $_POST['itens']; //array de produtos
+        $itens = json_decode($itensJSON, true); //recuperar valor do array javascript decodificando o json
+
+        $id_produto = $itens['id_produto'];
+        $numero_nf = $itens['numero_nf'];
+        $codigo_nf = $itens['codigo_nf'];
+        $descricao = utf8_decode($itens['descricao']);
+        $und = utf8_decode($itens['und']);
+        $qtd = $itens['qtd'];
+        $vlr_unitario = $itens['vlr_unitario'];
+        $cfop = $itens['cfop'];
+        $ncm = $itens['ncm'];
+        $cest = $itens['cest'];
+        $cst = $itens['cst'];
+        $base_icms = $itens['base_icms'];
+        $aliq_icms = $itens['aliq_icms'];
+        $vlr_icms = $itens['vlr_icms'];
+        $base_icms_sub = $itens['base_icms_sub'];
+        $icms_sub = $itens['icms_sub'];
+        $desconto = $itens['desconto'];
+        $aliq_ipi = $itens['aliq_ipi'];
+        $ipi = $itens['ipi'];
+        $ipi_devolvido = $itens['ipi_devolvido'];
+        $base_pis = $itens['base_pis'];
+        $pis = $itens['pis'];
+        $cst_pis = $itens['cst_pis'];
+        $base_cofins = $itens['base_cofins'];
+        $cofins = $itens['cofins'];
+        $cst_cofins = $itens['cst_cofins'];
+        $base_iss = $itens['base_iss'];
+        $iss = $itens['iss'];
+        $gtin = $itens['gtin'];
+
+        if ($cfop == '0') {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("cfop"));
+        } elseif ($ncm == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("ncm"));
+            // } elseif ($gtin == "") {
+            //     $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("gtin"));
+        } elseif ($cst == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("cst"));
+        } elseif ($qtd == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("quantidade"));
+        } elseif ($und == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("Unidade"));
+        } elseif ($descricao == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("descrição"));
+        } else {
+            $valor_total = $vlr_unitario * $qtd;
+            //   $retornar["dados"] = array("sucesso" => "false", "title" => $id_produto);
+            $update = "UPDATE `marvolt`.`tb_nfe_saida_item` SET `descricao` = '$descricao', `ncm` = '$ncm', `cest` = '$cest',  
+        `cfop` = '$cfop', `und` = '$und', `quantidade` = '$qtd', `valor_unitario` = '$vlr_unitario', `valor_produto` = '$valor_total', 
+        `bc_icms` = '$base_icms', `valor_icms` = '$vlr_icms', `aliq_icms` = '$aliq_icms', `base_icms_sub` = '$base_icms_sub', `icms_sub` = '$icms_sub', 
+        `aliq_ipi` = '$aliq_ipi', `valor_ipi` = '$ipi', `ipi_devolvido` = '$ipi_devolvido', `base_pis` = '$base_pis', `valor_pis` = '$pis', 
+        `cst_pis` = '$cst_pis', `base_cofins` = '$base_cofins', `valor_cofins` = '$cofins', `cst_cofins` = '$cst_cofins', `base_iss` = '$base_iss', 
+        `valor_iss` = '$iss', `origem` = '0',  `cst_icms` = '$cst',  `gtin` = '$gtin' WHERE `tb_nfe_saida_item`.`nfe_iten_saidaID` = $id_produto";
+            $operacao_update = mysqli_query($conecta, $update);
+            if ($operacao_update) {
+                $retornar["dados"] = array("sucesso" => true, "title" => "Item alterado com sucesso!");
+                recalcular_nf($conecta, $codigo_nf);
+            } else {
+                $retornar["dados"] = array("sucesso" => false, "title" => "Erro, Favor verifique com o suporte");
+            }
+        }
+    }
+
+    if ($acao == "insert_produto") {
+        $itensJSON = $_POST['itens']; //array de produtos
+        $itens = json_decode($itensJSON, true); //recuperar valor do array javascript decodificando o json
+
+        $id_produto = $itens['id_produto'];
+        $numero_nf = $itens['numero_nf'];
+        $codigo_nf = $itens['codigo_nf'];
+        $descricao = utf8_decode($itens['descricao']);
+        $und = utf8_decode($itens['und']);
+        $qtd = $itens['qtd'];
+        $vlr_unitario = $itens['vlr_unitario'];
+        $cfop = $itens['cfop'];
+        $ncm = $itens['ncm'];
+        $cest = $itens['cest'];
+        $cst = $itens['cst'];
+        $base_icms = $itens['base_icms'];
+        $aliq_icms = $itens['aliq_icms'];
+        $vlr_icms = $itens['vlr_icms'];
+        $base_icms_sub = $itens['base_icms_sub'];
+        $icms_sub = $itens['icms_sub'];
+        $desconto = $itens['desconto'];
+        $aliq_ipi = $itens['aliq_ipi'];
+        $ipi = $itens['ipi'];
+        $ipi_devolvido = $itens['ipi_devolvido'];
+        $base_pis = $itens['base_pis'];
+        $pis = $itens['pis'];
+        $cst_pis = $itens['cst_pis'];
+        $base_cofins = $itens['base_cofins'];
+        $cofins = $itens['cofins'];
+        $cst_cofins = $itens['cst_cofins'];
+        $base_iss = $itens['base_iss'];
+        $iss = $itens['iss'];
+        $gtin = $itens['gtin'];
+
+        if ($cfop == '0') {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("cfop"));
+        } elseif ($ncm == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("ncm"));
+            // } elseif ($gtin == "") {
+            //     $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("gtin"));
+        } elseif ($cst == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("cst"));
+        } elseif ($qtd == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("quantidade"));
+        } elseif ($und == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("Unidade"));
+        } elseif ($descricao == "") {
+            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("descrição"));
+        } else {
+
+            $valor_total = $vlr_unitario * $qtd;
+            //   $retornar["dados"] = array("sucesso" => "false", "title" => $id_produto);
+            $insert = "INSERT INTO `marvolt`.`tb_nfe_saida_item` ( `numero_nf`, `codigo`, `descricao`, `ncm`, `cfop`, `und`, `quantidade`, `valor_unitario`,
+              `valor_produto`, `bc_icms`, `valor_icms`, `aliq_icms`, `base_icms_sub`, `icms_sub`, `aliq_ipi`,`valor_ipi`, `ipi_devolvido`, `base_pis`,
+               `valor_pis`, `cst_pis`, `base_cofins`, `valor_cofins`,`cst_cofins`, `origem`, `cst_icms`, `codigo_nf`, `cest`, `gtin` )
+                 VALUES ( '$numero_nf', '$id_produto', '$descricao', '$ncm', '$cfop', '$und', '$qtd', '$vlr_unitario', '$valor_total', '$base_icms',
+                  '$vlr_icms', '$aliq_icms','$base_icms_sub', '$icms_sub', '$aliq_ipi', '$ipi', '$ipi_devolvido', '$base_pis', '$pis', '$cst_pis', '$base_cofins', 
+                  '$cofins', '$cst_cofins', '0', '$cst', '$codigo_nf', '$cest', '$gtin' )";
+            $operacao_insert = mysqli_query($conecta, $insert);
+            if ($operacao_insert) {
+                $retornar["dados"] = array("sucesso" => true, "title" => "Item Incluido com sucesso!");
+                //   recalcular_nf($conecta, $codigo_nf);
+            } else {
+                $retornar["dados"] = array("sucesso" => false, "title" => "Erro, Favor verifique com o suporte");
+            }
+        }
+    }
+
+    if ($acao == "delete_produto") {
+        $itensJSON = $_POST['itens']; //array de produtos
+        $itens = json_decode($itensJSON, true); //recuperar valor do array javascript decodificando o json
+        $id_produto = $itens['id_produto'];
+        $codigo_nf = $itens['codigo_nf'];
+
+        //   $retornar["dados"] = array("sucesso" => "false", "title" => $id_produto);
+        $delete = "DELETE FROM `marvolt`.`tb_nfe_saida_item` WHERE
+         `tb_nfe_saida_item`.`nfe_iten_saidaID` = $id_produto ";
+        $operacao_delete = mysqli_query($conecta, $delete);
+        if ($operacao_delete) {
+            $retornar["dados"] = array("sucesso" => true, "title" => "Item Removido com sucesso");
+            recalcular_nf($conecta, $codigo_nf);
+        } else {
+            $retornar["dados"] = array("sucesso" => false, "title" => "Erro, Favor verifique com o suporte");
+        }
+    }
+
+
+    /*fiscal */
     if (isset($_POST['nfe'])) {
         $ambiente = verficar_paramentro($conecta, "tb_parametros", "parametroID", "15"); //1- homologação 2 - produção
 
@@ -311,6 +539,11 @@ if (isset($_POST['formulario_nota_fiscal'])) {
         // } else {
         //     $indicado_inscricao = "1";
         // }
+        if ($finalidade_id == "3") { //nfe de ajuste tipo de documento - 0 entrada os demais saida
+            $tipo_documento = "0";
+        } else {
+            $tipo_documento = "1";
+        }
 
         $ref = $numero_nf; //numero da nf
         if ($acao == "enviar_nf") {
@@ -320,7 +553,7 @@ if (isset($_POST['formulario_nota_fiscal'])) {
                 "natureza_operacao" => "$descricao_cfop",
                 "data_emissao" => $data,
                 "data_entrada_saida" => $data,
-                "tipo_documento" => "1",
+                "tipo_documento" => "$tipo_documento",
                 "finalidade_emissao" => "$finalidade_id",
                 "serie" => "1",
                 "numero" => $ref,
@@ -367,12 +600,13 @@ if (isset($_POST['formulario_nota_fiscal'])) {
 
                 "items" => array(),
                 "volumes" => array(),
-                "formas_pagamento"=>array(),
-                
+                "formas_pagamento" => array(),
+                "notas_referenciadas" => array(),
+
             );
 
 
-         
+
             $volume_trans = array(
                 "forma_pagamento" => "$quantidade_vl",
                 "especie" => "$especie_tra",
@@ -383,16 +617,25 @@ if (isset($_POST['formulario_nota_fiscal'])) {
             array_push($nfe["volumes"], $volume_trans);
 
 
-            
-            $fpgmt = array(
-                "forma_pagamento" => "$tipo_forma_pagamento",
-                "valor_pagamento" => "$valor_total_nota",
+
+            $nf_referenciada = array(
+                "chave_nfe" => "$chave_acesso_ref",
             );
 
+
+            if ($chave_acesso_ref != "") { //finaljidade para estorno ou devolução sao necessario referenciar a chave de acesso
+                array_push($nfe["notas_referenciadas"], $nf_referenciada);
+                $fpgmt = array(
+                    "forma_pagamento" => "90", //sem pagamento
+                );
+            } else {
+                $fpgmt = array(
+                    "forma_pagamento" => "$tipo_forma_pagamento",
+                    "valor_pagamento" => "$valor_total_nota",
+                );
+            }
+
             array_push($nfe["formas_pagamento"], $fpgmt);
-
-
-
             $qtd_prod = mysqli_num_rows($consultar_nf_item);
             if ($valor_frete > 0 and $valor_frete != "") {
                 $valor_frete_item = $valor_frete / $qtd_prod;
@@ -418,8 +661,11 @@ if (isset($_POST['formulario_nota_fiscal'])) {
                 $valor_seguro_item = "0";
             }
 
+            $item_nf = 0;
             while ($linha = mysqli_fetch_assoc($consultar_nf_item)) {
-                $item_nf = $linha['item'];
+                //   $item_nf = $linha['item'];
+                $item_nf = $item_nf + 1;
+                $id_produto = ($linha['nfe_iten_saidaID']);
                 $descricao = utf8_encode($linha['descricao']);
                 $und = utf8_encode($linha['und']);
                 $quantidade = ($linha['quantidade']);
@@ -453,7 +699,7 @@ if (isset($_POST['formulario_nota_fiscal'])) {
 
                 $item = array(
                     "numero_item" => "$item_nf",
-                    "codigo_produto" => "$item_nf",
+                    "codigo_produto" => "$id_produto",
                     "descricao" => "$descricao",
                     "cfop" => "$cfop_item",
                     "unidade_comercial" => "$und",
@@ -656,141 +902,85 @@ if (isset($_POST['formulario_nota_fiscal'])) {
             $retornar["dados"] = array("sucesso" => true, "valores" => $txtretorno, "http_code" => $http_code);
             curl_close($ch);
         }
-    }
-    if ($acao == "showProduto") {
-        $id_produto = $_POST['id_produto'];
-        $select  = "SELECT * FROM tb_nfe_saida_item where nfe_iten_saidaID= $id_produto ";
-        $consulta_item_nf = mysqli_query($conecta, $select);
-        $linha = mysqli_fetch_assoc($consulta_item_nf);
-        $item = $linha['item'];
-        $descricao = utf8_encode($linha['descricao']);
-        $und = utf8_encode($linha['und']);
-        $quantidade = ($linha['quantidade']);
-        $valor_unitario = ($linha['valor_unitario']);
-        $valor_produto = ($linha['valor_produto']);
-        $ncm = ($linha['ncm']);
-        $cest = ($linha['cest']);
-        $cfop = ($linha['cfop']);
-        $cst = ($linha['cst_icms']);
-        $bc_icms = ($linha['bc_icms']);
-        $aliq_icms = ($linha['aliq_icms']);
-        $valor_icms = ($linha['valor_icms']);
-        $base_icms_sub = ($linha['base_icms_sub']);
-        $icms_sub = ($linha['icms_sub']);
-        $desconto = ($linha['desconto']);
-        $aliq_ipi = ($linha['aliq_ipi']);
-        $valor_ipi = ($linha['valor_ipi']);
-        $ipi_devolvido = ($linha['ipi_devolvido']);
-        $base_pis = ($linha['base_pis']);
-        $valor_pis = ($linha['valor_pis']);
-        $cst_pis = ($linha['cst_pis']);
-        $base_cofins = ($linha['base_cofins']);
-        $valor_cofins = ($linha['valor_cofins']);
-        $cst_cofins = ($linha['cst_cofins']);
-        $base_iss = ($linha['base_iss']);
-        $valor_iss = ($linha['valor_iss']);
-        $gtin = $linha['gtin'];
-
-
-        $informacao = array(
-            "item" => $item,
-            "descricao" => $descricao,
-            "und" => $und,
-            "quantidade" => $quantidade,
-            "valor_unitario" => $valor_unitario,
-            "valor_produto" => $valor_produto,
-            "cfop" => $cfop,
-            "ncm" => $ncm,
-            "cest" => $cest,
-            "cst" => $cst,
-            "bc_icms" => $bc_icms,
-            "aliq_icms" => $aliq_icms,
-            "valor_icms" => $valor_icms,
-            "base_icms_sub" => $base_icms_sub,
-            "icms_sub" => $icms_sub,
-            "desconto" => $desconto,
-            "aliq_ipi" => $aliq_ipi,
-            "valor_ipi" => $valor_ipi,
-            "ipi_devolvido" => $ipi_devolvido,
-            "base_pis" => $base_pis,
-            "valor_pis" => $valor_pis,
-            "cst_pis" => $cst_pis,
-            "base_cofins" => $base_cofins,
-            "valor_cofins" => $valor_cofins,
-            "cst_cofins" => $cst_cofins,
-            "base_iss" => $base_iss,
-            "valor_iss" => $valor_iss,
-            "gtin" => $gtin,
-
-        );
 
 
 
-        $retornar["dados"] = array("sucesso" => true, "valores" => $informacao);
-    }
-    if ($acao == "updateProduto") {
-        $itensJSON = $_POST['itens']; //array de produtos
-        $itens = json_decode($itensJSON, true); //recuperar valor do array javascript decodificando o json
+        if ($acao == "carta_correcao") {
+            $texto = $_POST['texto'];
+            $correcao = array(
+                "correcao" => "$texto",
+            );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_URL, $server . "/v2/nfe/" . $ref  . "/carta_correcao");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($correcao));
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
+            $body = curl_exec($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        $id_produto = $itens['id_produto'];
-        $numero_nf = $itens['numero_nf'];
-        $codigo_nf = $itens['codigo_nf'];
-        $descricao = utf8_decode($itens['descricao']);
-        $und = utf8_decode($itens['und']);
-        $qtd = $itens['qtd'];
-        $vlr_unitario = $itens['vlr_unitario'];
-        $cfop = $itens['cfop'];
-        $ncm = $itens['ncm'];
-        $cest = $itens['cest'];
-        $cst = $itens['cst'];
-        $base_icms = $itens['base_icms'];
-        $aliq_icms = $itens['aliq_icms'];
-        $vlr_icms = $itens['vlr_icms'];
-        $base_icms_sub = $itens['base_icms_sub'];
-        $icms_sub = $itens['icms_sub'];
-        $desconto = $itens['desconto'];
-        $aliq_ipi = $itens['aliq_ipi'];
-        $ipi = $itens['ipi'];
-        $ipi_devolvido = $itens['ipi_devolvido'];
-        $base_pis = $itens['base_pis'];
-        $pis = $itens['pis'];
-        $cst_pis = $itens['cst_pis'];
-        $base_cofins = $itens['base_cofins'];
-        $cofins = $itens['cofins'];
-        $cst_cofins = $itens['cst_cofins'];
-        $base_iss = $itens['base_iss'];
-        $iss = $itens['iss'];
-        $gtin = $itens['gtin'];
+            $txtretorno = $http_code . $body;
 
-        if ($cfop == '0') {
-            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("cfop"));
-        } elseif ($ncm == "") {
-            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("ncm"));
-        } elseif ($gtin == "") {
-            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("gtin"));
-        } elseif ($cst == "") {
-            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("cst"));
-        } elseif ($qtd == "") {
-            $retornar["dados"] = array("sucesso" => false, "title" => mensagem_alerta_cadastro("quantidade"));
-        } else {
+            $response = json_decode($body, true);
 
-            $valor_total = $vlr_unitario * $qtd;
-            //   $retornar["dados"] = array("sucesso" => "false", "title" => $id_produto);
-            $update = "UPDATE `marvolt`.`tb_nfe_saida_item` SET `descricao` = '$descricao', `ncm` = '$ncm', 
-        `cfop` = '$cfop', `und` = '$und', `quantidade` = '$qtd', `valor_unitario` = '$vlr_unitario', `valor_produto` = '$valor_total', 
-        `bc_icms` = '$base_icms', `valor_icms` = '$vlr_icms', `aliq_icms` = '$aliq_icms', `base_icms_sub` = '$base_icms_sub', `icms_sub` = '$icms_sub', 
-        `aliq_ipi` = '$aliq_ipi', `valor_ipi` = '$ipi', `ipi_devolvido` = '$ipi_devolvido', `base_pis` = '$base_pis', `valor_pis` = '$pis', 
-        `cst_pis` = '$cst_pis', `base_cofins` = '$base_cofins', `valor_cofins` = '$cofins', `cst_cofins` = '$cst_cofins', `base_iss` = '$base_iss', 
-        `valor_iss` = '$iss', `origem` = '0',  `cst_icms` = '$cst',  `gtin` = '$gtin' WHERE `tb_nfe_saida_item`.`nfe_iten_saidaID` = $id_produto";
-            $operacao_update = mysqli_query($conecta, $update);
-            if ($operacao_update) {
-                $retornar["dados"] = array("sucesso" => true, "title" => "Item alterado com sucesso!");
-                recalcular_nf($conecta, $codigo_nf);
+            if (isset($response['status'])) {
+                $status = $response['status'];
+                if ($status == "autorizado") { //status cancelado // alterar a finalidade para cancelado
+                    $caminho_danfe = $response['caminho_pdf_carta_correcao'];
+                    update_crt_correcao($conecta, $id_nf, $caminho_danfe);
+                    insert_crt_correcao($conecta, $numero_nf, "$server$caminho_danfe");
+                    $retornar["dados"] = array("sucesso" => true, "valores" => $txtretorno, "status" => $status, "http_code" => $http_code, "opem_danfe_crt" => "$server$caminho_danfe");
+                }
             } else {
-                $retornar["dados"] = array("sucesso" => false, "title" => "Erro, Favor verifique com o suporte");
+                $retornar["dados"] = array("sucesso" => true, "valores" => $txtretorno, "status" => "rejeicao", "http_code" => $http_code);
             }
+            //  $retornar["dados"] = array("sucesso" => true, "valores" => $txtretorno, "http_code" => $http_code);
+            curl_close($ch);
+        }
+
+        if ($acao == "intulizar") {
+            $numero_inicial = $_POST['numero_inicial'];
+        //    $numero_final = $_POST['numero_final'];
+            $inutiliza = array(
+                "cnpj" => "$cnpj_emit",
+                "serie" => "1",
+                "numero_inicial" => "$numero_inicial",
+                "numero_final" => "$numero_inicial",
+                "justificativa" => "Inutilizacao de numeracao"
+            );
+            // Inicia o processo de envio das informações usando o cURL.
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_URL, $server . "/v2/nfe/inutilizacao");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($inutiliza));
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
+            $body = curl_exec($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            $txtretorno = $http_code . $body;
+
+            $response = json_decode($body, true);
+            if (isset($response['status'])) {
+                $status = $response['status'];
+                if ($status == "autorizado") { //status cancelado // alterar a finalidade para cancelado
+                    //  $caminho_danfe = $response['caminho_pdf_carta_correcao'];
+                    $protocolo_sefaz = $response["protocolo_sefaz"];
+                    update_inutilizacao($conecta,$id_nf,$protocolo_sefaz);
+                    $retornar["dados"] = array("sucesso" => true, "valores" => $txtretorno, "status" => $status, "http_code" => $http_code,"protocolo_sefaz"=>$protocolo_sefaz);
+               
+                }
+            } else {
+                $retornar["dados"] = array("sucesso" => true, "valores" => $txtretorno, "status" => "rejeicao", "http_code" => $http_code);
+            }
+            curl_close($ch);
         }
     }
+
 
 
     echo json_encode($retornar);

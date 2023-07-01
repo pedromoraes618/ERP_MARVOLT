@@ -175,6 +175,7 @@ if (isset($_GET["campoPesquisaData"])) {
                         $valorProduto = $linha["valor_total_produtos"];
                         $valorDesconto = $linha["valor_desconto"];
                         $status = $linha['finalidade_id'];
+                        $finalidade_id = $linha['finalidade_id'];
                         $codigo_nf = $linha['codigo_nf'];
 
                         if ($status == "1" and $protocolo == "") {
@@ -194,9 +195,14 @@ if (isset($_GET["campoPesquisaData"])) {
                             $status = "Devolução";
                         } elseif ($status == "5") {
                             $status = "Cancelado";
+                        }elseif($status=="6"){
+                            $status = "Inutilizada";
                         }
 
-                        $valor_total_nota = $valorNota + $valor_total_nota;
+                        if($finalidade_id=="1"){
+                            $valor_total_nota = $valorNota + $valor_total_nota;
+
+                        }
                         // $select ="SELECT * FROM clientes where cpfcnpj = '$cnpj' ";
                         // $consultar_cliente = mysqli_query($conecta,$select);
                         // $linha = mysqli_fetch_assoc($consultar_cliente);

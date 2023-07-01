@@ -75,14 +75,14 @@ $("#nota_fsical").submit(function (e) {
             confirmButtonText: 'Sim'
         }).then((result) => {
             if (result.isConfirmed) {
-                var retorno = update(formulario)
+                var retorno = update(formulario,codigo_nf.value,numero_nf.value)
             }
         })
     }
 })
 
 
-function update(dados) {
+function update(dados,codigo_nf,numero_nf) {
 
     $.ajax({
         type: "POST",
@@ -102,6 +102,7 @@ function update(dados) {
                 showConfirmButton: false,
                 timer: 3500
             })
+            tabela_prod(codigo_nf, numero_nf);//atualzar a tabela
 
         } else {
             Swal.fire({
@@ -194,8 +195,30 @@ function tabela_prod(codigo_nf, numero_nf) {
 }
 
 
+//modal para informar dados adicionais 
+$("#modal_produto_add_item").click(function () {
+
+    
+    $.ajax({
+        type: 'GET',
+        data: "alterar_produto=true&&codigo_nf=" + codigo_nf.value + "&numero_nf=" + numero_nf.value ,
+        url: "include/produto/modal_produto.php",
+        success: function (result) {
+            return $(".modal_externo").html(result) + $("#modal_produto").modal('show')
+
+        },
+    });
+});
+
+
+
+
+
 function calcularTotal() {
  
+    var total_prod = $("#total_prod").val()
+    $("#vlr_total_produtos").val(total_prod)
+
     var outrasDespesas = parseFloat($("#outras_despesas").val()) || 0;
     var totalProdutos = parseFloat($("#vlr_total_produtos").val()) || 0;
     var desconto = parseFloat($("#desconto_nota").val()) || 0;
@@ -206,3 +229,4 @@ function calcularTotal() {
 
     $("#vlr_total_nota").val(valorTotal.toFixed(2));
 }
+

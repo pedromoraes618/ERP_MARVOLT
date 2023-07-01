@@ -5,7 +5,7 @@ var numero_nf_prod = $("#numero_nf").val()
 
 
 // $("#fechar_prod").click(function () {
-    
+
 //     $("#modal_produto").modal('hide');//fechar o modal
 
 
@@ -25,6 +25,7 @@ if (id_produto == "") {
 
 
 function calculaValorTotalProduto() {
+
     var qtd_produto = parseFloat($("#qtd_prod").val()) || 0;
     var valor_unitario = parseFloat($("#vlr_unitario_prd").val()) || 0;
 
@@ -98,7 +99,7 @@ $("#salvar_prod").click(function () {
         codigo_nf: codigo_nf_prod,
     };
 
-    if (id_produto.value != "") {//update
+    if (id_produto != "") {//update
         Swal.fire({
             title: 'Tem certeza?',
             text: "Deseja alterar esse prduto",
@@ -113,8 +114,52 @@ $("#salvar_prod").click(function () {
                 updateProduto(itens, codigo_nf_prod, numero_nf_prod)
             }
         })
+    } else{//INSERT
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Deseja Incluir esse produto, Será necessario recalcular a nota",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Não',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                insertProduto(itens, codigo_nf_prod, numero_nf_prod)
+            }
+        })
     }
 })
+
+
+$("#remover_prod").click(function () {
+
+    var itens = {
+        id_produto: id_produto,
+        numero_nf: numero_nf_prod,
+        codigo_nf: codigo_nf_prod,
+    };
+
+    if (id_produto != "") {//update
+       
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Deseja alterar remover esse produto, Será necessario recalcular a nota",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Não',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteProduto(itens, codigo_nf_prod, numero_nf_prod)
+            }
+        })
+    }
+})
+
 
 
 function updateProduto(itens, codigo_nf_prod, numero_nf_prod) {
@@ -159,6 +204,93 @@ function updateProduto(itens, codigo_nf_prod, numero_nf_prod) {
 
 }
 
+
+function deleteProduto(itens, codigo_nf_prod, numero_nf_prod) {
+    let itensJSON = JSON.stringify(itens); //codificar para json
+    $.ajax({
+        type: "POST",
+        data: "formulario_nota_fiscal=true&acao=delete_produto&itens=" + itensJSON,
+        url: "crud/gerenciar_nfe.php",
+        async: false
+    }).then(sucesso, falha);
+
+    function sucesso(data) {
+
+        $dados = $.parseJSON(data)["dados"];
+        if ($dados.sucesso == true) {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: $dados.title,
+                showConfirmButton: false,
+                timer: 3500
+            })
+
+            tabela_prod(codigo_nf_prod, numero_nf_prod);//atualizar a tabela
+            $('#fechar_modal_prod').trigger('click'); // clicar automaticamente para realizar fechar o modal
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Verifique!',
+                text: $dados.title,
+                timer: 7500,
+
+            })
+
+        }
+    }
+
+    function falha() {
+        console.log("erro");
+    }
+
+}
+
+
+function insertProduto(itens, codigo_nf_prod, numero_nf_prod) {
+    let itensJSON = JSON.stringify(itens); //codificar para json
+    $.ajax({
+        type: "POST",
+        data: "formulario_nota_fiscal=true&acao=insert_produto&itens=" + itensJSON,
+        url: "crud/gerenciar_nfe.php",
+        async: false
+    }).then(sucesso, falha);
+
+    function sucesso(data) {
+
+        $dados = $.parseJSON(data)["dados"];
+        if ($dados.sucesso == true) {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: $dados.title,
+                showConfirmButton: false,
+                timer: 3500
+            })
+
+            tabela_prod(codigo_nf_prod, numero_nf_prod);//atualizar a tabela
+            $('#fechar_modal_prod').trigger('click'); // clicar automaticamente para realizar fechar o modal
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Verifique!',
+                text: $dados.title,
+                timer: 7500,
+
+            })
+
+        }
+    }
+
+    function falha() {
+        console.log("erro");
+    }
+
+}
+
+
 //mostrar as informações no formulario show
 function showProduto(id) {
 
@@ -173,7 +305,7 @@ function showProduto(id) {
 
         $dados = $.parseJSON(data)["dados"];
         if ($dados.sucesso == true) {
-            $("#item_prod").val($dados.valores['item'])
+            $("#codigo_prod").val($dados.valores['codigo'])
             $("#descricao_prod").val($dados.valores['descricao'])
             $("#und_prod").val($dados.valores['und'])
             $("#qtd_prod").val($dados.valores['quantidade'])

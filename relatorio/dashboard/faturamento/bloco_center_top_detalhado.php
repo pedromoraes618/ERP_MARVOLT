@@ -44,7 +44,7 @@ include "../../../_incluir/funcoes.php";
                             while($i<=11){
                             $i = $i+ 1;
                             //verificar a quantidade de faturameto por mes 
-                            echo       "'". (consultar_faturamento_nfes_cliente($i,$ano,$clientecnpj)*0.001)   ."',";
+                            echo       "'". (consultar_faturamento_nfes_cliente($i,$ano,$clientecnpj,$clienteid)*0.001)   ."',";
                         }
                             ?>
 
@@ -63,7 +63,7 @@ include "../../../_incluir/funcoes.php";
                             while($i<=11){
                             $i = $i+ 1;
                             //verificar a quantidade de receita por mes 
-                            echo       "'".(consultar_quantidade_nfes_cliente($i,$ano,$clientecnpj))  ."',";
+                            echo       "'".(consultar_quantidade_nfes_cliente($i,$ano,$clientecnpj,$clienteid))  ."',";
                             }
                             ?>
                             ],

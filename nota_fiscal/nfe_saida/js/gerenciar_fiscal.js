@@ -15,22 +15,22 @@ $("#enviar_nf").click(function () {
 
     if (id != "") {//verificar se existe a nota
 
-    
-            Swal.fire({
-                title: 'Tem certeza?',
-                text: "Deseja enviar essa Nfe?",
-                icon: 'warning',
-                showCancelButton: true,
-                cancelButtonText: 'Não',
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sim'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    modal_enviar(id)
-                }
-            })
-        
+
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Deseja enviar essa Nfe?",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Não',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                modal_enviar(id)
+            }
+        })
+
     } else {
         Swal.fire({
             icon: 'error',
@@ -50,7 +50,34 @@ $("#consultar_pdf_nf").click(function () {
 $("#consultar_xml_nf").click(function () {
     consultar_xml_nf(id)
 })
+$("#ct_correcao").click(function () {
+    if (id != "") {//verificar se existe a nota
+        modal_carta_correacao(id)
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Verifique!',
+            text: "Nfe não encontrada, Favor verifique",
+            timer: 7500,
 
+        })
+    }
+
+})
+$("#inutilizar_nf").click(function () {
+    if (id != "") {//verificar se existe a nota
+        modal_inutilizar_nf(id)
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Verifique!',
+            text: "Nfe não encontrada, Favor verifique",
+            timer: 7500,
+
+        })
+    }
+
+})
 $("#cancelar_nf").click(function () {
 
     if (id != "") {//verificar se existe a nota
@@ -110,6 +137,30 @@ function modal_cancelar(id) {
 
 }
 
+function modal_carta_correacao(id) {
+    $.ajax({
+        type: 'GET',
+        data: "formulario_nota_fiscal=true&acao=carta_correcao&id_nf=" + id,
+        url: "include/consultar_nf/modal_consulta_nf.php",
+        success: function (result) {
+            return $(".modal_externo").html(result) + $("#modal_consulta_nf").modal('show')
+
+        },
+    });
+
+}
+function modal_inutilizar_nf(id) {
+    $.ajax({
+        type: 'GET',
+        data: "formulario_nota_fiscal=true&acao=inutilizar_nf&id_nf=" + id,
+        url: "include/consultar_nf/modal_consulta_nf.php",
+        success: function (result) {
+            return $(".modal_externo").html(result) + $("#modal_consulta_nf").modal('show')
+
+        },
+    });
+
+}
 
 function consultar_pdf_nf(id) {//consultar nfe
     //  alert("iokj")

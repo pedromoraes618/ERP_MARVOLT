@@ -24,8 +24,7 @@ if (isset($_POST['gerar_nfe'])) {
             $numero_pedido = verificar_valores($conecta, "pedido_compra", "codigo_pedido", $codigo_pedido, "numero_pedido_compra");
             $valor_total_produtos = verificar_total_valores($conecta, "tb_pedido_item", "pedidoID", $codigo_pedido);
             $cliente_uf = verificar_valores($conecta, "clientes", "clienteID", $cliente_id, "estadoID");
-            $mesagem_adicional = ("PEDIDO DE COMPRA Nº $numero_pedido. PAGAMENTO: BOLETO Nº .
-             VENCIMENTO . DADOS BANCARIOS: BANCO ITAÚ S.A AG: 8805 CONTA 99810-4. BANCO BRADESCO- AG:1123 CONTA:0030326-7. PIX ITAÚ- CNPJ 342268330001-97");
+            $mesagem_adicional = ("PEDIDO DE COMPRA N $numero_pedido. PAGAMENTO: BOLETO N . VENCIMENTO . DADOS BANCARIOS: BANCO ITAU S.A AG: 8805 CONTA 99810-4. BANCO BRADESCO- AG:1123 CONTA:0030326-7. PIX ITAU- CNPJ 342268330001-97");
 
             if ($cliente_uf == "10") { //estado maranhão 
                 $cfop = $cfop_interno;
@@ -37,7 +36,7 @@ if (isset($_POST['gerar_nfe'])) {
             $insert = "INSERT INTO `marvolt`.`tb_nfe_saida` ( `data_entrada`, `numero_nf`, `serie`, `cliente_id`,  `tipo_frete`,  `valor_desconto`, 
             `valor_total_produtos`, `valor_total_nota`, `finalidade_id`, `forma_pagamento_id`,`cfop`,`codigo_nf`,`observacao`,
             `numero_pedido`) VALUES ('$hoje', '$nfe_prox', '1',
-            '$cliente_id', '1', '$desconto','$valor_total_produtos','$valor_total_nota','1','$forma_pagamento_id','$cfop','$codigo_nf','$mesagem_adicional','$numero_pedido')";
+            '$cliente_id', '0', '$desconto','$valor_total_produtos','$valor_total_nota','1','$forma_pagamento_id','$cfop','$codigo_nf','$mesagem_adicional','$numero_pedido')";
             $operacao_insert = mysqli_query($conecta, $insert);
             if ($operacao_insert) {
                 $retornar["dados"] = array("sucesso" => true, "title" => "NFE $nfe_prox gerado com sucesso");
